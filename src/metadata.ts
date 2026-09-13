@@ -1,6 +1,13 @@
 import { docsSizes } from './layouts/docs.js'
 import type { Metadata, MetadataInput } from './types/index.js'
 
+const slashRegex = /\//g
+const trailingSlashRegex = /\/$/
+
+export const getImageUrl = (hostname: string, path: string, dir = 'og'): string => {
+  return `${hostname.replace(trailingSlashRegex, '')}/${dir}/${path.replace(slashRegex, '-')}.png`
+}
+
 export const getMetadata = (input: MetadataInput): Metadata => {
   const image = typeof input.image === 'string' ? { url: input.image } : input.image
 
