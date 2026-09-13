@@ -37,6 +37,16 @@
         "default": "./dist/index.cjs"
       }
     },
+    "./vitepress": {
+      "import": {
+        "types": "./dist/adapters/vitepress.d.ts",
+        "default": "./dist/adapters/vitepress.js"
+      },
+      "require": {
+        "types": "./dist/adapters/vitepress.d.cts",
+        "default": "./dist/adapters/vitepress.cjs"
+      }
+    },
     "./package.json": "./package.json"
   },
   "files": [
@@ -44,7 +54,7 @@
   ],
   "scripts": {
     "prepare": "lefthook install",
-    "build": "tsdown src/index.ts --format cjs,esm --dts --clean --unbundle --no-fixed-extension",
+    "build": "tsdown src/index.ts src/adapters/vitepress.ts --format cjs,esm --dts --clean --unbundle --no-fixed-extension --shims",
     "test": "bun test"
   },
   "dependencies": {
