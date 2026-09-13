@@ -1,0 +1,33 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: Branch to release
+        required: true
+        default: main
+        type: choice
+        options:
+          - main
+          - rc
+          - beta
+          - alpha
+
+jobs:
+  test:
+    uses: macieklamberski/kvalita/.github/workflows/shared-test.yml@main
+    secrets: inherit
+
+  release:
+    needs: test
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+      id-token: write
+    uses: macieklamberski/kvalita/.github/workflows/shared-release.yml@main
+    with:
+      branch: ${{ inputs.branch }}
+      build: true
+    secrets: inherit

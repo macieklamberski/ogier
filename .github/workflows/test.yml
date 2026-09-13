@@ -1,0 +1,11 @@
+name: Test
+
+on:
+  push:
+    branches: [main, alpha, beta, rc]
+  pull_request:
+
+jobs:
+  test:
+    uses: macieklamberski/kvalita/.github/workflows/shared-test.yml@main
+    secrets: inherit
