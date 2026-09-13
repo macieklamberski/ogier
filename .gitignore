@@ -72,3 +72,6 @@ coverage
 _drafts
 _files
 _plans
+
+# Glossary, kept local for now
+CONTEXT.md
