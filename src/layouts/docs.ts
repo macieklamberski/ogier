@@ -11,6 +11,9 @@ export type DocsSizes = Sizes & {
   titleLongLength: number
   titleLongestLength: number
   titleMaxLines: number
+  titleMaxLinesWithDescription: number
+  descriptionText: number
+  descriptionMaxLines: number
   footerIcon: number
   footerText: number
   railWidth: number
@@ -35,6 +38,9 @@ export const docsSizes: DocsSizes = {
   titleLongLength: 40,
   titleLongestLength: 90,
   titleMaxLines: 3,
+  titleMaxLinesWithDescription: 2,
+  descriptionText: 30,
+  descriptionMaxLines: 2,
   footerIcon: 32,
   footerText: 28,
   railWidth: 600,
@@ -103,6 +109,10 @@ const getTitleSize = (sizes: DocsSizes, text: string) => {
 const getTitleClamp = (context: DocsContext): number | undefined => {
   const { card, sizes } = context
 
+  if (card.description && card.title) {
+    return sizes.titleMaxLinesWithDescription
+  }
+
   if (card.eyebrow) {
     return sizes.titleMaxLines
   }
@@ -125,6 +135,19 @@ const renderTitle = (context: DocsContext, text: string): Node => {
   return h('div', clamp ? { ...style, lineClamp: clamp } : style, text)
 }
 
+const renderDescription = (context: DocsContext, text: string): Node => {
+  const style = {
+    fontFamily: 'title',
+    fontSize: context.sizes.descriptionText,
+    lineHeight: 1.35,
+    color: context.theme.textMuted,
+    display: 'block',
+    lineClamp: context.sizes.descriptionMaxLines,
+  }
+
+  return h('div', style, text)
+}
+
 const renderHeadline = (context: DocsContext): Node => {
   const { card } = context
   const children: Array<Node | undefined> = [
@@ -133,6 +156,14 @@ const renderHeadline = (context: DocsContext): Node => {
 
   if (card.title) {
     children.push(renderTitle(context, card.title))
+  }
+
+  if (card.description && card.title) {
+    children.push(renderDescription(context, card.description))
+  }
+
+  if (card.description && !card.title) {
+    children.push(renderTitle(context, card.description))
   }
 
   return h('div', { display: 'flex', flexDirection: 'column', gap: 16 }, children)
