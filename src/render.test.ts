@@ -28,6 +28,13 @@ describe('renderSvg', () => {
 
     expect(await renderSvg(card, options)).toStartWith(expected)
   })
+
+  it('should throw when the card has neither a title nor a description', () => {
+    const value = { name: 'feedsmith' }
+    const throwing = () => renderSvg(value)
+
+    expect(throwing()).rejects.toThrow('A card needs a title or a description.')
+  })
 })
 
 describe('renderPng', () => {

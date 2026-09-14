@@ -11,6 +11,10 @@ const nonBreakingHyphenRegex = /\u2011/g
 const textKeys = ['name', 'eyebrow', 'title', 'description', 'footer'] as const
 
 const normalizeCard = (card: Card): Card => {
+  if (!card.title && !card.description) {
+    throw new Error('A card needs a title or a description.')
+  }
+
   const normalized = { ...card }
 
   for (const key of textKeys) {
