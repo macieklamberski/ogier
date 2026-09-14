@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'bun:test'
+import locales from './locales.json' with { type: 'json' }
 import { renderPng, renderSvg } from './render.js'
 import type { Card } from './types/index.js'
 
@@ -33,7 +34,7 @@ describe('renderSvg', () => {
     const value = { name: 'feedsmith' }
     const throwing = () => renderSvg(value)
 
-    expect(throwing()).rejects.toThrow('A card needs a title or a description.')
+    expect(throwing()).rejects.toThrow(locales.errors.cardNeedsText)
   })
 })
 

@@ -2,18 +2,19 @@ import { Resvg } from '@resvg/resvg-js'
 import satori from 'satori'
 import { isString } from 'trousse'
 import { layouts } from './layouts/index.js'
+import locales from './locales.json' with { type: 'json' }
 import { darkTheme } from './themes/dark.js'
 import type { Card, Layout, LayoutContext, RenderOptions } from './types/index.js'
 import { loadFonts } from './utils/fonts.js'
 import { loadIcon, loadImage } from './utils/icons.js'
 
 // U+2011 is the non-breaking hyphen, which the fontsource latin subsets lack.
-const nonBreakingHyphenRegex = /\u2011/g
+const nonBreakingHyphenRegex = /‑/g
 const textKeys = ['name', 'eyebrow', 'title', 'description', 'footer'] as const
 
 const normalizeCard = (card: Card): Card => {
   if (!card.title && !card.description) {
-    throw new Error('A card needs a title or a description.')
+    throw new Error(locales.errors.cardNeedsText)
   }
 
   const normalized = { ...card }
@@ -38,6 +39,7 @@ export const renderSvg = async (card: Card, options: RenderOptions = {}): Promis
   const sizes: LayoutContext['sizes'] = { ...layout.sizes, ...options.sizes }
   const { background } = options
   const { fonts, families } = await loadFonts(options.fonts, layout.weights)
+
   const context: LayoutContext = {
     card: normalizeCard(card),
     theme: options.theme ?? darkTheme,

@@ -1,6 +1,8 @@
 import { readFile } from 'node:fs/promises'
 import { createRequire } from 'node:module'
 import { extname, join } from 'node:path'
+import { t } from 'trousse'
+import locales from '../locales.json' with { type: 'json' }
 import type { Icon, IconRef, ImageRef, Node } from '../types/index.js'
 
 type TablerNodes = Record<string, Array<[string, Record<string, string>]>>
@@ -27,12 +29,7 @@ const loadTablerIcon = async (name: string): Promise<Icon> => {
     try {
       iconFile = require.resolve(`@tabler/icons/outline/${name}.svg`)
     } catch (error) {
-      throw new Error(
-        `Icon "${name}" is not in @tabler/icons. Install it: npm install @tabler/icons.`,
-        {
-          cause: error,
-        },
-      )
+      throw new Error(t(locales.errors.iconNotInstalled, { name }), { cause: error })
     }
 
     // The package exports only icons/*, so the node table is reached from a resolved icon.
@@ -44,7 +41,7 @@ const loadTablerIcon = async (name: string): Promise<Icon> => {
   const nodes = tablerNodes?.[name]
 
   if (!nodes) {
-    throw new Error(`Icon "${name}" is not in @tabler/icons.`)
+    throw new Error(t(locales.errors.iconNotFound, { name }))
   }
 
   const children: Array<Node> = nodes.map(([type, props]) => ({ type, props }))

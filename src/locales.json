@@ -1,0 +1,8 @@
+{
+  "errors": {
+    "cardNeedsText": "A card needs a title or a description.",
+    "fontNotInstalled": "Font \"{{family}}\" has no files for weights {{weights}}. Install it: npm install @fontsource/{{family}}.",
+    "iconNotInstalled": "Icon \"{{name}}\" is not in @tabler/icons. Install it: npm install @tabler/icons.",
+    "iconNotFound": "Icon \"{{name}}\" is not in @tabler/icons."
+  }
+}

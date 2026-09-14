@@ -2,6 +2,8 @@ import { describe, expect, it } from 'bun:test'
 import { mkdtemp, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import { t } from 'trousse'
+import locales from '../locales.json' with { type: 'json' }
 import type { Icon } from '../types/index.js'
 import { loadIcon } from './icons.js'
 
@@ -42,6 +44,8 @@ describe('loadIcon', () => {
     const value = 'brand-nothing-here'
     const throwing = () => loadIcon(value)
 
-    expect(throwing()).rejects.toThrow('Icon "brand-nothing-here" is not in @tabler/icons.')
+    expect(throwing()).rejects.toThrow(
+      t(locales.errors.iconNotFound, { name: 'brand-nothing-here' }),
+    )
   })
 })

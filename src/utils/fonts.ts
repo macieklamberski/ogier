@@ -1,6 +1,8 @@
 import { readFile } from 'node:fs/promises'
 import { createRequire } from 'node:module'
 import type { Font } from 'satori'
+import { t } from 'trousse'
+import locales from '../locales.json' with { type: 'json' }
 import type { FontRole, Fonts } from '../types/index.js'
 
 export type LoadedFonts = {
@@ -46,9 +48,7 @@ const loadFamily = async (role: FontRole, family: string, weights: Array<number>
   }
 
   if (fonts.length === 0) {
-    throw new Error(
-      `Font "${family}" has no files for weights ${weights.join(', ')}. Install it: npm install @fontsource/${family}.`,
-    )
+    throw new Error(t(locales.errors.fontNotInstalled, { family, weights: weights.join(', ') }))
   }
 
   return { fonts, family: names.join(', ') }
