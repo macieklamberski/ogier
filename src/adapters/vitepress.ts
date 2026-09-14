@@ -1,6 +1,13 @@
 import { mkdir, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import type { DefaultTheme, HeadConfig, SiteConfig, TransformContext } from 'vitepress'
+import type {
+  DefaultTheme,
+  HeadConfig,
+  PageData,
+  SiteConfig,
+  SiteData,
+  TransformContext,
+} from 'vitepress'
 import { getImageUrl, getMetadata, toMetaTags } from '../metadata.js'
 import { renderPng } from '../render.js'
 import type { Card, IconRef, RenderOptions } from '../types/index.js'
@@ -9,6 +16,7 @@ export type VitepressOptions = Omit<RenderOptions, 'footerIcon'> & {
   hostname: string
   name: string
   footer?: { icon?: IconRef; text?: string }
+  card?: (pageData: PageData, siteData: SiteData<DefaultTheme.Config>) => Partial<Card>
 }
 
 type Page = {
@@ -49,7 +57,7 @@ const getEyebrow = (sidebar: DefaultTheme.Sidebar | undefined, path: string) => 
 }
 
 export const vitepress = (options: VitepressOptions) => {
-  const { hostname, name, footer, ...renderOptions } = options
+  const { hostname, name, footer, card: getCardOverrides, ...renderOptions } = options
   const pages: Array<Page> = []
 
   const transformHead = (context: TransformContext<DefaultTheme.Config>): Array<HeadConfig> => {
@@ -65,9 +73,10 @@ export const vitepress = (options: VitepressOptions) => {
           title: title.replace(titlePrefixRegex, ''),
           footer: footer?.text,
         }
+    const card: Card = { ...defaults, ...getCardOverrides?.(pageData, siteData) }
     const image = getImageUrl(hostname, path)
 
-    pages.push({ path, card: defaults })
+    pages.push({ path, card })
 
     const metadata = getMetadata({
       url: `${hostname}/${path.replace(indexRegex, '')}`,

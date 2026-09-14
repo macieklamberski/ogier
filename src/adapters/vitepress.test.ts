@@ -58,7 +58,10 @@ describe('vitepress', () => {
 
   it('should write one png per page under the image dir', async () => {
     const outDir = await mkdtemp(join(tmpdir(), 'ogier-'))
-    const og = vitepress(options)
+    const card = (pageData: PageData) => ({
+      eyebrow: pageData.relativePath === 'index.md' ? undefined : 'Custom',
+    })
+    const og = vitepress({ ...options, card })
     const expected = ['guides-parsing.png', 'index.png']
 
     og.transformHead(getContext('index.md', 'Home'))
