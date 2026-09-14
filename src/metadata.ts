@@ -1,3 +1,4 @@
+import { isString } from 'trousse'
 import { docsSizes } from './layouts/docs.js'
 import type { Metadata, MetadataInput, MetaTag } from './types/index.js'
 
@@ -9,7 +10,7 @@ export const getImageUrl = (hostname: string, path: string, dir = 'og'): string 
 }
 
 export const getMetadata = (input: MetadataInput): Metadata => {
-  const image = typeof input.image === 'string' ? { url: input.image } : input.image
+  const image = isString(input.image) ? { url: input.image } : input.image
 
   return {
     type: input.type ?? 'website',

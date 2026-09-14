@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises'
 import { createRequire } from 'node:module'
 import { extname, join } from 'node:path'
-import { t } from 'trousse'
+import { isString, t } from 'trousse'
 import locales from '../locales.json' with { type: 'json' }
 import type { Icon, IconRef, ImageRef, Node } from '../types/index.js'
 
@@ -60,7 +60,7 @@ export const loadImage = async (ref: ImageRef): Promise<Icon> => {
 }
 
 export const loadIcon = (ref: IconRef): Promise<Icon> => {
-  if (typeof ref === 'string') {
+  if (isString(ref)) {
     return loadTablerIcon(ref)
   }
 
