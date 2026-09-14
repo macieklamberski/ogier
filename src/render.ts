@@ -6,6 +6,24 @@ import type { Background, Card, Layout, LayoutContext, RenderOptions } from './t
 import { loadFonts } from './utils/fonts.js'
 import { loadIcon, loadImage } from './utils/icons.js'
 
+// U+2011 is the non-breaking hyphen, which the fontsource latin subsets lack.
+const nonBreakingHyphenRegex = /\u2011/g
+const textKeys = ['name', 'eyebrow', 'title', 'description', 'footer'] as const
+
+const normalizeCard = (card: Card): Card => {
+  const normalized = { ...card }
+
+  for (const key of textKeys) {
+    const value = normalized[key]
+
+    if (value) {
+      normalized[key] = value.replace(nonBreakingHyphenRegex, '-')
+    }
+  }
+
+  return normalized
+}
+
 const resolveLayout = (layout: RenderOptions['layout']): Layout => {
   if (layout === undefined || layout === 'docs') {
     return docsLayout
@@ -28,7 +46,7 @@ export const renderSvg = async (card: Card, options: RenderOptions = {}): Promis
   const background = resolveBackground(options.background)
   const { fonts, families } = await loadFonts(options.fonts, layout.weights)
   const context: LayoutContext = {
-    card,
+    card: normalizeCard(card),
     theme: options.theme ?? darkTheme,
     sizes,
     fonts: families,
