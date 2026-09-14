@@ -4,14 +4,15 @@ import type { Font } from 'satori'
 import type { FontRole, Fonts } from '../types/index.js'
 
 const require = createRequire(import.meta.url)
+const subsets = ['latin', 'latin-ext']
 const defaultFonts: Record<FontRole, string> = {
   title: 'inter',
   label: 'jetbrains-mono',
 }
 
-const resolveFontFile = (family: string, weight: number): string | undefined => {
+const resolveFontFile = (family: string, subset: string, weight: number): string | undefined => {
   try {
-    return require.resolve(`@fontsource/${family}/files/${family}-latin-${weight}-normal.woff`)
+    return require.resolve(`@fontsource/${family}/files/${family}-${subset}-${weight}-normal.woff`)
   } catch {}
 }
 
@@ -19,13 +20,15 @@ const loadFamily = async (role: FontRole, family: string, weights: Array<number>
   const fonts: Array<Font> = []
 
   for (const weight of weights) {
-    const file = resolveFontFile(family, weight)
+    for (const subset of subsets) {
+      const file = resolveFontFile(family, subset, weight)
 
-    if (!file) {
-      continue
+      if (!file) {
+        continue
+      }
+
+      fonts.push({ name: role, weight: weight as Font['weight'], data: await readFile(file) })
     }
-
-    fonts.push({ name: role, weight: weight as Font['weight'], data: await readFile(file) })
   }
 
   if (fonts.length === 0) {

@@ -8,7 +8,10 @@ describe('loadFonts', () => {
   it('should load the default families under their roles', async () => {
     const expected: Array<Font> = [
       { name: 'title', weight: 400, data: expect.any(Buffer) },
+      { name: 'title', weight: 400, data: expect.any(Buffer) },
       { name: 'title', weight: 700, data: expect.any(Buffer) },
+      { name: 'title', weight: 700, data: expect.any(Buffer) },
+      { name: 'label', weight: 500, data: expect.any(Buffer) },
       { name: 'label', weight: 500, data: expect.any(Buffer) },
     ]
 
@@ -19,6 +22,8 @@ describe('loadFonts', () => {
     const value = { label: 'inter' }
     const expected: Array<Font> = [
       { name: 'title', weight: 400, data: expect.any(Buffer) },
+      { name: 'title', weight: 400, data: expect.any(Buffer) },
+      { name: 'label', weight: 400, data: expect.any(Buffer) },
       { name: 'label', weight: 400, data: expect.any(Buffer) },
     ]
 
