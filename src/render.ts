@@ -3,7 +3,7 @@ import satori from 'satori'
 import { isString } from 'trousse'
 import { layouts } from './layouts/index.js'
 import { darkTheme } from './themes/dark.js'
-import type { Background, Card, Layout, LayoutContext, RenderOptions } from './types/index.js'
+import type { Card, Layout, LayoutContext, RenderOptions } from './types/index.js'
 import { loadFonts } from './utils/fonts.js'
 import { loadIcon, loadImage } from './utils/icons.js'
 
@@ -33,18 +33,10 @@ const resolveLayout = (layout: RenderOptions['layout'] = 'docs'): Layout => {
   return isString(layout) ? layouts[layout] : layout
 }
 
-const resolveBackground = (background: RenderOptions['background']): Background | undefined => {
-  if (background === undefined) {
-    return { pattern: 'dots' }
-  }
-
-  return background ?? undefined
-}
-
 export const renderSvg = async (card: Card, options: RenderOptions = {}): Promise<string> => {
   const layout = resolveLayout(options.layout)
   const sizes: LayoutContext['sizes'] = { ...layout.sizes, ...options.sizes }
-  const background = resolveBackground(options.background)
+  const { background } = options
   const { fonts, families } = await loadFonts(options.fonts, layout.weights)
   const context: LayoutContext = {
     card: normalizeCard(card),

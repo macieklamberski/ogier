@@ -9,5 +9,5 @@ export type RenderOptions = {
   fonts?: Fonts
   logo?: IconRef
   footerIcon?: IconRef
-  background?: Background | null
+  background?: Background
 }
