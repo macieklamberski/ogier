@@ -1,6 +1,7 @@
 import { Resvg } from '@resvg/resvg-js'
 import satori from 'satori'
-import { docsLayout } from './layouts/docs.js'
+import { isString } from 'trousse'
+import { layouts } from './layouts/index.js'
 import { darkTheme } from './themes/dark.js'
 import type { Background, Card, Layout, LayoutContext, RenderOptions } from './types/index.js'
 import { loadFonts } from './utils/fonts.js'
@@ -28,12 +29,8 @@ const normalizeCard = (card: Card): Card => {
   return normalized
 }
 
-const resolveLayout = (layout: RenderOptions['layout']): Layout => {
-  if (layout === undefined || layout === 'docs') {
-    return docsLayout
-  }
-
-  return layout
+const resolveLayout = (layout: RenderOptions['layout'] = 'docs'): Layout => {
+  return isString(layout) ? layouts[layout] : layout
 }
 
 const resolveBackground = (background: RenderOptions['background']): Background | undefined => {
