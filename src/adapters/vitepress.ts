@@ -16,6 +16,8 @@ export type VitepressOptions = Omit<RenderOptions, 'footerIcon'> & {
   hostname: string
   name: string
   footer?: { icon?: IconRef; text?: string }
+  imageDir?: string
+  imageUrl?: (path: string) => string
   card?: (pageData: PageData, siteData: SiteData<DefaultTheme.Config>) => Partial<Card>
 }
 
@@ -57,7 +59,15 @@ const getEyebrow = (sidebar: DefaultTheme.Sidebar | undefined, path: string) => 
 }
 
 export const vitepress = (options: VitepressOptions) => {
-  const { hostname, name, footer, card: getCardOverrides, ...renderOptions } = options
+  const {
+    hostname,
+    name,
+    footer,
+    imageDir = 'og',
+    imageUrl,
+    card: getCardOverrides,
+    ...renderOptions
+  } = options
   const pages: Array<Page> = []
 
   const transformHead = (context: TransformContext<DefaultTheme.Config>): Array<HeadConfig> => {
@@ -74,7 +84,7 @@ export const vitepress = (options: VitepressOptions) => {
           footer: footer?.text,
         }
     const card: Card = { ...defaults, ...getCardOverrides?.(pageData, siteData) }
-    const image = getImageUrl(hostname, path)
+    const image = imageUrl ? imageUrl(path) : getImageUrl(hostname, path, imageDir)
 
     pages.push({ path, card })
 
@@ -93,7 +103,7 @@ export const vitepress = (options: VitepressOptions) => {
   }
 
   const buildEnd = async ({ outDir }: SiteConfig) => {
-    const dir = join(outDir, 'og')
+    const dir = join(outDir, imageDir)
 
     await mkdir(dir, { recursive: true })
 

@@ -56,6 +56,17 @@ describe('vitepress', () => {
     expect(vitepress(options).transformHead(value)).toEqual(expected)
   })
 
+  it('should take the image url from the callback when given', () => {
+    const value = getContext('index.md', 'Home')
+    const imageUrl = (path: string) => `https://cdn.example.com/${path}.png`
+    const expected: HeadConfig = [
+      'meta',
+      { property: 'og:image', content: 'https://cdn.example.com/index.png' },
+    ]
+
+    expect(vitepress({ ...options, imageUrl }).transformHead(value)).toContainEqual(expected)
+  })
+
   it('should write one png per page under the image dir', async () => {
     const outDir = await mkdtemp(join(tmpdir(), 'ogier-'))
     const card = (pageData: PageData) => ({
