@@ -19,7 +19,7 @@ export type MetadataInput = {
   url: string
   title: string
   description?: string
-  image: string | Partial<MetadataImage>
+  image: string | (Partial<MetadataImage> & { url: string })
 }
 
 export type MetaTag = ['meta', Record<string, string>]

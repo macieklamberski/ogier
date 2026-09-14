@@ -18,7 +18,7 @@ export const getMetadata = (input: MetadataInput): Metadata => {
     title: input.title,
     description: input.description,
     image: {
-      url: image.url ?? '',
+      url: image.url,
       width: image.width ?? docsSizes.cardWidth,
       height: image.height ?? docsSizes.cardHeight,
       alt: image.alt ?? input.title,
