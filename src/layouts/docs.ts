@@ -207,7 +207,20 @@ const renderDots = (context: DocsContext): Node => {
 }
 
 const renderBackground = (context: DocsContext): Node | undefined => {
-  const { background } = context
+  const { background, backgroundImage, sizes } = context
+
+  if (backgroundImage && 'src' in backgroundImage) {
+    const style = {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: sizes.cardWidth,
+      height: sizes.cardHeight,
+      objectFit: 'cover',
+    }
+
+    return { type: 'img', props: { src: backgroundImage.src, style } }
+  }
 
   if (background && 'pattern' in background) {
     return renderDots(context)

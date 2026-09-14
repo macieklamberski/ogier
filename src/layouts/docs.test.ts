@@ -122,6 +122,22 @@ describe('docsLayout', () => {
     expect(findByText(docsLayout.render(value), description)).toMatchObject(expected)
   })
 
+  it('should render a background image instead of the dots', () => {
+    const value: LayoutContext = {
+      ...baseContext,
+      background: { image: { svg: '' } },
+      backgroundImage: { src: 'data:image/png;base64,AAAA' },
+    }
+    const nodes = collectNodes(docsLayout.render(value))
+    const expected = {
+      type: 'img',
+      props: { src: 'data:image/png;base64,AAAA', style: { objectFit: 'cover' } },
+    }
+
+    expect(nodes.find((node) => node.type === 'img')).toMatchObject(expected)
+    expect(nodes.filter((node) => node.type === 'circle')).toEqual([])
+  })
+
   it('should apply size overrides over the defaults', () => {
     const value: LayoutContext = {
       ...baseContext,

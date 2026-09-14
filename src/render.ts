@@ -4,7 +4,7 @@ import { docsLayout } from './layouts/docs.js'
 import { darkTheme } from './themes/dark.js'
 import type { Background, Card, Layout, LayoutContext, RenderOptions } from './types/index.js'
 import { loadFonts } from './utils/fonts.js'
-import { loadIcon } from './utils/icons.js'
+import { loadIcon, loadImage } from './utils/icons.js'
 
 const resolveLayout = (layout: RenderOptions['layout']): Layout => {
   if (layout === undefined || layout === 'docs') {
@@ -25,6 +25,7 @@ const resolveBackground = (background: RenderOptions['background']): Background 
 export const renderSvg = async (card: Card, options: RenderOptions = {}): Promise<string> => {
   const layout = resolveLayout(options.layout)
   const sizes: LayoutContext['sizes'] = { ...layout.sizes, ...options.sizes }
+  const background = resolveBackground(options.background)
   const fonts = await loadFonts(options.fonts, layout.weights)
   const context: LayoutContext = {
     card,
@@ -32,7 +33,9 @@ export const renderSvg = async (card: Card, options: RenderOptions = {}): Promis
     sizes,
     logo: options.logo ? await loadIcon(options.logo) : undefined,
     footerIcon: options.footerIcon ? await loadIcon(options.footerIcon) : undefined,
-    background: resolveBackground(options.background),
+    background,
+    backgroundImage:
+      background && 'image' in background ? await loadImage(background.image) : undefined,
   }
 
   return satori(layout.render(context), {
