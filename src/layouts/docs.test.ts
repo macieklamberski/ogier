@@ -34,6 +34,7 @@ describe('docsLayout', () => {
     card: { name: 'feedsmith', title: 'Parsing namespaces' },
     theme: darkTheme,
     sizes: docsSizes,
+    fonts: { title: 'title-latin', label: 'label-latin' },
     background: { pattern: 'dots' },
   }
 
@@ -51,10 +52,10 @@ describe('docsLayout', () => {
     }
     const nodes = collectNodes(docsLayout.render(value))
     const expectedEyebrow = {
-      props: { style: { fontFamily: 'label', fontSize: 26, color: '#ff8c4d' } },
+      props: { style: { fontFamily: 'label-latin', fontSize: 26, color: '#ff8c4d' } },
     }
     const expectedTitle = {
-      props: { style: { fontFamily: 'title', fontSize: 72, fontWeight: 700, lineClamp: 3 } },
+      props: { style: { fontFamily: 'title-latin', fontSize: 72, fontWeight: 700, lineClamp: 3 } },
     }
     const expectedLogo = {
       type: 'img',

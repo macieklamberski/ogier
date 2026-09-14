@@ -26,11 +26,12 @@ export const renderSvg = async (card: Card, options: RenderOptions = {}): Promis
   const layout = resolveLayout(options.layout)
   const sizes: LayoutContext['sizes'] = { ...layout.sizes, ...options.sizes }
   const background = resolveBackground(options.background)
-  const fonts = await loadFonts(options.fonts, layout.weights)
+  const { fonts, families } = await loadFonts(options.fonts, layout.weights)
   const context: LayoutContext = {
     card,
     theme: options.theme ?? darkTheme,
     sizes,
+    fonts: families,
     logo: options.logo ? await loadIcon(options.logo) : undefined,
     footerIcon: options.footerIcon ? await loadIcon(options.footerIcon) : undefined,
     background,

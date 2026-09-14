@@ -11,6 +11,7 @@ export type LayoutContext = {
   card: Card
   theme: Theme
   sizes: Sizes & SizeOverrides
+  fonts: Record<FontRole, string>
   logo?: Icon
   footerIcon?: Icon
   background?: Background

@@ -74,17 +74,17 @@ const renderIcon = (icon: Icon, size: number): Node => {
 }
 
 const renderLogo = (context: DocsContext): Node => {
-  const { card, logo, sizes } = context
+  const { card, fonts, logo, sizes } = context
 
   return h('div', { display: 'flex', alignItems: 'center', gap: 20 }, [
     logo ? renderIcon(logo, sizes.logoTile) : undefined,
-    h('div', { fontFamily: 'label', fontSize: sizes.logoText }, card.name),
+    h('div', { fontFamily: fonts.label, fontSize: sizes.logoText }, card.name),
   ])
 }
 
 const renderEyebrow = (context: DocsContext, eyebrow: string): Node => {
   const style = {
-    fontFamily: 'label',
+    fontFamily: context.fonts.label,
     fontSize: context.sizes.eyebrowText,
     color: context.theme.accent,
     textTransform: 'uppercase',
@@ -119,11 +119,11 @@ const getTitleClamp = (context: DocsContext): number | undefined => {
 }
 
 const renderTitle = (context: DocsContext, text: string): Node => {
-  const { sizes } = context
+  const { fonts, sizes } = context
   const clamp = getTitleClamp(context)
   const isLong = text.length > sizes.titleLongestLength
   const style = {
-    fontFamily: 'title',
+    fontFamily: fonts.title,
     fontSize: getTitleSize(sizes, text),
     fontWeight: isLong ? 400 : 700,
     lineHeight: 1.15,
@@ -137,7 +137,7 @@ const renderTitle = (context: DocsContext, text: string): Node => {
 
 const renderDescription = (context: DocsContext, text: string): Node => {
   const style = {
-    fontFamily: 'title',
+    fontFamily: context.fonts.title,
     fontSize: context.sizes.descriptionText,
     lineHeight: 1.35,
     color: context.theme.textMuted,
@@ -170,11 +170,11 @@ const renderHeadline = (context: DocsContext): Node => {
 }
 
 const renderFooter = (context: DocsContext, text: string): Node => {
-  const { footerIcon, sizes, theme } = context
+  const { fonts, footerIcon, sizes, theme } = context
 
   return h('div', { display: 'flex', alignItems: 'center', gap: 14, color: theme.textMuted }, [
     footerIcon ? renderIcon(footerIcon, sizes.footerIcon) : undefined,
-    h('div', { fontFamily: 'label', fontSize: sizes.footerText }, text),
+    h('div', { fontFamily: fonts.label, fontSize: sizes.footerText }, text),
   ])
 }
 
