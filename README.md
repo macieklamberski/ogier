@@ -158,3 +158,22 @@ Each page gets the tags from `transformHead` and a PNG under `og/` from `buildEn
 | `site` | `hostname`, plus `imageDir` for the folder under the output dir and in the image URL, default `og`, and `imageUrl`, a function from the page path to the image URL, default `getImageUrl`. `favicon` takes an SVG as `{ file }` or `{ svg }` and writes it as `favicon.png` at the output root, 192 px square unless `size` says otherwise, with an icon link on every page. Search engines take PNG favicons and not SVG ones. |
 | `card` | The fields every card shares, merged over the page defaults. A function of the page data and site data gives per-page values. |
 | `style` | The style passed to every render. |
+
+### Next
+
+```typescript
+// app/blog/[slug]/opengraph-image.tsx
+import { next } from 'ogier/adapters'
+import { getPost } from '../../../lib/posts'
+
+const image = next({ background: { pattern: 'dots' } }, async ({ slug }) => {
+  const post = await getPost(String(slug))
+
+  return { header: { text: 'feedstand', aside: post.date }, title: post.title }
+})
+
+export default image.default
+export const { size, contentType } = image
+```
+
+The file's default export takes the route params, resolves the card and responds with the PNG. `size` and `contentType` feed the `og:image` width, height and type. A `twitter-image.tsx` beside it re-exports the same three names. Every card in the file renders through one renderer, so the fonts are read once.
