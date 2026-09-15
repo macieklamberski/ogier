@@ -36,7 +36,7 @@ Each card below is rendered from a preset in [examples](examples). Click a card 
 
 | | |
 |---|---|
-| [![Docs page on a dark theme with the dot rail](examples/output/docs-dark.png)](examples/presets/docs-dark.ts) | [![Book club card in Young Serif and IBM Plex Mono on red with a painting on the right](examples/output/bookclub.png)](examples/presets/bookclub.ts) |
+| [![Docs page on a dark theme with the dot rail](examples/output/docs.png)](examples/presets/docs.ts) | [![Book club card in Young Serif and IBM Plex Mono on red with a painting on the right](examples/output/bookclub.png)](examples/presets/bookclub.ts) |
 | [![Essay in DM Serif Display and Inter with a still life on the left and right-aligned text](examples/output/editorial.png)](examples/presets/editorial.ts) | [![Blog post in Gloock and DM Sans with the headline at the bottom and an accent bar](examples/output/post.png)](examples/presets/post.ts) |
 | [![Wordmark card in JetBrains Mono](examples/output/wordmark.png)](examples/presets/wordmark.ts) | [![Research post in Epunda Slab with yellow text over a full-bleed aerial photo of a river](examples/output/cover.png)](examples/presets/cover.ts) |
 | [![Changelog card in Space Mono and Space Grotesk on blue with the dot rail](examples/output/launch.png)](examples/presets/launch.ts) | [![Personal card with an icon and a name and role in Commit Mono](examples/output/personal.png)](examples/presets/personal.ts) |

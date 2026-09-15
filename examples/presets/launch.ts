@@ -2,11 +2,19 @@ import type { Card, Style } from '../../src/index.js'
 import { dark } from '../../src/themes/index.js'
 
 export const card: Card = {
-  header: { text: 'Loopwise', icon: { file: '@tabler/icons/outline/send-2.svg' }, aside: 'v3.0' },
+  header: {
+    text: 'Loopwise',
+    icon: {
+      file: '@tabler/icons/outline/send-2.svg',
+    },
+    aside: 'v3.0',
+  },
   eyebrow: 'Changelog',
   title: 'Scheduled sends are finally here',
   description: 'Write it tonight and let it land in the morning.',
-  footer: { text: 'loopwise.example' },
+  footer: {
+    text: 'loopwise.example',
+  },
 }
 
 export const style: Style = {
@@ -18,7 +26,17 @@ export const style: Style = {
     accent: '#ffffff',
     pattern: '#8f7dff',
   },
-  fonts: { title: 'space-mono', body: 'space-grotesk', label: 'space-grotesk' },
-  sizes: { titleText: 64, titleWeight: 700, titleTracking: '-0.06em' },
-  background: { pattern: 'dots' },
+  fonts: {
+    title: 'space-mono',
+    body: 'space-grotesk',
+    label: 'space-grotesk',
+  },
+  sizes: {
+    titleText: 64,
+    titleWeight: 700,
+    titleTracking: '-0.06em',
+  },
+  background: {
+    pattern: 'dots',
+  },
 }

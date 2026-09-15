@@ -3,10 +3,16 @@ import { dark } from '../../src/themes/index.js'
 
 // See: https://unsplash.com/photos/a-black-and-white-photo-of-an-aerial-view-of-a-river-faHQlMrKx8U.
 export const card: Card = {
-  header: { text: 'Halden Lab', aside: 'Research' },
+  header: {
+    text: 'Halden Lab',
+    aside: 'Research',
+  },
   title: 'Measuring turbulence in thin films of paint',
   byline: 'Fluid Dynamics Team',
-  footer: { text: 'halden.example', aside: 'March 12, 2026' },
+  footer: {
+    text: 'halden.example',
+    aside: 'March 12, 2026',
+  },
 }
 
 export const style: Style = {
@@ -18,7 +24,11 @@ export const style: Style = {
     aside: '#ffd84a',
     accent: '#6ea8ff',
   },
-  fonts: { title: 'epunda-slab', body: 'epunda-slab', label: 'geist-mono' },
+  fonts: {
+    title: 'epunda-slab',
+    body: 'epunda-slab',
+    label: 'geist-mono',
+  },
   sizes: {
     titleWeight: 700,
     titleTracking: '-0.02em',
@@ -27,5 +37,9 @@ export const style: Style = {
     footerTracking: '-0.03em',
     asideTracking: '-0.03em',
   },
-  background: { image: { file: new URL('../assets/river.jpg', import.meta.url) } },
+  background: {
+    image: {
+      file: new URL('../assets/river.jpg', import.meta.url),
+    },
+  },
 }
