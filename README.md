@@ -4,7 +4,7 @@
 [![npm version](https://img.shields.io/npm/v/ogier.svg)](https://www.npmjs.com/package/ogier)
 [![license](https://img.shields.io/npm/l/ogier.svg)](https://github.com/macieklamberski/ogier/blob/main/LICENSE)
 
-Generate Open Graph images and meta tags for any page. Titles, sections and branding in, a themed PNG and a tag list out.
+Easily generate Open Graph images with predefined layouts and themes, fonts and icons on demand, and adapters that plug into your site framework.
 
 A share card is rendered from a plain card object through a layout, a theme and a size table. Satori turns the layout into SVG and resvg turns that into a 1200 by 630 PNG. Fonts come from fontsource packages, icons from Tabler or your own SVG files. A VitePress adapter renders one card per page at build time and emits the tags that point at it.
 
