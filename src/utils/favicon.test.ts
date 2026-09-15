@@ -1,4 +1,8 @@
 import { describe, expect, it } from 'bun:test'
+import { mkdtemp, writeFile } from 'node:fs/promises'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
+import locales from '../locales.json' with { type: 'json' }
 import { renderFavicon } from './favicon.js'
 
 const pngSignature = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10])
@@ -21,5 +25,13 @@ describe('renderFavicon', () => {
 
   it('should reject markup that is not svg', async () => {
     await expect(renderFavicon({ svg: 'not svg' })).rejects.toThrow()
+  })
+
+  it('should reject a raster file', async () => {
+    const file = join(await mkdtemp(join(tmpdir(), 'ogier-')), 'icon.png')
+
+    await writeFile(file, Buffer.from([137, 80, 78, 71]))
+
+    await expect(renderFavicon({ file })).rejects.toThrow(locales.errors.faviconNeedsSvg)
   })
 })
