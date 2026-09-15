@@ -1,5 +1,6 @@
 import { mkdir, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
+import { isFunction } from 'trousse'
 import type {
   DefaultTheme,
   HeadConfig,
@@ -10,15 +11,18 @@ import type {
 } from 'vitepress'
 import { getImageUrl, getMetadata, toMetaTags } from '../metadata.js'
 import { renderPng } from '../render.js'
-import type { Card, IconRef, RenderOptions } from '../types/index.js'
+import type { Card, Style } from '../types/index.js'
 
-export type VitepressOptions = Omit<RenderOptions, 'footerIcon'> & {
-  hostname: string
-  name: string
-  footer?: { icon?: IconRef; text?: string }
-  imageDir?: string
-  imageUrl?: (path: string) => string
-  card?: (pageData: PageData, siteData: SiteData<DefaultTheme.Config>) => Partial<Card>
+export type VitepressSiteData = SiteData<DefaultTheme.Config>
+
+export type VitepressOptions = {
+  site: {
+    hostname: string
+    imageDir?: string
+    imageUrl?: (path: string) => string
+  }
+  card?: Partial<Card> | ((pageData: PageData, siteData: VitepressSiteData) => Partial<Card>)
+  style?: Style
 }
 
 type Page = {
@@ -59,31 +63,23 @@ const getEyebrow = (sidebar: DefaultTheme.Sidebar | undefined, path: string) => 
 }
 
 export const vitepress = (options: VitepressOptions) => {
-  const {
-    hostname,
-    name,
-    footer,
-    imageDir = 'og',
-    imageUrl,
-    card: getCardOverrides,
-    ...renderOptions
-  } = options
+  const { site, card: cardOption, style = {} } = options
+  const { hostname, imageDir = 'og', imageUrl } = site
   const pages: Array<Page> = []
 
   const transformHead = (context: TransformContext<DefaultTheme.Config>): Array<HeadConfig> => {
     const { pageData, siteData, description } = context
     const path = pageData.relativePath.replace(mdRegex, '')
     const isHome = path === 'index'
-    const title = pageData.title || name
+    const title = pageData.title || siteData.title
     const defaults: Card = isHome
-      ? { name, description: siteData.description, footer: footer?.text }
+      ? { description: siteData.description }
       : {
-          name,
           eyebrow: getEyebrow(siteData.themeConfig.sidebar, path),
           title: title.replace(titlePrefixRegex, ''),
-          footer: footer?.text,
         }
-    const card: Card = { ...defaults, ...getCardOverrides?.(pageData, siteData) }
+    const overrides = isFunction(cardOption) ? cardOption(pageData, siteData) : cardOption
+    const card: Card = { ...defaults, ...overrides }
     const image = imageUrl ? imageUrl(path) : getImageUrl(hostname, path, imageDir)
 
     pages.push({ path, card })
@@ -92,11 +88,7 @@ export const vitepress = (options: VitepressOptions) => {
       url: `${hostname}/${path.replace(indexRegex, '')}`,
       title,
       description,
-      image: {
-        url: image,
-        width: renderOptions.sizes?.cardWidth,
-        height: renderOptions.sizes?.cardHeight,
-      },
+      image: { url: image, width: style.sizes?.cardWidth, height: style.sizes?.cardHeight },
     })
 
     return toMetaTags(metadata)
@@ -108,7 +100,7 @@ export const vitepress = (options: VitepressOptions) => {
     await mkdir(dir, { recursive: true })
 
     for (const page of pages) {
-      const png = await renderPng(page.card, { ...renderOptions, footerIcon: footer?.icon })
+      const png = await renderPng(page.card, style)
 
       await writeFile(join(dir, `${page.path.replace(slashRegex, '-')}.png`), png)
     }

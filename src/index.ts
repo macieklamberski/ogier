@@ -20,8 +20,9 @@ export type {
   MetadataInput,
   MetaTag,
   Node,
-  RenderOptions,
   SizeOverrides,
   Sizes,
+  Slot,
+  Style,
   Theme,
 } from './types/index.js'

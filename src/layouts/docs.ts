@@ -2,8 +2,8 @@ import type { Icon, Layout, LayoutContext, Node, Sizes } from '../types/index.js
 
 export type DocsSizes = Sizes & {
   cardPadding: string
-  logoTile: number
-  logoText: number
+  headerIcon: number
+  headerText: number
   eyebrowText: number
   titleText: number
   titleTextLong: number
@@ -29,8 +29,8 @@ export const docsSizes: DocsSizes = {
   cardWidth: 1200,
   cardHeight: 630,
   cardPadding: '56px 400px 56px 64px',
-  logoTile: 56,
-  logoText: 44,
+  headerIcon: 56,
+  headerText: 44,
   eyebrowText: 26,
   titleText: 72,
   titleTextLong: 56,
@@ -64,7 +64,7 @@ const renderIcon = (icon: Icon, size: number): Node => {
       height: size,
       viewBox: '0 0 24 24',
       fill: 'none',
-      stroke: 'currentColor',
+      stroke: icon.color ?? 'currentColor',
       strokeWidth: 2,
       strokeLinecap: 'round',
       strokeLinejoin: 'round',
@@ -73,12 +73,12 @@ const renderIcon = (icon: Icon, size: number): Node => {
   }
 }
 
-const renderLogo = (context: DocsContext): Node => {
-  const { card, fonts, logo, sizes } = context
+const renderHeader = (context: DocsContext, text: string): Node => {
+  const { fonts, headerIcon, sizes } = context
 
   return h('div', { display: 'flex', alignItems: 'center', gap: 20 }, [
-    logo ? renderIcon(logo, sizes.logoTile) : undefined,
-    h('div', { fontFamily: fonts.label, fontSize: sizes.logoText }, card.name),
+    headerIcon ? renderIcon(headerIcon, sizes.headerIcon) : undefined,
+    h('div', { fontFamily: fonts.label, fontSize: sizes.headerText }, text),
   ])
 }
 
@@ -254,9 +254,9 @@ export const docsLayout: Layout = {
     return h('div', cardStyle, [
       renderBackground(context),
       h('div', bodyStyle, [
-        renderLogo(context),
+        card.header ? renderHeader(context, card.header.text) : undefined,
         renderHeadline(context),
-        card.footer ? renderFooter(context, card.footer) : undefined,
+        card.footer ? renderFooter(context, card.footer.text) : undefined,
       ]),
     ])
   },

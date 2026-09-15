@@ -1,9 +1,18 @@
+export type ImageRef = { file: string | URL } | { svg: string | Uint8Array }
+
+export type IconRef = string | ((ImageRef | { name: string }) & { color?: string })
+
+export type Slot = {
+  text: string
+  icon?: IconRef
+}
+
 export type Card = {
-  name: string
+  header?: Slot
   eyebrow?: string
   title?: string
   description?: string
-  footer?: string
+  footer?: Slot
 }
 
 export type Theme = {
@@ -24,9 +33,5 @@ export type SizeOverrides = Partial<Sizes> & Record<string, number | string | un
 export type FontRole = 'title' | 'label'
 
 export type Fonts = Partial<Record<FontRole, string>>
-
-export type ImageRef = { file: string | URL } | { svg: string | Uint8Array }
-
-export type IconRef = string | ImageRef
 
 export type Background = { pattern: 'dots' } | { image: ImageRef }

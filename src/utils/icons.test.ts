@@ -17,6 +17,25 @@ describe('loadIcon', () => {
     expect(await loadIcon(value)).toEqual(expected)
   })
 
+  it('should color a Tabler icon given by name', async () => {
+    const value = { name: 'brand-github', color: '#ffffff' }
+    const expected: Icon = {
+      children: [{ type: 'path', props: { d: expect.any(String) } }],
+      color: '#ffffff',
+    }
+
+    expect(await loadIcon(value)).toEqual(expected)
+  })
+
+  it('should replace currentColor in markup with the given color', async () => {
+    const value = { svg: '<svg><path fill="currentColor" /></svg>', color: '#ff8c4d' }
+    const expected: Icon = {
+      src: `data:image/svg+xml;base64,${Buffer.from('<svg><path fill="#ff8c4d" /></svg>').toString('base64')}`,
+    }
+
+    expect(await loadIcon(value)).toEqual(expected)
+  })
+
   it('should embed inline markup as a data URI', async () => {
     const svg =
       '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle r="12" /></svg>'
