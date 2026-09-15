@@ -1,5 +1,5 @@
 export { composeMetadata, composeMetaTags, getImageUrl } from './metadata.js'
-export { renderPng, renderSvg } from './render.js'
+export { createRenderer, renderPng, renderSvg } from './render.js'
 export type {
   Background,
   Card,

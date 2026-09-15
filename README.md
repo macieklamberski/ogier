@@ -88,6 +88,22 @@ await renderPng(card, {
 })
 ```
 
+### `createRenderer(style?)`
+
+Render many cards with one style. The fonts are read from disk on the first render and shared by every render after it, so a server renders a card per request and a build renders a card per page without reading the font files each time. Icons and images are read per render.
+
+```typescript
+import { createRenderer } from 'ogier'
+
+const renderer = createRenderer({ theme: light, background: { pattern: 'dots' } })
+
+for (const page of pages) {
+  await writeFile(`og/${page.slug}.png`, await renderer.renderPng(page.card))
+}
+```
+
+`renderPng(card, style?)` and `renderSvg(card, style?)` are one render through a fresh renderer. The VitePress adapter renders every page through one.
+
 ### `composeMetadata(input)` and `composeMetaTags(metadata)`
 
 `composeMetadata` builds the Open Graph values for one page. `composeMetaTags` turns them into `['meta', attributes]` pairs, with the title, description and image mirrored into the Twitter tags.
