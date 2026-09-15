@@ -92,25 +92,9 @@ const tags = toMetaTags(metadata)
 
 `getImageUrl(hostname, path, dir?)` is the default image scheme: the page path with slashes turned into dashes, as a PNG under `og/`.
 
-### Custom layouts
+## Adapters
 
-A layout is an object with the font weights it needs per role, its default sizes and a render function that returns a satori element tree. The context carries the card, the theme, the merged sizes, the font family per role and the loaded header icon, footer icon and background.
-
-```typescript
-import { docsLayout, renderPng } from 'ogier'
-import type { Layout } from 'ogier'
-
-const layout: Layout = {
-  ...docsLayout,
-  render: (context) => {
-    return docsLayout.render({ ...context, card: { ...context.card, eyebrow: undefined } })
-  },
-}
-
-await renderPng(card, { layout })
-```
-
-## VitePress
+### VitePress
 
 ```typescript
 // docs/.vitepress/config.ts
