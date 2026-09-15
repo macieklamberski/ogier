@@ -5,7 +5,7 @@ export type Node = {
   props: Record<string, unknown>
 }
 
-export type Icon = { children: Array<Node>; color?: string } | { src: string }
+export type Icon = { svg: string } | { src: string }
 
 export type LayoutContext = {
   card: Card

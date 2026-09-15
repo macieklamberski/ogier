@@ -1,6 +1,6 @@
 export type ImageRef = { file: string | URL } | { svg: string | Uint8Array }
 
-export type IconRef = string | ((ImageRef | { name: string }) & { color?: string })
+export type IconRef = ImageRef & { color?: string }
 
 export type Slot = {
   text: string

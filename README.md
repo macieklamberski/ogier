@@ -6,15 +6,13 @@
 
 Generate Open Graph images and meta tags for any page. Titles, sections and branding in, a themed PNG and a tag list out.
 
-A share card is rendered from a plain card object through a layout, a theme and a size table. Satori turns the layout into SVG and resvg turns that into a 1200 by 630 PNG. Fonts come from fontsource packages, icons from Tabler or your own SVG files. A VitePress adapter renders one card per page at build time and emits the tags that point at it.
+A share card is rendered from a plain card object through a layout, a theme and a size table. Satori turns the layout into SVG and resvg turns that into a 1200 by 630 PNG. Fonts come from fontsource packages, icons from any SVG file, your own or one shipped by an icon package. A VitePress adapter renders one card per page at build time and emits the tags that point at it.
 
 ## Installation
 
 ```bash
 npm install ogier
 ```
-
-Tabler icons are optional. Install `@tabler/icons` to use an icon by name.
 
 ## Quick Start
 
@@ -26,7 +24,7 @@ const png = await renderPng({
   header: { text: 'feedsmith', icon: { file: './public/favicon.svg' } },
   eyebrow: 'Guides › Parsing',
   title: 'Parsing namespaces',
-  footer: { text: 'macieklamberski/feedsmith', icon: 'brand-github' },
+  footer: { text: 'macieklamberski/feedsmith', icon: { file: '@tabler/icons/outline/brand-github.svg' } },
 })
 
 await writeFile('og/guides-parsing.png', png)
@@ -50,7 +48,7 @@ type Card = {
 }
 ```
 
-An icon is a Tabler name such as `'brand-github'`, `{ name }` with a `color`, `{ file }` with a path or file URL, or `{ svg }` with the markup as a string or bytes. Tabler icons render inline and take the surrounding text color unless given one. Files and markup embed as images; a `color` replaces `currentColor` in SVG content and leaves baked colors alone.
+An icon is `{ file }` with a path, a file URL or a package path such as `'@tabler/icons/outline/brand-github.svg'` or `'lucide-static/icons/rss.svg'`, or `{ svg }` with the markup as a string or bytes. A package path resolves from your node_modules, so any icon package that ships SVG files works once installed. `currentColor` in the SVG takes the color of the text beside it, or the icon's own `color` when given, and baked colors stay as they are.
 
 Style is how the card is drawn. Every field is optional.
 
@@ -106,7 +104,7 @@ const og = vitepress({
   site: { hostname: 'https://feedsmith.dev' },
   card: {
     header: { text: 'feedsmith', icon: { file: 'docs/public/favicon.svg' } },
-    footer: { text: 'macieklamberski/feedsmith', icon: 'brand-github' },
+    footer: { text: 'macieklamberski/feedsmith', icon: { file: '@tabler/icons/outline/brand-github.svg' } },
   },
   style: {
     theme: { ...darkTheme, accent: '#ff8c4d' },

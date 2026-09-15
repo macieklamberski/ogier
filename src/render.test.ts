@@ -7,7 +7,7 @@ const card: Card = {
   header: { text: 'feedsmith' },
   eyebrow: 'Guides',
   title: 'Parsing namespaces',
-  footer: { text: 'example/repo', icon: 'brand-github' },
+  footer: { text: 'example/repo', icon: { file: '@tabler/icons/outline/brand-github.svg' } },
 }
 
 describe('renderSvg', () => {
