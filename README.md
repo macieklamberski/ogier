@@ -32,7 +32,7 @@ await writeFile('og/guides-parsing.png', png)
 
 ## Examples
 
-Each card below is rendered from a preset in [examples/presets](examples/presets), with its photo from [examples/assets](examples/assets). Click a card to see its preset, and run `bun run examples` to render them again into [examples/output](examples/output). The examples are their own package, so their fonts and icons install inside [examples](examples) and stay out of ogier's dependencies.
+Each card below is rendered from a preset in [examples](examples). Click a card to see its source.
 
 | | |
 |---|---|
