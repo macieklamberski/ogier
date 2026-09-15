@@ -1,6 +1,6 @@
-import type { Card, Style } from '../../src/index.js'
-import { renderPng } from '../../src/index.js'
-import { dark } from '../../src/themes/index.js'
+import type { Card, Style } from 'ogier'
+import { renderPng } from 'ogier'
+import { dark } from 'ogier/themes'
 
 // See: https://unsplash.com/photos/a-black-and-white-photo-of-an-aerial-view-of-a-river-faHQlMrKx8U.
 const card: Card = {

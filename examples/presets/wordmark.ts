@@ -1,6 +1,6 @@
-import type { Card, Style } from '../../src/index.js'
-import { renderPng } from '../../src/index.js'
-import { dark } from '../../src/themes/index.js'
+import type { Card, Style } from 'ogier'
+import { renderPng } from 'ogier'
+import { dark } from 'ogier/themes'
 
 const card: Card = {
   header: {
