@@ -10,7 +10,7 @@ import type {
   TransformContext,
 } from 'vitepress'
 import { composeMetadata, composeMetaTags, getImageUrl } from '../metadata.js'
-import { renderPng } from '../render.js'
+import { createRenderer } from '../render.js'
 import type { Card, ImageRef, Style } from '../types/index.js'
 import { faviconSize, renderFavicon } from '../utils/favicon.js'
 
@@ -69,6 +69,7 @@ export const vitepress = (options: VitepressOptions) => {
   const { hostname, imageDir = 'og', imageUrl, favicon } = site
   const faviconFile = 'favicon.png'
   const pages: Array<Page> = []
+  const renderer = createRenderer(style)
 
   const transformHead = (context: TransformContext<DefaultTheme.Config>): Array<HeadConfig> => {
     const { pageData, siteData, description } = context
@@ -118,7 +119,7 @@ export const vitepress = (options: VitepressOptions) => {
     }
 
     for (const page of pages) {
-      const png = await renderPng(page.card, style)
+      const png = await renderer.renderPng(page.card)
 
       await writeFile(join(dir, `${page.path.replace(slashRegex, '-')}.png`), png)
     }
