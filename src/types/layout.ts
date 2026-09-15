@@ -5,14 +5,14 @@ export type Node = {
   props: Record<string, unknown>
 }
 
-export type Icon = { children: Array<Node> } | { src: string }
+export type Icon = { children: Array<Node>; color?: string } | { src: string }
 
 export type LayoutContext = {
   card: Card
   theme: Theme
   sizes: Sizes & SizeOverrides
   fonts: Record<FontRole, string>
-  logo?: Icon
+  headerIcon?: Icon
   footerIcon?: Icon
   background?: Background
   backgroundImage?: Icon

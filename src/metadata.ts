@@ -9,7 +9,7 @@ export const getImageUrl = (hostname: string, path: string, dir = 'og'): string 
   return `${hostname.replace(trailingSlashRegex, '')}/${dir}/${path.replace(slashRegex, '-')}.png`
 }
 
-export const getMetadata = (input: MetadataInput): Metadata => {
+export const composeMetadata = (input: MetadataInput): Metadata => {
   const image = isString(input.image) ? { url: input.image } : input.image
 
   return {
@@ -27,7 +27,7 @@ export const getMetadata = (input: MetadataInput): Metadata => {
   }
 }
 
-export const toMetaTags = (metadata: Metadata): Array<MetaTag> => {
+export const composeMetaTags = (metadata: Metadata): Array<MetaTag> => {
   const tags: Array<MetaTag> = [
     ['meta', { property: 'og:type', content: metadata.type }],
     ['meta', { property: 'og:url', content: metadata.url }],

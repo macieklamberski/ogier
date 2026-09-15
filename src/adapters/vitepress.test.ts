@@ -13,6 +13,7 @@ import type {
 import { vitepress } from './vitepress.js'
 
 const siteData = {
+  title: 'Feedsmith',
   description: 'Fast feed parser.',
   themeConfig: {
     sidebar: [{ text: 'Guides', items: [{ text: 'Parsing', link: '/guides/parsing' }] }],
@@ -31,9 +32,8 @@ const getContext = (relativePath: string, title: string) => {
 
 describe('vitepress', () => {
   const options = {
-    hostname: 'https://example.com',
-    name: 'feedsmith',
-    footer: { text: 'example/feedsmith' },
+    site: { hostname: 'https://example.com' },
+    card: { header: { text: 'feedsmith' }, footer: { text: 'example/feedsmith' } },
   }
 
   it('should emit the tags pointing at the page and its image', () => {
@@ -64,7 +64,9 @@ describe('vitepress', () => {
       { property: 'og:image', content: 'https://cdn.example.com/index.png' },
     ]
 
-    expect(vitepress({ ...options, imageUrl }).transformHead(value)).toContainEqual(expected)
+    const og = vitepress({ ...options, site: { ...options.site, imageUrl } })
+
+    expect(og.transformHead(value)).toContainEqual(expected)
   })
 
   it('should write one png per page under the image dir', async () => {

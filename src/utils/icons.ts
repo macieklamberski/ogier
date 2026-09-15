@@ -8,6 +8,7 @@ import type { Icon, IconRef, ImageRef, Node } from '../types/index.js'
 type TablerNodes = Record<string, Array<[string, Record<string, string>]>>
 
 const require = createRequire(import.meta.url)
+const currentColorRegex = /currentColor/g
 const mimeTypes: Record<string, string> = {
   '.svg': 'image/svg+xml',
   '.png': 'image/png',
@@ -22,7 +23,7 @@ const toDataUri = (data: string | Uint8Array, mimeType: string) => {
   return `data:${mimeType};base64,${Buffer.from(data).toString('base64')}`
 }
 
-const loadTablerIcon = async (name: string): Promise<Icon> => {
+const loadTablerIcon = async (name: string, color?: string): Promise<Icon> => {
   if (!tablerNodes) {
     let iconFile: string
 
@@ -46,17 +47,24 @@ const loadTablerIcon = async (name: string): Promise<Icon> => {
 
   const children: Array<Node> = nodes.map(([type, props]) => ({ type, props }))
 
-  return { children }
+  return { children, color }
 }
 
-export const loadImage = async (ref: ImageRef): Promise<Icon> => {
+export const loadImage = async (ref: ImageRef, color?: string): Promise<Icon> => {
   if ('svg' in ref) {
-    return { src: toDataUri(ref.svg, 'image/svg+xml') }
+    const svg = color ? ref.svg.toString().replace(currentColorRegex, color) : ref.svg
+
+    return { src: toDataUri(svg, 'image/svg+xml') }
   }
 
   const mimeType = mimeTypes[extname(ref.file.toString()).toLowerCase()] ?? 'image/svg+xml'
+  const data = await readFile(ref.file)
 
-  return { src: toDataUri(await readFile(ref.file), mimeType) }
+  if (color && mimeType === 'image/svg+xml') {
+    return { src: toDataUri(data.toString().replace(currentColorRegex, color), mimeType) }
+  }
+
+  return { src: toDataUri(data, mimeType) }
 }
 
 export const loadIcon = (ref: IconRef): Promise<Icon> => {
@@ -64,5 +72,9 @@ export const loadIcon = (ref: IconRef): Promise<Icon> => {
     return loadTablerIcon(ref)
   }
 
-  return loadImage(ref)
+  if ('name' in ref) {
+    return loadTablerIcon(ref.name, ref.color)
+  }
+
+  return loadImage(ref, ref.color)
 }

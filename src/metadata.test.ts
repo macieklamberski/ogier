@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { getImageUrl, getMetadata, toMetaTags } from './metadata.js'
+import { composeMetadata, composeMetaTags, getImageUrl } from './metadata.js'
 import type { Metadata, MetaTag } from './types/index.js'
 
 describe('getImageUrl', () => {
@@ -18,7 +18,7 @@ describe('getImageUrl', () => {
   })
 })
 
-describe('getMetadata', () => {
+describe('composeMetadata', () => {
   it('should keep every field with all properties', () => {
     const value = {
       type: 'article',
@@ -46,7 +46,7 @@ describe('getMetadata', () => {
       twitterCard: 'summary_large_image',
     }
 
-    expect(getMetadata(value)).toEqual(expected)
+    expect(composeMetadata(value)).toEqual(expected)
   })
 
   it('should fill the defaults with minimal properties', () => {
@@ -68,11 +68,11 @@ describe('getMetadata', () => {
       twitterCard: 'summary_large_image',
     }
 
-    expect(getMetadata(value)).toEqual(expected)
+    expect(composeMetadata(value)).toEqual(expected)
   })
 })
 
-describe('toMetaTags', () => {
+describe('composeMetaTags', () => {
   const value: Metadata = {
     type: 'website',
     url: 'https://example.com/guides/parsing',
@@ -103,7 +103,7 @@ describe('toMetaTags', () => {
       ['meta', { name: 'twitter:image', content: 'https://example.com/og/guides-parsing.png' }],
     ]
 
-    expect(toMetaTags(value)).toEqual(expected)
+    expect(composeMetaTags(value)).toEqual(expected)
   })
 
   it('should skip the description tags when there is no description', () => {
@@ -120,6 +120,6 @@ describe('toMetaTags', () => {
       ['meta', { name: 'twitter:image', content: 'https://example.com/og/guides-parsing.png' }],
     ]
 
-    expect(toMetaTags({ ...value, description: undefined })).toEqual(expected)
+    expect(composeMetaTags({ ...value, description: undefined })).toEqual(expected)
   })
 })

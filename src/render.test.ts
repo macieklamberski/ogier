@@ -4,10 +4,10 @@ import { renderPng, renderSvg } from './render.js'
 import type { Card } from './types/index.js'
 
 const card: Card = {
-  name: 'feedsmith',
+  header: { text: 'feedsmith' },
   eyebrow: 'Guides',
   title: 'Parsing namespaces',
-  footer: 'example/repo',
+  footer: { text: 'example/repo', icon: 'brand-github' },
 }
 
 describe('renderSvg', () => {
@@ -17,21 +17,24 @@ describe('renderSvg', () => {
     expect(await renderSvg(card)).toStartWith(expected)
   })
 
-  it('should render at an overridden size with a logo and a Tabler footer icon', async () => {
-    const options = {
-      sizes: { cardWidth: 600, cardHeight: 315 },
-      logo: {
-        svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8"><rect width="8" height="8" /></svg>',
+  it('should render at an overridden size with a header icon from markup', async () => {
+    const value: Card = {
+      ...card,
+      header: {
+        text: 'feedsmith',
+        icon: {
+          svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8"><rect width="8" height="8" /></svg>',
+        },
       },
-      footerIcon: 'brand-github',
     }
+    const style = { sizes: { cardWidth: 600, cardHeight: 315 } }
     const expected = '<svg width="600" height="315"'
 
-    expect(await renderSvg(card, options)).toStartWith(expected)
+    expect(await renderSvg(value, style)).toStartWith(expected)
   })
 
   it('should throw when the card has neither a title nor a description', () => {
-    const value = { name: 'feedsmith' }
+    const value = { header: { text: 'feedsmith' } }
     const throwing = () => renderSvg(value)
 
     expect(throwing()).rejects.toThrow(locales.errors.cardNeedsText)
