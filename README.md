@@ -36,12 +36,11 @@ Each card below is rendered from a preset in [examples/presets](examples/presets
 
 | | |
 |---|---|
-| [![Docs page on a dark theme with the dot rail](examples/output/docs-dark.png)](examples/presets/docs-dark.ts) | [![Docs page on a light theme with a version aside](examples/output/docs-light.png)](examples/presets/docs-light.ts) |
-| [![Essay in DM Serif Display and Inter with a still life on the left and right-aligned text](examples/output/editorial.png)](examples/presets/editorial.ts) | [![Research post in Geist and Geist Mono on black with a paint swirl on the right](examples/output/research.png)](examples/presets/research.ts) |
-| [![Blog post in Gloock and DM Sans with the headline at the bottom and an accent bar](examples/output/post.png)](examples/presets/post.ts) | [![Wordmark card in JetBrains Mono](examples/output/wordmark.png)](examples/presets/wordmark.ts) |
-| [![Research post in Epunda Slab with yellow text over a full-bleed aerial photo of a river](examples/output/cover.png)](examples/presets/cover.ts) | [![Landing page in Bricolage Grotesque with centered text](examples/output/centered.png)](examples/presets/centered.ts) |
-| [![Personal card with an icon and a name and role in Commit Mono](examples/output/personal.png)](examples/presets/personal.ts) | [![Changelog card in Space Mono and Space Grotesk on blue with the dot rail](examples/output/launch.png)](examples/presets/launch.ts) |
-| [![Book club card in Young Serif and IBM Plex Mono on red with a painting on the right](examples/output/bookclub.png)](examples/presets/bookclub.ts) | |
+| [![Docs page on a dark theme with the dot rail](examples/output/docs-dark.png)](examples/presets/docs-dark.ts) | [![Book club card in Young Serif and IBM Plex Mono on red with a painting on the right](examples/output/bookclub.png)](examples/presets/bookclub.ts) |
+| [![Essay in DM Serif Display and Inter with a still life on the left and right-aligned text](examples/output/editorial.png)](examples/presets/editorial.ts) | [![Blog post in Gloock and DM Sans with the headline at the bottom and an accent bar](examples/output/post.png)](examples/presets/post.ts) |
+| [![Wordmark card in JetBrains Mono](examples/output/wordmark.png)](examples/presets/wordmark.ts) | [![Research post in Epunda Slab with yellow text over a full-bleed aerial photo of a river](examples/output/cover.png)](examples/presets/cover.ts) |
+| [![Landing page in Bricolage Grotesque with centered text](examples/output/centered.png)](examples/presets/centered.ts) | [![Personal card with an icon and a name and role in Commit Mono](examples/output/personal.png)](examples/presets/personal.ts) |
+| [![Changelog card in Space Mono and Space Grotesk on blue with the dot rail](examples/output/launch.png)](examples/presets/launch.ts) | [![Research post in Geist and Geist Mono on black with a paint swirl on the right](examples/output/research.png)](examples/presets/research.ts) |
 
 ## API
 
