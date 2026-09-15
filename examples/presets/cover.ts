@@ -1,8 +1,9 @@
 import type { Card, Style } from '../../src/index.js'
+import { renderPng } from '../../src/index.js'
 import { dark } from '../../src/themes/index.js'
 
 // See: https://unsplash.com/photos/a-black-and-white-photo-of-an-aerial-view-of-a-river-faHQlMrKx8U.
-export const card: Card = {
+const card: Card = {
   header: {
     text: 'Halden Lab',
     aside: 'Research',
@@ -15,7 +16,7 @@ export const card: Card = {
   },
 }
 
-export const style: Style = {
+const style: Style = {
   theme: {
     ...dark,
     bg: '#000000',
@@ -43,3 +44,5 @@ export const style: Style = {
     },
   },
 }
+
+export const png = await renderPng(card, style)

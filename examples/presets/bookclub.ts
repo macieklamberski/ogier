@@ -1,7 +1,8 @@
 import type { Card, Style } from '../../src/index.js'
+import { renderPng } from '../../src/index.js'
 import { light } from '../../src/themes/index.js'
 
-export const card: Card = {
+const card: Card = {
   header: {
     text: 'Sunday Pages',
     aside: 'Book club',
@@ -14,7 +15,7 @@ export const card: Card = {
   },
 }
 
-export const style: Style = {
+const style: Style = {
   theme: {
     ...light,
     bg: '#bf3a2e',
@@ -41,3 +42,5 @@ export const style: Style = {
     asideTracking: '-0.03em',
   },
 }
+
+export const png = await renderPng(card, style)

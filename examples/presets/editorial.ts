@@ -1,8 +1,9 @@
 import type { Card, Style } from '../../src/index.js'
+import { renderPng } from '../../src/index.js'
 import { light } from '../../src/themes/index.js'
 
 // See: https://unsplash.com/photos/still-life-with-apples-pitcher-and-bowl-_sZ7R0C_xKY.
-export const card: Card = {
+const card: Card = {
   header: {
     icon: {
       file: '@tabler/icons/outline/feather.svg',
@@ -19,7 +20,7 @@ export const card: Card = {
   align: 'right',
 }
 
-export const style: Style = {
+const style: Style = {
   theme: {
     ...light,
     bg: '#f1eac6',
@@ -42,3 +43,5 @@ export const style: Style = {
     bylineText: 32,
   },
 }
+
+export const png = await renderPng(card, style)

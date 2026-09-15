@@ -1,7 +1,8 @@
 import type { Card, Style } from '../../src/index.js'
+import { renderPng } from '../../src/index.js'
 import { light } from '../../src/themes/index.js'
 
-export const card: Card = {
+const card: Card = {
   header: {
     icon: {
       file: '@tabler/icons/outline/flare.svg',
@@ -11,7 +12,7 @@ export const card: Card = {
   description: 'software designer',
 }
 
-export const style: Style = {
+const style: Style = {
   theme: {
     ...light,
     bg: '#f7f7f7',
@@ -40,3 +41,5 @@ export const style: Style = {
     descriptionLineHeight: 1.15,
   },
 }
+
+export const png = await renderPng(card, style)

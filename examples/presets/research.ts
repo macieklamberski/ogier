@@ -1,8 +1,9 @@
 import type { Card, Style } from '../../src/index.js'
+import { renderPng } from '../../src/index.js'
 import { dark } from '../../src/themes/index.js'
 
 // See: https://unsplash.com/photos/a-painting-of-blue-and-purple-flowers-on-a-white-background-F50wqBrZPgI.
-export const card: Card = {
+const card: Card = {
   header: {
     aside: 'Research',
   },
@@ -17,7 +18,7 @@ export const card: Card = {
   },
 }
 
-export const style: Style = {
+const style: Style = {
   theme: {
     ...dark,
     bg: '#000000',
@@ -40,3 +41,5 @@ export const style: Style = {
     asideTracking: '-0.03em',
   },
 }
+
+export const png = await renderPng(card, style)

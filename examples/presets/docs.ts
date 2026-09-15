@@ -1,7 +1,8 @@
 import type { Card, Style } from '../../src/index.js'
+import { renderPng } from '../../src/index.js'
 import { dark } from '../../src/themes/index.js'
 
-export const card: Card = {
+const card: Card = {
   header: {
     text: 'tidewater',
     icon: {
@@ -18,7 +19,7 @@ export const card: Card = {
   },
 }
 
-export const style: Style = {
+const style: Style = {
   theme: {
     ...dark,
     accent: '#4dd4c6',
@@ -27,3 +28,5 @@ export const style: Style = {
     pattern: 'dots',
   },
 }
+
+export const png = await renderPng(card, style)

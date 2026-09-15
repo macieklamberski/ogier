@@ -1,7 +1,8 @@
 import type { Card, Style } from '../../src/index.js'
+import { renderPng } from '../../src/index.js'
 import { dark } from '../../src/themes/index.js'
 
-export const card: Card = {
+const card: Card = {
   header: {
     icon: {
       file: '@tabler/icons/outline/terminal-2.svg',
@@ -14,7 +15,7 @@ export const card: Card = {
   },
 }
 
-export const style: Style = {
+const style: Style = {
   theme: {
     ...dark,
     accent: '#a2e57b',
@@ -26,3 +27,5 @@ export const style: Style = {
     titleTracking: '-0.04em',
   },
 }
+
+export const png = await renderPng(card, style)
