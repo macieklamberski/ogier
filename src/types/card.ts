@@ -8,6 +8,8 @@ export type Slot = {
   aside?: string
 }
 
+export type Align = 'left' | 'center' | 'right'
+
 export type Card = {
   header?: Slot
   eyebrow?: string
@@ -15,12 +17,21 @@ export type Card = {
   byline?: string
   description?: string
   footer?: Slot
+  image?: ImageRef & { position?: 'left' | 'right' }
+  align?: Align
 }
 
 export type Theme = {
   bg: string
   text: string
-  textMuted: string
+  muted: string
+  header?: string
+  eyebrow?: string
+  title?: string
+  byline?: string
+  description?: string
+  footer?: string
+  aside?: string
   accent: string
   pattern: string
 }
@@ -28,13 +39,19 @@ export type Theme = {
 export type Sizes = {
   cardWidth: number
   cardHeight: number
-  cardPadding: string
+  cardPadding: { top?: number; right?: number; bottom?: number; left?: number }
+  contentWidth: number
   headerIcon: number
   headerText: number
   headerGap: number
+  headerTracking: string
   asideText: number
+  asideBaseline: number
+  asideTracking: string
   lineMaxWidth: number
+  slotLineHeight: number
   eyebrowText: number
+  eyebrowTracking: string
   titleText: number
   titleTextLong: number
   titleTextLongest: number
@@ -43,25 +60,28 @@ export type Sizes = {
   titleWeight: number
   titleWeightLong: number
   titleLineHeight: number
-  titleLetterSpacing: string
-  titleLetterSpacingLong: string
+  titleTracking: string
+  titleTrackingLong: string
   titleMaxLines: number
   titleMaxLinesWithDescription: number
   headlinePosition: 'middle' | 'bottom'
   bylineText: number
+  bylineTracking: string
   descriptionText: number
   descriptionLineHeight: number
   descriptionMaxLines: number
+  descriptionTracking: string
   footerIcon: number
   footerText: number
   footerGap: number
+  footerTracking: string
   barHeight: number
   railWidth: number
   railDotStep: number
   railDotRadius: number
 }
 
-export type FontRole = 'title' | 'label'
+export type FontRole = 'title' | 'body' | 'label'
 
 export type Fonts = Partial<Record<FontRole, string>>
 

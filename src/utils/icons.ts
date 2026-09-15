@@ -1,11 +1,10 @@
 import { readFile } from 'node:fs/promises'
-import { createRequire } from 'node:module'
 import { extname, isAbsolute } from 'node:path'
 import { isString, t } from 'trousse'
 import locales from '../locales.json' with { type: 'json' }
 import type { Icon, IconRef, ImageRef } from '../types/index.js'
+import { resolvePackageFile } from './packages.js'
 
-const require = createRequire(import.meta.url)
 const currentColorRegex = /currentColor/g
 const relativeRegex = /^\.\.?\//
 const mimeTypes: Record<string, string> = {
@@ -25,11 +24,13 @@ const resolveFile = (file: string | URL): string | URL => {
     return file
   }
 
-  try {
-    return require.resolve(file)
-  } catch (error) {
-    throw new Error(t(locales.errors.iconNotFound, { file }), { cause: error })
+  const resolved = resolvePackageFile(file)
+
+  if (!resolved) {
+    throw new Error(t(locales.errors.iconNotFound, { file }))
   }
+
+  return resolved
 }
 
 export const toDataUri = (data: string | Uint8Array, mimeType: string) => {
