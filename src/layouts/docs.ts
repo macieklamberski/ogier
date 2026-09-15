@@ -1,4 +1,5 @@
 import type { Icon, Layout, LayoutContext, Node, Sizes } from '../types/index.js'
+import { colorSvg, toDataUri } from '../utils/icons.js'
 
 export type DocsSizes = Sizes & {
   cardPadding: string
@@ -52,32 +53,18 @@ const h = (type: string, style: Record<string, unknown>, children?: unknown): No
   return { type, props: { style, children } }
 }
 
-const renderIcon = (icon: Icon, size: number): Node => {
-  if ('src' in icon) {
-    return { type: 'img', props: { src: icon.src, width: size, height: size } }
-  }
+// Satori embeds an SVG as an image, so the slot color is written into the markup first.
+const renderIcon = (icon: Icon, size: number, color: string): Node => {
+  const src = 'src' in icon ? icon.src : toDataUri(colorSvg(icon.svg, color), 'image/svg+xml')
 
-  return {
-    type: 'svg',
-    props: {
-      width: size,
-      height: size,
-      viewBox: '0 0 24 24',
-      fill: 'none',
-      stroke: icon.color ?? 'currentColor',
-      strokeWidth: 2,
-      strokeLinecap: 'round',
-      strokeLinejoin: 'round',
-      children: icon.children,
-    },
-  }
+  return { type: 'img', props: { src, width: size, height: size } }
 }
 
 const renderHeader = (context: DocsContext, text: string): Node => {
-  const { fonts, headerIcon, sizes } = context
+  const { fonts, headerIcon, sizes, theme } = context
 
   return h('div', { display: 'flex', alignItems: 'center', gap: 20 }, [
-    headerIcon ? renderIcon(headerIcon, sizes.headerIcon) : undefined,
+    headerIcon ? renderIcon(headerIcon, sizes.headerIcon, theme.text) : undefined,
     h('div', { fontFamily: fonts.label, fontSize: sizes.headerText }, text),
   ])
 }
@@ -173,7 +160,7 @@ const renderFooter = (context: DocsContext, text: string): Node => {
   const { fonts, footerIcon, sizes, theme } = context
 
   return h('div', { display: 'flex', alignItems: 'center', gap: 14, color: theme.textMuted }, [
-    footerIcon ? renderIcon(footerIcon, sizes.footerIcon) : undefined,
+    footerIcon ? renderIcon(footerIcon, sizes.footerIcon, theme.textMuted) : undefined,
     h('div', { fontFamily: fonts.label, fontSize: sizes.footerText }, text),
   ])
 }
@@ -209,7 +196,11 @@ const renderDots = (context: DocsContext): Node => {
 const renderBackground = (context: DocsContext): Node | undefined => {
   const { background, backgroundImage, sizes } = context
 
-  if (backgroundImage && 'src' in backgroundImage) {
+  if (backgroundImage) {
+    const src =
+      'src' in backgroundImage
+        ? backgroundImage.src
+        : toDataUri(backgroundImage.svg, 'image/svg+xml')
     const style = {
       position: 'absolute',
       top: 0,
@@ -219,7 +210,7 @@ const renderBackground = (context: DocsContext): Node | undefined => {
       objectFit: 'cover',
     }
 
-    return { type: 'img', props: { src: backgroundImage.src, style } }
+    return { type: 'img', props: { src, style } }
   }
 
   if (background && 'pattern' in background) {

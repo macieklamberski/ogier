@@ -64,13 +64,9 @@
     "satori": "^0.33.4"
   },
   "peerDependencies": {
-    "@tabler/icons": ">=3",
     "vitepress": ">=1"
   },
   "peerDependenciesMeta": {
-    "@tabler/icons": {
-      "optional": true
-    },
     "vitepress": {
       "optional": true
     }

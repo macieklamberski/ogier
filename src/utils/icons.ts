@@ -1,14 +1,13 @@
 import { readFile } from 'node:fs/promises'
 import { createRequire } from 'node:module'
-import { extname, join } from 'node:path'
+import { extname, isAbsolute } from 'node:path'
 import { isString, t } from 'trousse'
 import locales from '../locales.json' with { type: 'json' }
-import type { Icon, IconRef, ImageRef, Node } from '../types/index.js'
-
-type TablerNodes = Record<string, Array<[string, Record<string, string>]>>
+import type { Icon, IconRef, ImageRef } from '../types/index.js'
 
 const require = createRequire(import.meta.url)
 const currentColorRegex = /currentColor/g
+const relativeRegex = /^\.\.?\//
 const mimeTypes: Record<string, string> = {
   '.svg': 'image/svg+xml',
   '.png': 'image/png',
@@ -17,64 +16,45 @@ const mimeTypes: Record<string, string> = {
   '.webp': 'image/webp',
 }
 
-let tablerNodes: TablerNodes | undefined
+const isPackagePath = (file: string | URL): file is string => {
+  return isString(file) && !isAbsolute(file) && !relativeRegex.test(file)
+}
 
-const toDataUri = (data: string | Uint8Array, mimeType: string) => {
+const resolveFile = (file: string | URL): string | URL => {
+  if (!isPackagePath(file)) {
+    return file
+  }
+
+  try {
+    return require.resolve(file)
+  } catch (error) {
+    throw new Error(t(locales.errors.iconNotFound, { file }), { cause: error })
+  }
+}
+
+export const toDataUri = (data: string | Uint8Array, mimeType: string) => {
   return `data:${mimeType};base64,${Buffer.from(data).toString('base64')}`
 }
 
-const loadTablerIcon = async (name: string, color?: string): Promise<Icon> => {
-  if (!tablerNodes) {
-    let iconFile: string
-
-    try {
-      iconFile = require.resolve(`@tabler/icons/outline/${name}.svg`)
-    } catch (error) {
-      throw new Error(t(locales.errors.iconNotInstalled, { name }), { cause: error })
-    }
-
-    // The package exports only icons/*, so the node table is reached from a resolved icon.
-    const nodesFile = join(iconFile, '../../../tabler-nodes-outline.json')
-
-    tablerNodes = JSON.parse(await readFile(nodesFile, 'utf8'))
-  }
-
-  const nodes = tablerNodes?.[name]
-
-  if (!nodes) {
-    throw new Error(t(locales.errors.iconNotFound, { name }))
-  }
-
-  const children: Array<Node> = nodes.map(([type, props]) => ({ type, props }))
-
-  return { children, color }
+export const colorSvg = (svg: string, color: string | undefined) => {
+  return color ? svg.replace(currentColorRegex, color) : svg
 }
 
 export const loadImage = async (ref: ImageRef, color?: string): Promise<Icon> => {
   if ('svg' in ref) {
-    const svg = color ? ref.svg.toString().replace(currentColorRegex, color) : ref.svg
-
-    return { src: toDataUri(svg, 'image/svg+xml') }
+    return { svg: colorSvg(ref.svg.toString(), color) }
   }
 
   const mimeType = mimeTypes[extname(ref.file.toString()).toLowerCase()] ?? 'image/svg+xml'
-  const data = await readFile(ref.file)
+  const data = await readFile(resolveFile(ref.file))
 
-  if (color && mimeType === 'image/svg+xml') {
-    return { src: toDataUri(data.toString().replace(currentColorRegex, color), mimeType) }
+  if (mimeType === 'image/svg+xml') {
+    return { svg: colorSvg(data.toString(), color) }
   }
 
   return { src: toDataUri(data, mimeType) }
 }
 
 export const loadIcon = (ref: IconRef): Promise<Icon> => {
-  if (isString(ref)) {
-    return loadTablerIcon(ref)
-  }
-
-  if ('name' in ref) {
-    return loadTablerIcon(ref.name, ref.color)
-  }
-
   return loadImage(ref, ref.color)
 }

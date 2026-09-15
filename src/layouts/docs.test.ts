@@ -42,13 +42,13 @@ describe('docsLayout', () => {
     const value: LayoutContext = {
       ...baseContext,
       card: {
-        header: { text: 'feedsmith', icon: 'brand-github' },
+        header: { text: 'feedsmith', icon: { svg: '<svg />' } },
         eyebrow: 'Guides › Parsing',
         title: 'Parsing namespaces',
-        footer: { text: 'example/repo', icon: 'brand-github' },
+        footer: { text: 'example/repo', icon: { svg: '<svg />' } },
       },
       headerIcon: { src: 'data:image/svg+xml;base64,AAAA' },
-      footerIcon: { children: [{ type: 'path', props: { d: 'M0 0' } }], color: '#ffffff' },
+      footerIcon: { svg: '<svg><path stroke="currentColor" /></svg>' },
     }
     const nodes = collectNodes(docsLayout.render(value))
     const expectedEyebrow = {
@@ -62,8 +62,12 @@ describe('docsLayout', () => {
       props: { src: 'data:image/svg+xml;base64,AAAA', width: 56, height: 56 },
     }
     const expectedFooterIcon = {
-      type: 'svg',
-      props: { width: 32, height: 32, stroke: '#ffffff' },
+      type: 'img',
+      props: {
+        width: 32,
+        height: 32,
+        src: `data:image/svg+xml;base64,${Buffer.from('<svg><path stroke="#a3a3a3" /></svg>').toString('base64')}`,
+      },
     }
 
     expect(nodes.find((node) => node.props.children === 'Guides › Parsing')).toMatchObject(
@@ -73,10 +77,8 @@ describe('docsLayout', () => {
       expectedTitle,
     )
     expect(nodes.find((node) => node.props.children === 'example/repo')).toBeDefined()
-    expect(nodes.find((node) => node.type === 'img')).toEqual(expectedHeaderIcon)
-    expect(nodes.find((node) => node.type === 'svg' && node.props.stroke)).toMatchObject(
-      expectedFooterIcon,
-    )
+    expect(nodes.find((node) => node.props.width === 56)).toEqual(expectedHeaderIcon)
+    expect(nodes.find((node) => node.props.width === 32)).toEqual(expectedFooterIcon)
   })
 
   it('should render the header, the title and the dots with minimal properties', () => {
