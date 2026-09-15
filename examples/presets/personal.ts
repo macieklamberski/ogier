@@ -36,7 +36,7 @@ const style: Style = {
     titleText: 76,
     titleWeight: 500,
     titleTracking: '-0.04em',
-    descriptionText: 76,
+    descriptionText: 64,
     descriptionTracking: '-0.04em',
     descriptionLineHeight: 1.15,
   },

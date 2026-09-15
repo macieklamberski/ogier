@@ -20,7 +20,7 @@ const style: Style = {
     accent: '#e0452b',
   },
   fonts: {
-    title: 'gloock',
+    title: 'literata',
     body: 'dm-sans',
     label: 'dm-sans',
   },
@@ -28,8 +28,8 @@ const style: Style = {
     headlinePosition: 'bottom',
     barHeight: 12,
     headerText: 28,
-    titleWeight: 400,
-    titleTracking: '-0.005em',
+    titleWeight: 700,
+    titleTracking: '-0.02em',
   },
 }
 

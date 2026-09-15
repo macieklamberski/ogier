@@ -4,6 +4,9 @@
   "workspaces": {
     "": {
       "name": "ogier-examples",
+      "dependencies": {
+        "@fontsource/literata": "^5.3.0",
+      },
       "devDependencies": {
         "@fontsource/bricolage-grotesque": "^5.3.0",
         "@fontsource/commit-mono": "^5.3.0",
@@ -12,7 +15,6 @@
         "@fontsource/epunda-slab": "^5.3.0",
         "@fontsource/geist-mono": "^5.3.0",
         "@fontsource/geist-sans": "^5.3.0",
-        "@fontsource/gloock": "^5.3.0",
         "@fontsource/ibm-plex-mono": "^5.3.0",
         "@fontsource/space-grotesk": "^5.3.0",
         "@fontsource/space-mono": "^5.3.0",
@@ -36,9 +38,9 @@
 
     "@fontsource/geist-sans": ["@fontsource/geist-sans@5.3.0", "", {}, "sha512-AmG7cE1AvE4NHROPaOl1sN+a02cB5xy6pA/ZV76HXqWTCsJTV2SCBc9DTFHfJqnVOODm7HhXIYtUIb75NP5QXQ=="],
 
-    "@fontsource/gloock": ["@fontsource/gloock@5.3.0", "", {}, "sha512-vGvBRavw/y3aTCsz1uTNydQjCfRLGNOnSpmn/Qs3EZDqPAKBg6Id4OdHGnWLWXQ57IkzuNk/e9+KdMze+azOxA=="],
-
     "@fontsource/ibm-plex-mono": ["@fontsource/ibm-plex-mono@5.3.0", "", {}, "sha512-eTgnZjZEGk1QtD3ZstF+Vclo2HLAni8YMy34/DxllwZvyz1lR/1RF/xTiAquOBO7MvqBx8D2Ig2WCPMVfdZu7Q=="],
+
+    "@fontsource/literata": ["@fontsource/literata@5.3.0", "", {}, "sha512-9JGMT5+YfBK49thoMq9ASaMRJErHT4V4QuMhAEwKHRLreOsIMP2xP6ZRLhPJ0e6YlET+kjWTJuN7LAxt9/gWGQ=="],
 
     "@fontsource/space-grotesk": ["@fontsource/space-grotesk@5.3.0", "", {}, "sha512-ksnGizDPXIDuvqcTYTSrmZ+evx9sDlS8rp7+42BQ7wU+spt3twEoXfbJz672C+5CLg6VeUQwRy5RXshWb67LcQ=="],
 

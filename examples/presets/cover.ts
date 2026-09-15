@@ -31,6 +31,7 @@ const style: Style = {
     label: 'geist-mono',
   },
   sizes: {
+    titleTextLong: 64,
     titleWeight: 700,
     titleTracking: '-0.02em',
     headerTracking: '-0.03em',
