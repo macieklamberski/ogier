@@ -65,7 +65,8 @@
   "scripts": {
     "prepare": "lefthook install",
     "build": "tsdown src/index.ts src/themes/index.ts src/adapters/vitepress.ts --format cjs,esm --dts --clean --unbundle --no-fixed-extension --shims",
-    "test": "bun test"
+    "test": "bun test",
+    "examples": "cd examples && bun install && bun index.ts"
   },
   "dependencies": {
     "@fontsource/inter": "^5.3.0",
