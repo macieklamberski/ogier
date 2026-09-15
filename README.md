@@ -130,7 +130,7 @@ const tags = composeMetaTags(metadata)
 ```typescript
 // docs/.vitepress/config.ts
 import { dark } from 'ogier/themes'
-import { vitepress } from 'ogier/vitepress'
+import { vitepress } from 'ogier/adapters'
 import { defineConfig } from 'vitepress'
 
 const og = vitepress({
