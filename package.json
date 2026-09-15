@@ -1,6 +1,6 @@
 {
   "name": "ogier",
-  "description": "Easily generate Open Graph images with predefined layouts and themes, fonts and icons on demand, and adapters that plug into your site framework.",
+  "description": "Easily generate Open Graph images from text, icons and fonts, with ready-made layouts and themes, and adapters for your site framework.",
   "repository": {
     "type": "git",
     "url": "https://github.com/macieklamberski/ogier.git"
