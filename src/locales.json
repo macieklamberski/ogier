@@ -1,6 +1,7 @@
 {
   "errors": {
     "cardNeedsText": "A card needs a title or a description.",
+    "faviconNeedsSvg": "A favicon is rendered from SVG markup or an SVG file.",
     "fontNotInstalled": "Font \"{{family}}\" has no files for weights {{weights}}. Install it: npm install @fontsource/{{family}}.",
     "iconNotFound": "Icon \"{{file}}\" was not found. A package path needs its package installed."
   }

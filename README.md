@@ -101,7 +101,7 @@ import { vitepress } from 'ogier/vitepress'
 import { defineConfig } from 'vitepress'
 
 const og = vitepress({
-  site: { hostname: 'https://feedsmith.dev' },
+  site: { hostname: 'https://feedsmith.dev', favicon: { file: 'docs/public/favicon.svg' } },
   card: {
     header: { text: 'feedsmith', icon: { file: 'docs/public/favicon.svg' } },
     footer: { text: 'macieklamberski/feedsmith', icon: { file: '@tabler/icons/outline/brand-github.svg' } },
@@ -122,6 +122,6 @@ Each page gets the tags from `transformHead` and a PNG under `og/` from `buildEn
 
 | Option | What it holds |
 |---|---|
-| `site` | `hostname`, plus `imageDir` for the folder under the output dir and in the image URL, default `og`, and `imageUrl`, a function from the page path to the image URL, default `getImageUrl`. |
+| `site` | `hostname`, plus `imageDir` for the folder under the output dir and in the image URL, default `og`, and `imageUrl`, a function from the page path to the image URL, default `getImageUrl`. `favicon` takes an SVG as `{ file }` or `{ svg }` and writes it as `favicon.png` at the output root, 192 px square unless `size` says otherwise, with an icon link on every page. Search engines take PNG favicons and not SVG ones. |
 | `card` | The fields every card shares, merged over the page defaults. A function of the page data and site data gives per-page values. |
 | `style` | The style passed to every render. |

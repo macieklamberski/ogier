@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { mkdtemp, readdir } from 'node:fs/promises'
+import { mkdtemp, readdir, readFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import type {
@@ -13,12 +13,16 @@ import type {
 import { vitepress } from './vitepress.js'
 
 const siteData = {
+  base: '/',
   title: 'Feedsmith',
   description: 'Fast feed parser.',
   themeConfig: {
     sidebar: [{ text: 'Guides', items: [{ text: 'Parsing', link: '/guides/parsing' }] }],
   },
 } as SiteData<DefaultTheme.Config>
+
+const svg =
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><rect width="120" height="120" fill="#ff6602" /></svg>'
 
 const getContext = (relativePath: string, title: string) => {
   const pageData = { relativePath, title } as PageData
@@ -67,6 +71,37 @@ describe('vitepress', () => {
     const og = vitepress({ ...options, site: { ...options.site, imageUrl } })
 
     expect(og.transformHead(value)).toContainEqual(expected)
+  })
+
+  it('should emit no icon link without a favicon', () => {
+    const value = getContext('index.md', 'Home')
+
+    expect(vitepress(options).transformHead(value)).not.toContainEqual(
+      expect.arrayContaining(['link']),
+    )
+  })
+
+  it('should emit the icon link when a favicon is given', () => {
+    const value = getContext('index.md', 'Home')
+    const expected: HeadConfig = [
+      'link',
+      { rel: 'icon', href: '/favicon.png', type: 'image/png', sizes: '192x192' },
+    ]
+    const og = vitepress({ ...options, site: { ...options.site, favicon: { svg } } })
+
+    expect(og.transformHead(value)).toContainEqual(expected)
+  })
+
+  it('should write the favicon png at the output root', async () => {
+    const outDir = await mkdtemp(join(tmpdir(), 'ogier-'))
+    const og = vitepress({ ...options, site: { ...options.site, favicon: { svg, size: 48 } } })
+
+    og.transformHead(getContext('index.md', 'Home'))
+    await og.buildEnd({ outDir } as SiteConfig)
+
+    const png = await readFile(join(outDir, 'favicon.png'))
+
+    expect([png.readUInt32BE(16), png.readUInt32BE(20)]).toEqual([48, 48])
   })
 
   it('should write one png per page under the image dir', async () => {
