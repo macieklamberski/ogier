@@ -218,7 +218,7 @@ const renderBackground = (context: DocsContext): Node | undefined => {
   }
 }
 
-export const docsLayout: Layout = {
+export const docs: Layout = {
   weights: { title: [400, 700], label: [500] },
   sizes: docsSizes,
   render: (layoutContext) => {

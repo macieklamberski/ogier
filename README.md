@@ -50,21 +50,24 @@ type Card = {
 
 An icon is `{ file }` with a path, a file URL or a package path such as `'@tabler/icons/outline/brand-github.svg'` or `'lucide-static/icons/rss.svg'`, or `{ svg }` with the markup as a string or bytes. A package path resolves from your node_modules, so any icon package that ships SVG files works once installed. `currentColor` in the SVG takes the color of the text beside it, or the icon's own `color` when given, and baked colors stay as they are.
 
-Style is how the card is drawn. Every field is optional.
+Style is how the card is drawn. Every field is optional. Layouts come from `ogier/layouts`, `docs` being the only one, and themes from `ogier/themes`, `dark` and `light`.
 
 | Option | Default | What it does |
 |---|---|---|
-| `layout` | `'docs'` | The built-in layout by name, or a custom `Layout` object. |
-| `theme` | `darkTheme` | Colors: `bg`, `text`, `textMuted`, `accent`, `pattern`. Spread a preset to override one value. |
+| `layout` | `docs` from `ogier/layouts` | The layout to draw with. |
+| `theme` | `dark` from `ogier/themes` | Colors: `bg`, `text`, `textMuted`, `accent`, `pattern`. Spread a preset to override one value. |
 | `sizes` | the layout's table | Size overrides, merged over the layout's defaults. `cardWidth` and `cardHeight` set the image size. |
 | `fonts` | `{ title: 'inter', label: 'jetbrains-mono' }` | A fontsource slug per role. Inter and JetBrains Mono ship with ogier. Any other family needs its `@fontsource/<slug>` package installed. |
 | `background` | none | `{ pattern: 'dots' }` for the dot rail, or `{ image }` for a full-bleed image. |
 
 ```typescript
-import { darkTheme, renderPng } from 'ogier'
+import { renderPng } from 'ogier'
+import { docs } from 'ogier/layouts'
+import { light } from 'ogier/themes'
 
 await renderPng(card, {
-  theme: { ...darkTheme, accent: '#a2e57b' },
+  layout: docs,
+  theme: { ...light, accent: '#a2e57b' },
   sizes: { titleText: 80 },
   fonts: { title: 'roboto' },
   background: { image: { file: './og-bg.png' } },
@@ -96,7 +99,7 @@ const tags = composeMetaTags(metadata)
 
 ```typescript
 // docs/.vitepress/config.ts
-import { darkTheme } from 'ogier'
+import { dark } from 'ogier/themes'
 import { vitepress } from 'ogier/vitepress'
 import { defineConfig } from 'vitepress'
 
@@ -107,7 +110,7 @@ const og = vitepress({
     footer: { text: 'macieklamberski/feedsmith', icon: { file: '@tabler/icons/outline/brand-github.svg' } },
   },
   style: {
-    theme: { ...darkTheme, accent: '#ff8c4d' },
+    theme: { ...dark, accent: '#ff8c4d' },
     background: { pattern: 'dots' },
   },
 })

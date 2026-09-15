@@ -1,10 +1,9 @@
 import { Resvg } from '@resvg/resvg-js'
 import satori from 'satori'
-import { isString } from 'trousse'
-import { layouts } from './layouts/index.js'
+import { docs } from './layouts/docs.js'
 import locales from './locales.json' with { type: 'json' }
-import { darkTheme } from './themes/dark.js'
-import type { Card, Layout, LayoutContext, Slot, Style } from './types/index.js'
+import { dark } from './themes/dark.js'
+import type { Card, LayoutContext, Slot, Style } from './types/index.js'
 import { loadFonts } from './utils/fonts.js'
 import { loadIcon, loadImage } from './utils/icons.js'
 
@@ -33,18 +32,14 @@ const normalizeCard = (card: Card): Card => {
   }
 }
 
-const resolveLayout = (layout: Style['layout'] = 'docs'): Layout => {
-  return isString(layout) ? layouts[layout] : layout
-}
-
 export const renderSvg = async (card: Card, style: Style = {}): Promise<string> => {
-  const layout = resolveLayout(style.layout)
+  const layout = style.layout ?? docs
   const sizes: LayoutContext['sizes'] = { ...layout.sizes, ...style.sizes }
   const { background } = style
   const { fonts, families } = await loadFonts(style.fonts, layout.weights)
   const context: LayoutContext = {
     card: normalizeCard(card),
-    theme: style.theme ?? darkTheme,
+    theme: style.theme ?? dark,
     sizes,
     fonts: families,
     headerIcon: card.header?.icon ? await loadIcon(card.header.icon) : undefined,
