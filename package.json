@@ -1,6 +1,6 @@
 {
   "name": "ogier",
-  "description": "Generate Open Graph images and meta tags for any page. Titles, sections and branding in, a themed PNG and a tag list out.",
+  "description": "Easily generate Open Graph images from text, icons and fonts, with ready-made layouts and themes, and adapters for your site framework.",
   "repository": {
     "type": "git",
     "url": "https://github.com/macieklamberski/ogier.git"
