@@ -6,7 +6,7 @@
 
 Generate Open Graph images and meta tags for any page. Titles, sections and branding in, a themed PNG and a tag list out.
 
-A share card is rendered from a plain card object through a layout, a theme and a size table. Satori turns the layout into SVG and resvg turns that into a 1200 by 630 PNG. Fonts come from fontsource packages, icons from any SVG file, your own or one shipped by an icon package. A VitePress adapter renders one card per page at build time and emits the tags that point at it.
+A share card is rendered from a plain card object through a layout, a theme and a size table. Satori turns the layout into SVG and resvg turns that into a 1200 by 630 PNG. Fonts come from fontsource packages, icons from any SVG file, your own or one shipped by an icon package (Tabler, Lucide). A VitePress adapter renders one card per page at build time and emits the tags that point at it.
 
 ## Installation
 
