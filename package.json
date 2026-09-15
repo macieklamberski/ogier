@@ -47,14 +47,14 @@
         "default": "./dist/themes/index.cjs"
       }
     },
-    "./vitepress": {
+    "./adapters": {
       "import": {
-        "types": "./dist/adapters/vitepress.d.ts",
-        "default": "./dist/adapters/vitepress.js"
+        "types": "./dist/adapters/index.d.ts",
+        "default": "./dist/adapters/index.js"
       },
       "require": {
-        "types": "./dist/adapters/vitepress.d.cts",
-        "default": "./dist/adapters/vitepress.cjs"
+        "types": "./dist/adapters/index.d.cts",
+        "default": "./dist/adapters/index.cjs"
       }
     },
     "./package.json": "./package.json"
@@ -64,7 +64,7 @@
   ],
   "scripts": {
     "prepare": "lefthook install",
-    "build": "tsdown src/index.ts src/themes/index.ts src/adapters/vitepress.ts --format cjs,esm --dts --clean --unbundle --no-fixed-extension --shims",
+    "build": "tsdown src/index.ts src/themes/index.ts src/adapters/index.ts --format cjs,esm --dts --clean --unbundle --no-fixed-extension --shims",
     "test": "bun test",
     "examples": "cd examples && bun install && bun index.ts"
   },
