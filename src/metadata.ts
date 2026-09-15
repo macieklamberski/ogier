@@ -1,5 +1,5 @@
 import { isString } from 'trousse'
-import { docsSizes } from './layouts/docs.js'
+import { defaultSizes } from './layout.js'
 import type { Metadata, MetadataInput, MetaTag } from './types/index.js'
 
 const slashRegex = /\//g
@@ -19,8 +19,8 @@ export const composeMetadata = (input: MetadataInput): Metadata => {
     description: input.description,
     image: {
       url: image.url,
-      width: image.width ?? docsSizes.cardWidth,
-      height: image.height ?? docsSizes.cardHeight,
+      width: image.width ?? defaultSizes.cardWidth,
+      height: image.height ?? defaultSizes.cardHeight,
       alt: image.alt ?? input.title,
     },
     twitterCard: 'summary_large_image',

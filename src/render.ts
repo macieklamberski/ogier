@@ -1,9 +1,9 @@
 import { Resvg } from '@resvg/resvg-js'
 import satori from 'satori'
-import { docs } from './layouts/docs.js'
+import { defaultSizes, fontWeights, render } from './layout.js'
 import locales from './locales.json' with { type: 'json' }
 import { dark } from './themes/dark.js'
-import type { Card, LayoutContext, Slot, Style } from './types/index.js'
+import type { Card, RenderContext, Sizes, Slot, Style } from './types/index.js'
 import { loadFonts } from './utils/fonts.js'
 import { loadIcon, loadImage } from './utils/icons.js'
 
@@ -15,7 +15,15 @@ const normalizeText = (text: string | undefined) => {
 }
 
 const normalizeSlot = (slot: Slot | undefined): Slot | undefined => {
-  return slot && { ...slot, text: normalizeText(slot.text) ?? '' }
+  if (!slot) {
+    return
+  }
+
+  return {
+    ...slot,
+    text: normalizeText(slot.text),
+    aside: normalizeText(slot.aside),
+  }
 }
 
 const normalizeCard = (card: Card): Card => {
@@ -27,17 +35,17 @@ const normalizeCard = (card: Card): Card => {
     header: normalizeSlot(card.header),
     eyebrow: normalizeText(card.eyebrow),
     title: normalizeText(card.title),
+    byline: normalizeText(card.byline),
     description: normalizeText(card.description),
     footer: normalizeSlot(card.footer),
   }
 }
 
 export const renderSvg = async (card: Card, style: Style = {}): Promise<string> => {
-  const layout = style.layout ?? docs
-  const sizes: LayoutContext['sizes'] = { ...layout.sizes, ...style.sizes }
+  const sizes: Sizes = { ...defaultSizes, ...style.sizes }
   const { background } = style
-  const { fonts, families } = await loadFonts(style.fonts, layout.weights)
-  const context: LayoutContext = {
+  const { fonts, families } = await loadFonts(style.fonts, fontWeights)
+  const context: RenderContext = {
     card: normalizeCard(card),
     theme: style.theme ?? dark,
     sizes,
@@ -49,7 +57,7 @@ export const renderSvg = async (card: Card, style: Style = {}): Promise<string> 
       background && 'image' in background ? await loadImage(background.image) : undefined,
   }
 
-  return satori(layout.render(context), {
+  return satori(render(context), {
     width: sizes.cardWidth,
     height: sizes.cardHeight,
     fonts,

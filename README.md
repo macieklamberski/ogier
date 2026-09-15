@@ -36,37 +36,35 @@ await writeFile('og/guides-parsing.png', png)
 
 Render one card. Both take the same arguments and return a PNG buffer or an SVG string.
 
-A card is what the image says and shows. It needs a title, a description or both. A description alone takes the title's place, which is what a home page card usually wants. The header and the footer are a text with an optional icon.
+A card is what the image says and shows. It needs a title, a description or both. A description alone takes the title's place, which is what a home page card usually wants. The header and the footer are a line with a text, an icon, or both, plus an aside at the far end of the line: a date on a post, a version on a docs page. An icon alone makes a wordmark line. Each text on the line runs to half the card and then wraps, the header line downward and the footer line upward. The byline sits under the title: an author, a source, anything that is not the description.
 
 ```typescript
 type Card = {
-  header?: { text: string; icon?: IconRef }
+  header?: { text?: string; icon?: IconRef; aside?: string }
   eyebrow?: string
   title?: string
+  byline?: string
   description?: string
-  footer?: { text: string; icon?: IconRef }
+  footer?: { text?: string; icon?: IconRef; aside?: string }
 }
 ```
 
 An icon is `{ file }` with a path, a file URL or a package path such as `'@tabler/icons/outline/brand-github.svg'` or `'lucide-static/icons/rss.svg'`, or `{ svg }` with the markup as a string or bytes. A package path resolves from your node_modules, so any icon package that ships SVG files works once installed. `currentColor` in the SVG takes the color of the text beside it, or the icon's own `color` when given, and baked colors stay as they are.
 
-Style is how the card is drawn. Every field is optional. Layouts come from `ogier/layouts`, `docs` being the only one, and themes from `ogier/themes`, `dark` and `light`.
+Style is how the card is drawn. Every field is optional. The header sits top left, the eyebrow, title, byline and description in the middle, the footer bottom left, and the dot rail on the right when the background asks for it. Themes come from `ogier/themes`, `dark` and `light`.
 
 | Option | Default | What it does |
 |---|---|---|
-| `layout` | `docs` from `ogier/layouts` | The layout to draw with. |
 | `theme` | `dark` from `ogier/themes` | Colors: `bg`, `text`, `textMuted`, `accent`, `pattern`. Spread a preset to override one value. |
-| `sizes` | the layout's table | Size overrides, merged over the layout's defaults. `cardWidth` and `cardHeight` set the image size. |
+| `sizes` | the default table | Overrides merged over the defaults. `cardWidth` and `cardHeight` set the image size, `cardPadding` the frame, the `title*` keys the type scale and weights, `headlinePosition: 'bottom'` moves the headline down against the footer, and `barHeight` draws an accent bar along the bottom edge. |
 | `fonts` | `{ title: 'inter', label: 'jetbrains-mono' }` | A fontsource slug per role. Inter and JetBrains Mono ship with ogier. Any other family needs its `@fontsource/<slug>` package installed. |
 | `background` | none | `{ pattern: 'dots' }` for the dot rail, or `{ image }` for a full-bleed image. |
 
 ```typescript
 import { renderPng } from 'ogier'
-import { docs } from 'ogier/layouts'
 import { light } from 'ogier/themes'
 
 await renderPng(card, {
-  layout: docs,
   theme: { ...light, accent: '#a2e57b' },
   sizes: { titleText: 80 },
   fonts: { title: 'roboto' },

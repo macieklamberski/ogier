@@ -33,6 +33,21 @@ describe('renderSvg', () => {
     expect(await renderSvg(value, style)).toStartWith(expected)
   })
 
+  it('should render an icon-only header with an aside', async () => {
+    const value: Card = {
+      header: {
+        icon: {
+          svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 4"><rect width="8" height="4" /></svg>',
+        },
+        aside: 'December 15, 2025',
+      },
+      title: 'Parsing namespaces',
+    }
+    const expected = '<svg width="1200" height="630"'
+
+    expect(await renderSvg(value)).toStartWith(expected)
+  })
+
   it('should throw when the card has neither a title nor a description', () => {
     const value = { header: { text: 'feedsmith' } }
     const throwing = () => renderSvg(value)
