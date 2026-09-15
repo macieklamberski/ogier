@@ -1,10 +1,8 @@
-import type { Background, Fonts, SizeOverrides, Theme } from './card.js'
-import type { Layout } from './layout.js'
+import type { Background, Fonts, Sizes, Theme } from './card.js'
 
 export type Style = {
-  layout?: Layout
   theme?: Theme
-  sizes?: SizeOverrides
+  sizes?: Partial<Sizes>
   fonts?: Fonts
   background?: Background
 }
