@@ -21,3 +21,4 @@ export type {
   Style,
   Theme,
 } from './types/index.js'
+export { renderFavicon } from './utils/favicon.js'

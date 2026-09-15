@@ -11,7 +11,8 @@ import type {
 } from 'vitepress'
 import { composeMetadata, composeMetaTags, getImageUrl } from '../metadata.js'
 import { renderPng } from '../render.js'
-import type { Card, Style } from '../types/index.js'
+import type { Card, ImageRef, Style } from '../types/index.js'
+import { faviconSize, renderFavicon } from '../utils/favicon.js'
 
 export type VitepressSiteData = SiteData<DefaultTheme.Config>
 
@@ -20,6 +21,7 @@ export type VitepressOptions = {
     hostname: string
     imageDir?: string
     imageUrl?: (path: string) => string
+    favicon?: ImageRef & { size?: number }
   }
   card?: Partial<Card> | ((pageData: PageData, siteData: VitepressSiteData) => Partial<Card>)
   style?: Style
@@ -64,7 +66,8 @@ const getEyebrow = (sidebar: DefaultTheme.Sidebar | undefined, path: string) => 
 
 export const vitepress = (options: VitepressOptions) => {
   const { site, card: cardOption, style = {} } = options
-  const { hostname, imageDir = 'og', imageUrl } = site
+  const { hostname, imageDir = 'og', imageUrl, favicon } = site
+  const faviconFile = 'favicon.png'
   const pages: Array<Page> = []
 
   const transformHead = (context: TransformContext<DefaultTheme.Config>): Array<HeadConfig> => {
@@ -91,13 +94,28 @@ export const vitepress = (options: VitepressOptions) => {
       image: { url: image, width: style.sizes?.cardWidth, height: style.sizes?.cardHeight },
     })
 
-    return composeMetaTags(metadata)
+    const tags: Array<HeadConfig> = composeMetaTags(metadata)
+
+    if (favicon) {
+      const sizes = `${favicon.size ?? faviconSize}x${favicon.size ?? faviconSize}`
+
+      tags.push([
+        'link',
+        { rel: 'icon', href: `${siteData.base}${faviconFile}`, type: 'image/png', sizes },
+      ])
+    }
+
+    return tags
   }
 
   const buildEnd = async ({ outDir }: SiteConfig) => {
     const dir = join(outDir, imageDir)
 
     await mkdir(dir, { recursive: true })
+
+    if (favicon) {
+      await writeFile(join(outDir, faviconFile), await renderFavicon(favicon, favicon.size))
+    }
 
     for (const page of pages) {
       const png = await renderPng(page.card, style)
