@@ -2,7 +2,7 @@ export type { DocsSizes } from './layouts/docs.js'
 export { docsLayout, docsSizes } from './layouts/docs.js'
 export type { LayoutName } from './layouts/index.js'
 export { layouts } from './layouts/index.js'
-export { getImageUrl, getMetadata, toMetaTags } from './metadata.js'
+export { composeMetadata, composeMetaTags, getImageUrl } from './metadata.js'
 export { renderPng, renderSvg } from './render.js'
 export { darkTheme } from './themes/dark.js'
 export type {

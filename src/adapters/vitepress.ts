@@ -9,7 +9,7 @@ import type {
   SiteData,
   TransformContext,
 } from 'vitepress'
-import { getImageUrl, getMetadata, toMetaTags } from '../metadata.js'
+import { composeMetadata, composeMetaTags, getImageUrl } from '../metadata.js'
 import { renderPng } from '../render.js'
 import type { Card, Style } from '../types/index.js'
 
@@ -84,14 +84,14 @@ export const vitepress = (options: VitepressOptions) => {
 
     pages.push({ path, card })
 
-    const metadata = getMetadata({
+    const metadata = composeMetadata({
       url: `${hostname}/${path.replace(indexRegex, '')}`,
       title,
       description,
       image: { url: image, width: style.sizes?.cardWidth, height: style.sizes?.cardHeight },
     })
 
-    return toMetaTags(metadata)
+    return composeMetaTags(metadata)
   }
 
   const buildEnd = async ({ outDir }: SiteConfig) => {

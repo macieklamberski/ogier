@@ -73,21 +73,21 @@ await renderPng(card, {
 })
 ```
 
-### `getMetadata(input)` and `toMetaTags(metadata)`
+### `composeMetadata(input)` and `composeMetaTags(metadata)`
 
-`getMetadata` builds the Open Graph values for one page. `toMetaTags` turns them into `['meta', attributes]` pairs, with the title, description and image mirrored into the Twitter tags.
+`composeMetadata` builds the Open Graph values for one page. `composeMetaTags` turns them into `['meta', attributes]` pairs, with the title, description and image mirrored into the Twitter tags.
 
 ```typescript
-import { getImageUrl, getMetadata, toMetaTags } from 'ogier'
+import { getImageUrl, composeMetadata, composeMetaTags } from 'ogier'
 
-const metadata = getMetadata({
+const metadata = composeMetadata({
   url: 'https://feedsmith.dev/guides/parsing',
   title: 'Parsing namespaces',
   description: 'How the parser reads namespaces.',
   image: getImageUrl('https://feedsmith.dev', 'guides/parsing'),
 })
 
-const tags = toMetaTags(metadata)
+const tags = composeMetaTags(metadata)
 ```
 
 `getImageUrl(hostname, path, dir?)` is the default image scheme: the page path with slashes turned into dashes, as a PNG under `og/`.
