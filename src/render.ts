@@ -38,6 +38,8 @@ const normalizeCard = (card: Card): Card => {
     byline: normalizeText(card.byline),
     description: normalizeText(card.description),
     footer: normalizeSlot(card.footer),
+    image: card.image,
+    align: card.align,
   }
 }
 
@@ -52,6 +54,7 @@ export const renderSvg = async (card: Card, style: Style = {}): Promise<string> 
     fonts: families,
     headerIcon: card.header?.icon ? await loadIcon(card.header.icon) : undefined,
     footerIcon: card.footer?.icon ? await loadIcon(card.footer.icon) : undefined,
+    image: card.image ? await loadImage(card.image) : undefined,
     background,
     backgroundImage:
       background && 'image' in background ? await loadImage(background.image) : undefined,

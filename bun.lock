@@ -18,6 +18,12 @@
         "tsdown": "^0.23.0",
         "vitepress": "^2.0.0-alpha.17",
       },
+      "peerDependencies": {
+        "vitepress": ">=1",
+      },
+      "optionalPeers": [
+        "vitepress",
+      ],
     },
   },
   "packages": {

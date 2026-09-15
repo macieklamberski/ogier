@@ -48,6 +48,19 @@ describe('renderSvg', () => {
     expect(await renderSvg(value)).toStartWith(expected)
   })
 
+  it('should render a card image cropped to cover the left half', async () => {
+    const value: Card = {
+      title: 'Parsing namespaces',
+      image: {
+        svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8"><rect width="8" height="8" /></svg>',
+        position: 'left',
+      },
+    }
+    const expected = '<image x="-15" y="0" width="630" height="630"'
+
+    expect(await renderSvg(value)).toContain(expected)
+  })
+
   it('should throw when the card has neither a title nor a description', () => {
     const value = { header: { text: 'feedsmith' } }
     const throwing = () => renderSvg(value)

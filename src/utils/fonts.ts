@@ -1,26 +1,24 @@
 import { readFile } from 'node:fs/promises'
-import { createRequire } from 'node:module'
 import type { Font } from 'satori'
 import { t } from 'trousse'
 import locales from '../locales.json' with { type: 'json' }
 import type { FontRole, Fonts } from '../types/index.js'
+import { resolvePackageFile } from './packages.js'
 
 export type LoadedFonts = {
   fonts: Array<Font>
   families: Record<FontRole, string>
 }
 
-const require = createRequire(import.meta.url)
 const subsets = ['latin', 'latin-ext']
 const defaultFonts: Record<FontRole, string> = {
   title: 'inter',
+  body: 'inter',
   label: 'jetbrains-mono',
 }
 
-const resolveFontFile = (family: string, subset: string, weight: number): string | undefined => {
-  try {
-    return require.resolve(`@fontsource/${family}/files/${family}-${subset}-${weight}-normal.woff`)
-  } catch {}
+const resolveFontFile = (family: string, subset: string, weight: number) => {
+  return resolvePackageFile(`@fontsource/${family}/files/${family}-${subset}-${weight}-normal.woff`)
 }
 
 // Satori keeps one file per font name and weight, so each subset gets its own name and the
@@ -59,7 +57,7 @@ export const loadFonts = async (
   weights: Record<FontRole, Array<number>>,
 ): Promise<LoadedFonts> => {
   const families = { ...defaultFonts, ...fonts }
-  const loaded: LoadedFonts = { fonts: [], families: { title: '', label: '' } }
+  const loaded: LoadedFonts = { fonts: [], families: { title: '', body: '', label: '' } }
 
   for (const role of Object.keys(weights) as Array<FontRole>) {
     const result = await loadFamily(role, families[role], weights[role])
