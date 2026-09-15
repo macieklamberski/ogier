@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'bun:test'
-import { darkTheme } from '../themes/dark.js'
+import { dark } from '../themes/dark.js'
 import type { LayoutContext, Node } from '../types/index.js'
-import { docsLayout, docsSizes } from './docs.js'
+import { docs, docsSizes } from './docs.js'
 
 const collectNodes = (node: Node | undefined, nodes: Array<Node> = []): Array<Node> => {
   if (!node) {
@@ -29,10 +29,10 @@ const findByText = (root: Node, text: string) => {
   return collectNodes(root).find((node) => node.props.children === text)
 }
 
-describe('docsLayout', () => {
+describe('docs', () => {
   const baseContext: LayoutContext = {
     card: { header: { text: 'feedsmith' }, title: 'Parsing namespaces' },
-    theme: darkTheme,
+    theme: dark,
     sizes: docsSizes,
     fonts: { title: 'title-latin', label: 'label-latin' },
     background: { pattern: 'dots' },
@@ -50,7 +50,7 @@ describe('docsLayout', () => {
       headerIcon: { src: 'data:image/svg+xml;base64,AAAA' },
       footerIcon: { svg: '<svg><path stroke="currentColor" /></svg>' },
     }
-    const nodes = collectNodes(docsLayout.render(value))
+    const nodes = collectNodes(docs.render(value))
     const expectedEyebrow = {
       props: { style: { fontFamily: 'label-latin', fontSize: 26, color: '#ff8c4d' } },
     }
@@ -82,7 +82,7 @@ describe('docsLayout', () => {
   })
 
   it('should render the header, the title and the dots with minimal properties', () => {
-    const nodes = collectNodes(docsLayout.render(baseContext))
+    const nodes = collectNodes(docs.render(baseContext))
     const expected = {
       props: { style: { fontSize: 72, fontWeight: 700 } },
     }
@@ -99,7 +99,7 @@ describe('docsLayout', () => {
       ...baseContext,
       card: { ...baseContext.card, description: 'Every tag the parser reads.' },
     }
-    const root = docsLayout.render(value)
+    const root = docs.render(value)
     const expectedTitle = {
       props: { style: { lineClamp: 2 } },
     }
@@ -122,7 +122,7 @@ describe('docsLayout', () => {
       props: { style: { fontSize: 44, fontWeight: 400 } },
     }
 
-    expect(findByText(docsLayout.render(value), description)).toMatchObject(expected)
+    expect(findByText(docs.render(value), description)).toMatchObject(expected)
   })
 
   it('should render a background image instead of the dots', () => {
@@ -131,7 +131,7 @@ describe('docsLayout', () => {
       background: { image: { svg: '' } },
       backgroundImage: { src: 'data:image/png;base64,AAAA' },
     }
-    const nodes = collectNodes(docsLayout.render(value))
+    const nodes = collectNodes(docs.render(value))
     const expected = {
       type: 'img',
       props: { src: 'data:image/png;base64,AAAA', style: { objectFit: 'cover' } },
@@ -150,6 +150,6 @@ describe('docsLayout', () => {
       props: { style: { fontSize: 80 } },
     }
 
-    expect(findByText(docsLayout.render(value), 'Parsing namespaces')).toMatchObject(expected)
+    expect(findByText(docs.render(value), 'Parsing namespaces')).toMatchObject(expected)
   })
 })
