@@ -25,7 +25,7 @@ const style: Style = {
     text: '#ffffff',
     muted: '#cfc7ff',
     accent: '#ffffff',
-    pattern: '#8f7dff',
+    pattern: 'rgba(255, 255, 255, 0.35)',
   },
   fonts: {
     title: 'space-mono',
@@ -36,9 +36,11 @@ const style: Style = {
     titleText: 64,
     titleWeight: 700,
     titleTracking: '-0.06em',
+    railStrokeWidth: 2,
   },
   background: {
-    pattern: 'dots',
+    pattern: 'waves',
+    angle: -45,
   },
 }
 

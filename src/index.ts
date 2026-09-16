@@ -1,4 +1,5 @@
 export { composeMetadata, composeMetaTags, getImageUrl } from './metadata.js'
+export type { Pattern } from './patterns.js'
 export { createRenderer, renderPng, renderSvg } from './render.js'
 export type {
   Background,
