@@ -77,12 +77,19 @@ export type Sizes = {
   footerTracking: string
   barHeight: number
   railWidth: number
-  railDotStep: number
+  railStep: number
   railDotRadius: number
+  railStrokeWidth: number
 }
 
 export type FontRole = 'title' | 'body' | 'label'
 
 export type Fonts = Partial<Record<FontRole, string>>
 
-export type Background = { pattern: 'dots' } | { image: ImageRef }
+export type Background =
+  | {
+      pattern: 'dots' | 'stripes' | 'grid' | 'crosses' | 'waves' | 'checks'
+      angle?: number
+      fade?: boolean
+    }
+  | { image: ImageRef }
