@@ -37,7 +37,6 @@ export const defaultSizes: Sizes = {
   titleTrackingLong: '-0.0125em',
   titleMaxLines: 3,
   titleMaxLinesWithDescription: 2,
-  headlinePosition: 'middle',
   bylineText: 28,
   bylineTracking: '0em',
   descriptionText: 30,
@@ -59,7 +58,7 @@ const lineAlign: Record<LineRole, string> = {
   footer: 'flex-end',
 }
 
-const flexAlign: Record<Align, string> = {
+const flexAlign: Record<NonNullable<Align['horizontal']>, string> = {
   left: 'flex-start',
   center: 'center',
   right: 'flex-end',
@@ -274,9 +273,10 @@ const renderHeadline = (context: RenderContext): Node => {
     children.push(renderTitle(context, card.description))
   }
 
+  const horizontal = card.align?.horizontal ?? 'left'
   const rowStyle = {
     display: 'flex',
-    justifyContent: flexAlign[card.align ?? 'left'],
+    justifyContent: flexAlign[horizontal],
     ...getImageMargin(context),
   }
   const columnStyle = {
@@ -285,8 +285,8 @@ const renderHeadline = (context: RenderContext): Node => {
     gap: 16,
     width: '100%',
     maxWidth: context.sizes.contentWidth,
-    alignItems: flexAlign[card.align ?? 'left'],
-    textAlign: card.align ?? 'left',
+    alignItems: flexAlign[horizontal],
+    textAlign: horizontal,
   }
 
   return h('div', rowStyle, h('div', columnStyle, children))
@@ -376,18 +376,23 @@ const renderBody = (context: RenderContext): Node => {
     paddingBottom: bottom,
     paddingLeft: left,
   }
-  // An empty box stands in for a missing line, so the space-between body keeps the headline
-  // where it sits when both lines are there.
-  const header = card.header ? renderLine(context, 'header', card.header) : h('div', {})
+  const groupStyle = { display: 'flex', flexDirection: 'column', gap: 16 }
+  const header = card.header ? renderLine(context, 'header', card.header) : undefined
   const footer = card.footer ? renderLine(context, 'footer', card.footer) : undefined
+  const headline = renderHeadline(context)
+  const vertical = card.align?.vertical ?? 'center'
 
-  if (sizes.headlinePosition === 'bottom') {
-    const bottomStyle = { display: 'flex', flexDirection: 'column', gap: 16 }
-
-    return h('div', bodyStyle, [header, h('div', bottomStyle, [renderHeadline(context), footer])])
+  if (vertical === 'top') {
+    return h('div', bodyStyle, [h('div', groupStyle, [header, headline]), footer ?? h('div', {})])
   }
 
-  return h('div', bodyStyle, [header, renderHeadline(context), footer ?? h('div', {})])
+  if (vertical === 'bottom') {
+    return h('div', bodyStyle, [header ?? h('div', {}), h('div', groupStyle, [headline, footer])])
+  }
+
+  // An empty box stands in for a missing line, so the space-between body keeps the headline
+  // where it sits when both lines are there.
+  return h('div', bodyStyle, [header ?? h('div', {}), headline, footer ?? h('div', {})])
 }
 
 export const render = (context: RenderContext): Node => {

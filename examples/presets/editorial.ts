@@ -17,7 +17,9 @@ const card: Card = {
     file: new URL('../assets/still.jpg', import.meta.url),
     position: 'left',
   },
-  align: 'right',
+  align: {
+    horizontal: 'right',
+  },
 }
 
 const style: Style = {

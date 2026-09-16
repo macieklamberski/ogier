@@ -50,7 +50,7 @@ Render one card. Both take the same arguments and return a PNG buffer or an SVG 
 
 A card is what the image says and shows. It needs a title, a description or both. A description alone takes the title's place, which is what a home page card usually wants. The header and the footer are a line with a text, an icon, or both, plus an aside at the far end of the line: a date on a post, a version on a docs page. An icon alone makes a wordmark line. Each text on the line runs to half the card and then wraps, the header line downward and the footer line upward. The byline sits under the title: an author, a source, anything that is not the description.
 
-The image covers half the card from edge to edge, the right half unless `position` says `'left'`, and the text moves to the other half. The header and footer lines still run the full width of the card, over the image, with the aside on the baseline of the text beside it. `align` sets the eyebrow, title, byline and description to the left, center or right. The header and footer lines keep their order whatever the alignment, with the icon and text first and the aside at the far end.
+The image covers half the card from edge to edge, the right half unless `position` says `'left'`, and the text moves to the other half. The header and footer lines still run the full width of the card, over the image, with the aside on the baseline of the text beside it. `align.horizontal` sets the eyebrow, title, byline and description to the left, center or right, and `align.vertical` puts that block at the top under the header, in the middle, or at the bottom above the footer. The header and footer lines keep their order whatever the alignment, with the icon and text first and the aside at the far end.
 
 ```typescript
 type Card = {
@@ -61,7 +61,7 @@ type Card = {
   description?: string
   footer?: { text?: string; icon?: IconRef; aside?: string }
   image?: ImageRef & { position?: 'left' | 'right' }
-  align?: 'left' | 'center' | 'right'
+  align?: { horizontal?: 'left' | 'center' | 'right'; vertical?: 'top' | 'center' | 'bottom' }
 }
 ```
 
@@ -72,7 +72,7 @@ Style is how the card is drawn. Every field is optional. The header sits top lef
 | Option | Default | What it does |
 |---|---|---|
 | `theme` | `dark` from `ogier/themes` | Colors: `bg`, `text`, `muted`, `accent`, `pattern`, plus an optional color per text: `header`, `eyebrow`, `title`, `byline`, `description`, `footer` and `aside`. A text without its own color takes `text`, `accent` for the eyebrow, or `muted` for the description, the footer and the aside. Spread a preset to override one value. |
-| `sizes` | the default table | Overrides merged over the defaults. `cardWidth` and `cardHeight` set the card size, `cardPadding` the frame as `{ top, right, bottom, left }` in pixels with a missing side at the edge, `contentWidth` the widest the headline gets, `slotLineHeight` the line height of the header and footer texts, `asideBaseline` the label font's ascender plus descender over its em size, which puts the aside on the text baseline, 0.73 by default, the `title*` keys the type scale, weights and tracking, the `*Tracking` keys the letter spacing of the header, eyebrow, byline, description, footer and aside, `headlinePosition: 'bottom'` moves the headline down against the footer, and `barHeight` draws an accent bar along the bottom edge. |
+| `sizes` | the default table | Overrides merged over the defaults. `cardWidth` and `cardHeight` set the card size, `cardPadding` the frame as `{ top, right, bottom, left }` in pixels with a missing side at the edge, `contentWidth` the widest the headline gets, `slotLineHeight` the line height of the header and footer texts, `asideBaseline` the label font's ascender plus descender over its em size, which puts the aside on the text baseline, 0.73 by default, the `title*` keys the type scale, weights and tracking, the `*Tracking` keys the letter spacing of the header, eyebrow, byline, description, footer and aside, and `barHeight` draws an accent bar along the bottom edge. |
 | `fonts` | `{ title: 'inter', body: 'inter', label: 'jetbrains-mono' }` | A fontsource slug per role: `title` for the title, `body` for the description, `label` for the header, eyebrow, byline, aside and footer. A description alone takes the title font. Inter and JetBrains Mono ship with ogier. Any other family needs its `@fontsource/<slug>` package installed in your project. |
 | `background` | none | `{ pattern: 'dots' }` for the dot rail, or `{ image }` for a full-bleed image. |
 

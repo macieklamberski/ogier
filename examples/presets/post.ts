@@ -12,6 +12,9 @@ const card: Card = {
   footer: {
     text: 'anaruiz.example',
   },
+  align: {
+    vertical: 'bottom',
+  },
 }
 
 const style: Style = {
@@ -25,7 +28,6 @@ const style: Style = {
     label: 'dm-sans',
   },
   sizes: {
-    headlinePosition: 'bottom',
     barHeight: 12,
     headerText: 28,
     titleWeight: 700,
