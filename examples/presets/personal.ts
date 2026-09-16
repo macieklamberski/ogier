@@ -10,6 +10,9 @@ const card: Card = {
   },
   title: 'nora lindqvist',
   description: 'software designer',
+  align: {
+    vertical: 'bottom',
+  },
 }
 
 const style: Style = {
@@ -32,7 +35,6 @@ const style: Style = {
       left: 64,
     },
     headerIcon: 48,
-    headlinePosition: 'bottom',
     titleText: 76,
     titleWeight: 500,
     titleTracking: '-0.04em',

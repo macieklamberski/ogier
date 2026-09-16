@@ -6,7 +6,7 @@
 
 Easily generate Open Graph images from text, icons and fonts, with ready-made layouts and themes, and adapters for your site framework.
 
-A share card is rendered from a plain card object through a layout, a theme and a size table. Satori turns the layout into SVG and resvg turns that into a 1200 by 630 PNG. Fonts come from fontsource packages, icons from any SVG file, your own or one shipped by an icon package (e.g. Tabler, Lucide). A VitePress adapter renders one card per page at build time and emits the tags that point at it.
+Ogier turns a title, a description and an icon into the image a page shows when it is shared: a 1200 by 630 PNG in your fonts and colors. Icons come from any SVG file, your own or one from an icon package like Tabler or Lucide. The VitePress and Next adapters render a card for every page and write the tags that point at it.
 
 ## Installation
 
@@ -46,11 +46,9 @@ Each card below is rendered from a preset in [examples](examples). Click a card 
 
 ### `renderPng(card, style?)` and `renderSvg(card, style?)`
 
-Render one card. Both take the same arguments and return a PNG buffer or an SVG string.
+Render one card. Both take the same arguments and give back a PNG buffer or an SVG string.
 
-A card is what the image says and shows. It needs a title, a description or both. A description alone takes the title's place, which is what a home page card usually wants. The header and the footer are a line with a text, an icon, or both, plus an aside at the far end of the line: a date on a post, a version on a docs page. An icon alone makes a wordmark line. Each text on the line runs to half the card and then wraps, the header line downward and the footer line upward. The byline sits under the title: an author, a source, anything that is not the description.
-
-The image covers half the card from edge to edge, the right half unless `position` says `'left'`, and the text moves to the other half. The header and footer lines still run the full width of the card, over the image, with the aside on the baseline of the text beside it. `align` sets the eyebrow, title, byline and description to the left, center or right. The header and footer lines keep their order whatever the alignment, with the icon and text first and the aside at the far end.
+The card is what the image says:
 
 ```typescript
 type Card = {
@@ -61,20 +59,34 @@ type Card = {
   description?: string
   footer?: { text?: string; icon?: IconRef; aside?: string }
   image?: ImageRef & { position?: 'left' | 'right' }
-  align?: 'left' | 'center' | 'right'
+  align?: { horizontal?: 'left' | 'center' | 'right'; vertical?: 'top' | 'center' | 'bottom' }
 }
 ```
 
-An icon or an image is `{ file }` with a path, a file URL or a package path such as `'@tabler/icons/outline/brand-github.svg'` or `'lucide-static/icons/rss.svg'`, or `{ svg }` with the markup as a string or bytes. An image file can also be a PNG, JPG or WebP. A package path resolves from your node_modules, so any icon package that ships SVG files works once installed. `currentColor` in the SVG takes the color of the text beside it, or the icon's own `color` when given, and baked colors stay as they are.
+- `title` and `description`: at least one of them. A description alone takes the title's place, which is what a home page wants.
+- `header` and `footer`: a line with a text, an icon, or both. `aside` sits at the far end of the line, for a date or a version. An icon alone makes a wordmark line.
+- `eyebrow`: the short line above the title, for a section name or a category.
+- `byline`: the line under the title, for an author or a source.
+- `image`: a picture over one half of the card, the right half unless `position` is `'left'`. The text takes the other half.
+- `align`: `horizontal` moves the eyebrow, title, byline and description left, center or right. `vertical` puts them at the top under the header, in the middle, or at the bottom above the footer.
 
-Style is how the card is drawn. Every field is optional. The header sits top left, the eyebrow, title, byline and description in the middle, the footer bottom left, and a pattern rail on the right when the background asks for it. Themes come from `ogier/themes`, `dark` and `light`.
+An icon or an image is `{ file }` with a path, a file URL or a package path such as `'@tabler/icons/outline/brand-github.svg'`, or `{ svg }` with the markup. Package paths resolve from your node_modules, so any icon package that ships SVG files works once installed. An image can also be a PNG, JPG or WebP. `currentColor` in an icon takes the color of the text beside it.
 
-| Option | Default | What it does |
-|---|---|---|
-| `theme` | `dark` from `ogier/themes` | Colors: `bg`, `text`, `muted`, `accent`, `pattern`, plus an optional color per text: `header`, `eyebrow`, `title`, `byline`, `description`, `footer` and `aside`. A text without its own color takes `text`, `accent` for the eyebrow, or `muted` for the description, the footer and the aside. Spread a preset to override one value. |
-| `sizes` | the default table | Overrides merged over the defaults. `cardWidth` and `cardHeight` set the card size, `cardPadding` the frame as `{ top, right, bottom, left }` in pixels with a missing side at the edge, `contentWidth` the widest the headline gets, `slotLineHeight` the line height of the header and footer texts, `asideBaseline` the label font's ascender plus descender over its em size, which puts the aside on the text baseline, 0.73 by default, the `title*` keys the type scale, weights and tracking, the `*Tracking` keys the letter spacing of the header, eyebrow, byline, description, footer and aside, `headlinePosition: 'bottom'` moves the headline down against the footer, and `barHeight` draws an accent bar along the bottom edge. |
-| `fonts` | `{ title: 'inter', body: 'inter', label: 'jetbrains-mono' }` | A fontsource slug per role: `title` for the title, `body` for the description, `label` for the header, eyebrow, byline, aside and footer. A description alone takes the title font. Inter and JetBrains Mono ship with ogier. Any other family needs its `@fontsource/<slug>` package installed in your project. |
-| `background` | none | `{ pattern }` for a rail on the right that fades in from the middle of the card: `dots`, `stripes`, `grid`, `crosses`, `waves` or `checks`, with an optional `angle` in degrees, 45 for stripes and 0 otherwise, and `fade: false` for a flat rail. The rail is `railWidth` wide, the tile `railStep` square, drawn in the theme's `pattern` color. Or `{ image }` for a full-bleed image. |
+The style is how the card looks. Every field is optional:
+
+```typescript
+type Style = {
+  theme?: Theme
+  sizes?: Partial<Sizes>
+  fonts?: { title?: string; body?: string; label?: string }
+  background?: { pattern: Pattern; angle?: number; fade?: boolean } | { image: ImageRef }
+}
+```
+
+- `theme`: the colors. `dark` and `light` come from `ogier/themes`. Spread one and change a value, or give a text its own color with `title`, `description`, `aside` and the other text names.
+- `sizes`: the numbers. Card size and padding, the type scale, the accent bar along the bottom edge. Every key has a default, so set only what you change. The [examples](examples) show the ones that matter in practice, and the `Sizes` type lists them all.
+- `fonts`: a fontsource family per role. `title` for the title, `body` for the description, `label` for the rest. Inter and JetBrains Mono ship with ogier. Any other family needs its `@fontsource/<slug>` package installed in your project.
+- `background`: `{ pattern }` for a rail on the right that fades in from the middle of the card. The pattern is `dots`, `stripes`, `grid`, `crosses`, `waves` or `checks`, drawn in the theme's `pattern` color, with an optional `angle` in degrees and `fade: false` for a flat rail. Or `{ image }` for a picture behind the whole card.
 
 ```typescript
 import { renderPng } from 'ogier'
@@ -90,7 +102,7 @@ await renderPng(card, {
 
 ### `createRenderer(style?)`
 
-Render many cards with one style. The fonts are read from disk on the first render and shared by every render after it, so a server renders a card per request and a build renders a card per page without reading the font files each time. Icons and images are read per render.
+Render many cards with one style. The fonts are read from disk once, on the first render, so a server or a build does not read them again for every card.
 
 ```typescript
 import { createRenderer } from 'ogier'
@@ -102,11 +114,9 @@ for (const page of pages) {
 }
 ```
 
-`renderPng(card, style?)` and `renderSvg(card, style?)` are one render through a fresh renderer. The VitePress adapter renders every page through one.
-
 ### `composeMetadata(input)` and `composeMetaTags(metadata)`
 
-`composeMetadata` builds the Open Graph values for one page. `composeMetaTags` turns them into `['meta', attributes]` pairs, with the title, description and image mirrored into the Twitter tags.
+The tags that point at the image. `composeMetadata` builds the Open Graph values for one page, and `composeMetaTags` turns them into `['meta', attributes]` pairs with the Twitter tags filled in from the same values.
 
 ```typescript
 import { getImageUrl, composeMetadata, composeMetaTags } from 'ogier'
@@ -117,11 +127,10 @@ const metadata = composeMetadata({
   description: 'How the parser reads namespaces.',
   image: getImageUrl('https://feedsmith.dev', 'guides/parsing'),
 })
-
 const tags = composeMetaTags(metadata)
 ```
 
-`getImageUrl(hostname, path, dir?)` is the default image scheme: the page path with slashes turned into dashes, as a PNG under `og/`.
+`getImageUrl(hostname, path, dir?)` names the image for a page: the path with slashes turned into dashes, as a PNG under `og/`.
 
 ## Adapters
 

@@ -8,7 +8,9 @@ const card: Card = {
   footer: {
     text: 'plotwise.example',
   },
-  align: 'center',
+  align: {
+    horizontal: 'center',
+  },
 }
 
 const style: Style = {

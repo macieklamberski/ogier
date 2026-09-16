@@ -8,7 +8,10 @@ export type Slot = {
   aside?: string
 }
 
-export type Align = 'left' | 'center' | 'right'
+export type Align = {
+  horizontal?: 'left' | 'center' | 'right'
+  vertical?: 'top' | 'center' | 'bottom'
+}
 
 export type Card = {
   header?: Slot
@@ -64,7 +67,6 @@ export type Sizes = {
   titleTrackingLong: string
   titleMaxLines: number
   titleMaxLinesWithDescription: number
-  headlinePosition: 'middle' | 'bottom'
   bylineText: number
   bylineTracking: string
   descriptionText: number
