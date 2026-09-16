@@ -288,8 +288,12 @@ describe('render', () => {
   it('should push the headline to the bottom above the footer and draw the accent bar', () => {
     const value: RenderContext = {
       ...baseContext,
-      card: { ...baseContext.card, footer: { text: 'example/repo' } },
-      sizes: { ...defaultSizes, headlinePosition: 'bottom', barHeight: 10 },
+      card: {
+        ...baseContext.card,
+        footer: { text: 'example/repo' },
+        align: { vertical: 'bottom' },
+      },
+      sizes: { ...defaultSizes, barHeight: 10 },
     }
     const root = render(value)
     const body = findByStyle(root, 'justifyContent', 'space-between') as Node
@@ -322,14 +326,27 @@ describe('render', () => {
   it('should push the headline to the bottom without a header', () => {
     const value: RenderContext = {
       ...baseContext,
-      card: { title: 'Parsing namespaces' },
-      sizes: { ...defaultSizes, headlinePosition: 'bottom' },
+      card: { title: 'Parsing namespaces', align: { vertical: 'bottom' } },
     }
     const root = render(value)
     const body = findByStyle(root, 'justifyContent', 'space-between') as Node
     const expected = [{ type: 'div', props: { style: {} } }, { props: { style: { gap: 16 } } }]
 
     expect(body.props.children).toMatchObject(expected)
+  })
+
+  it('should pull the headline to the top under the header without a footer', () => {
+    const value: RenderContext = {
+      ...baseContext,
+      card: { ...baseContext.card, align: { vertical: 'top' } },
+    }
+    const root = render(value)
+    const body = findByStyle(root, 'justifyContent', 'space-between') as Node
+    const expected = [{ props: { style: { gap: 16 } } }, { type: 'div', props: { style: {} } }]
+    const group = (body.props.children as Array<Node>)[0]
+
+    expect(body.props.children).toMatchObject(expected)
+    expect(listTexts(group)).toEqual(['feedsmith', 'Parsing namespaces'])
   })
 
   it('should clamp both the title and the description to two lines', () => {
@@ -457,7 +474,7 @@ describe('render', () => {
       card: {
         header: { text: 'feedsmith', aside: 'v1.1.0' },
         title: 'Parsing namespaces',
-        align: 'right',
+        align: { horizontal: 'right' },
       },
     }
     const root = render(value)
@@ -480,7 +497,7 @@ describe('render', () => {
       card: {
         header: { text: 'feedsmith', aside: 'v1.1.0' },
         title: 'Parsing namespaces',
-        align: 'center',
+        align: { horizontal: 'center' },
       },
     }
     const root = render(value)
