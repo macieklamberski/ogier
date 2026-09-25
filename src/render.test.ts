@@ -61,11 +61,11 @@ describe('renderSvg', () => {
     expect(await renderSvg(value)).toContain(expected)
   })
 
-  it('should throw when the card has neither a title nor a description', () => {
+  it('should throw when the card has neither a title nor a description', async () => {
     const value = { header: { text: 'feedsmith' } }
     const throwing = () => renderSvg(value)
 
-    expect(throwing()).rejects.toThrow(locales.errors.cardNeedsText)
+    await expect(throwing()).rejects.toThrow(locales.errors.cardNeedsText)
   })
 })
 
