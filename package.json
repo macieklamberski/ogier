@@ -29,8 +29,8 @@
   "exports": {
     ".": {
       "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
       },
       "require": {
         "types": "./dist/index.d.cts",
@@ -39,8 +39,8 @@
     },
     "./themes": {
       "import": {
-        "types": "./dist/themes/index.d.ts",
-        "default": "./dist/themes/index.js"
+        "types": "./dist/themes/index.d.mts",
+        "default": "./dist/themes/index.mjs"
       },
       "require": {
         "types": "./dist/themes/index.d.cts",
@@ -49,8 +49,8 @@
     },
     "./adapters": {
       "import": {
-        "types": "./dist/adapters/index.d.ts",
-        "default": "./dist/adapters/index.js"
+        "types": "./dist/adapters/index.d.mts",
+        "default": "./dist/adapters/index.mjs"
       },
       "require": {
         "types": "./dist/adapters/index.d.cts",
@@ -62,9 +62,12 @@
   "files": [
     "dist"
   ],
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "prepare": "lefthook install",
-    "build": "tsdown src/index.ts src/themes/index.ts src/adapters/index.ts --format cjs,esm --dts --clean --unbundle --no-fixed-extension --shims",
+    "build": "tsdown src/index.ts src/themes/index.ts src/adapters/index.ts --format cjs,esm --dts --clean --unbundle --shims",
     "test": "bun test",
     "examples": "cd examples && bun install && bun index.ts"
   },
