@@ -47,11 +47,11 @@ describe('loadIcon', () => {
     expect(await loadIcon(value)).toEqual(expected)
   })
 
-  it('should throw for a package path that does not resolve', () => {
+  it('should throw for a package path that does not resolve', async () => {
     const value = { file: 'no-such-package/icons/rss.svg' }
     const throwing = () => loadIcon(value)
 
-    expect(throwing()).rejects.toThrow(
+    await expect(throwing()).rejects.toThrow(
       t(locales.errors.iconNotFound, { file: 'no-such-package/icons/rss.svg' }),
     )
   })

@@ -50,11 +50,11 @@ describe('loadFonts', () => {
     expect(await loadFonts(value, { title: [400], body: [400], label: [400] })).toEqual(expected)
   })
 
-  it('should throw with the install command when the family is not installed', () => {
+  it('should throw with the install command when the family is not installed', async () => {
     const value = { title: 'roboto' }
     const throwing = () => loadFonts(value, weights)
 
-    expect(throwing()).rejects.toThrow(
+    await expect(throwing()).rejects.toThrow(
       t(locales.errors.fontNotInstalled, { family: 'roboto', weights: '400, 700' }),
     )
   })

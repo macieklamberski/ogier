@@ -23,10 +23,10 @@ describe('renderFavicon', () => {
     expect([png.readUInt32BE(16), png.readUInt32BE(20)]).toEqual([48, 48])
   })
 
-  it('should reject markup that is not svg', () => {
+  it('should reject markup that is not svg', async () => {
     const throwing = () => renderFavicon({ svg: 'not svg' })
 
-    expect(throwing()).rejects.toThrow()
+    await expect(throwing()).rejects.toThrow()
   })
 
   it('should reject a raster file', async () => {
@@ -36,6 +36,6 @@ describe('renderFavicon', () => {
 
     const throwing = () => renderFavicon({ file })
 
-    expect(throwing()).rejects.toThrow(locales.errors.faviconNeedsSvg)
+    await expect(throwing()).rejects.toThrow(locales.errors.faviconNeedsSvg)
   })
 })
