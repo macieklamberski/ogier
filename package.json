@@ -58,7 +58,7 @@
     "satori": "^0.33.4"
   },
   "peerDependencies": {
-    "vitepress": ">=1"
+    "vitepress": "^2.0.0-0"
   },
   "peerDependenciesMeta": {
     "vitepress": {
