@@ -1,3 +1,4 @@
+import { renderPattern } from './patterns.js'
 import type { Align, FontRole, Icon, Node, RenderContext, Sizes, Slot } from './types/index.js'
 import { colorSvg, toDataUri } from './utils/icons.js'
 
@@ -49,8 +50,9 @@ export const defaultSizes: Sizes = {
   footerTracking: '0em',
   barHeight: 0,
   railWidth: 600,
-  railDotStep: 24,
+  railStep: 24,
   railDotRadius: 2,
+  railStrokeWidth: 1,
 }
 
 const lineAlign: Record<LineRole, string> = {
@@ -292,36 +294,27 @@ const renderHeadline = (context: RenderContext): Node => {
   return h('div', rowStyle, h('div', columnStyle, children))
 }
 
-const renderDots = (context: RenderContext): Node => {
-  const { sizes, theme } = context
-  const dots: Array<Node> = []
+const renderRail = (context: RenderContext): Node | undefined => {
+  const { background, sizes, theme } = context
 
-  for (let y = sizes.railDotStep / 2; y < sizes.cardHeight; y += sizes.railDotStep) {
-    for (let x = sizes.railDotStep / 2; x < sizes.railWidth; x += sizes.railDotStep) {
-      const opacity = x / sizes.railWidth
-
-      dots.push({
-        type: 'circle',
-        props: { cx: x, cy: y, r: sizes.railDotRadius, fill: theme.pattern, opacity },
-      })
-    }
+  if (!background || !('pattern' in background)) {
+    return
   }
 
-  const svg: Node = {
-    type: 'svg',
-    props: {
-      width: sizes.railWidth,
-      height: sizes.cardHeight,
-      viewBox: `0 0 ${sizes.railWidth} ${sizes.cardHeight}`,
-      children: dots,
-    },
+  const src = toDataUri(renderPattern(background, sizes, theme), 'image/svg+xml')
+  const style = {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    width: sizes.railWidth,
+    height: sizes.cardHeight,
   }
 
-  return h('div', { position: 'absolute', top: 0, right: 0, display: 'flex' }, svg)
+  return { type: 'img', props: { src, style } }
 }
 
 const renderBackground = (context: RenderContext): Node | undefined => {
-  const { background, backgroundImage, sizes } = context
+  const { backgroundImage, sizes } = context
 
   if (backgroundImage) {
     const src = getImageSrc(backgroundImage)
@@ -337,9 +330,7 @@ const renderBackground = (context: RenderContext): Node | undefined => {
     return { type: 'img', props: { src, style } }
   }
 
-  if (background && 'pattern' in background) {
-    return renderDots(context)
-  }
+  return renderRail(context)
 }
 
 const renderImage = (context: RenderContext): Node | undefined => {
