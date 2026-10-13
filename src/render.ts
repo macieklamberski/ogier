@@ -1,6 +1,6 @@
 import { Resvg } from '@resvg/resvg-js'
 import satori from 'satori'
-import { defaultSizes, fontWeights, render } from './layout.js'
+import { defaultSizes, getFontWeights, render } from './layout.js'
 import locales from './locales.json' with { type: 'json' }
 import { dark } from './themes/dark.js'
 import type { Card, RenderContext, Sizes, Slot, Style } from './types/index.js'
@@ -51,7 +51,7 @@ export const createRenderer = (style: Style = {}) => {
   let loadedFonts: Promise<LoadedFonts> | undefined
 
   const renderSvg = async (card: Card): Promise<string> => {
-    loadedFonts ??= loadFonts(style.fonts, fontWeights)
+    loadedFonts ??= loadFonts(style.fonts, getFontWeights(sizes))
 
     const { fonts, families } = await loadedFonts
     const context: RenderContext = {

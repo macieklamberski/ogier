@@ -3,10 +3,18 @@ import { colorSvg, toDataUri } from './utils/icons.js'
 
 type LineRole = 'header' | 'footer'
 
-export const fontWeights: Record<FontRole, Array<number>> = {
+const fontWeights: Record<FontRole, Array<number>> = {
   title: [400, 500, 700],
   body: [400],
   label: [500],
+}
+
+// Satori draws a weight that was not loaded in the nearest one it has, so a title weight set in
+// the sizes is loaded next to the defaults.
+export const getFontWeights = (sizes: Sizes): Record<FontRole, Array<number>> => {
+  const title = new Set([...fontWeights.title, sizes.titleWeight, sizes.titleWeightLong])
+
+  return { ...fontWeights, title: [...title].sort((a, b) => a - b) }
 }
 
 export const defaultSizes: Sizes = {
