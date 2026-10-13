@@ -47,7 +47,7 @@
   },
   "scripts": {
     "prepare": "lefthook install",
-    "build": "tsdown src/index.ts src/themes/index.ts src/adapters/index.ts --format esm --dts --clean --unbundle",
+    "build": "tsdown src/index.ts src/themes/index.ts src/adapters/index.ts --format esm --dts --clean",
     "test": "bun test",
     "examples": "cd examples && bun install && bun index.ts"
   },
