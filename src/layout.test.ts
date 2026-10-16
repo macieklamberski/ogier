@@ -196,7 +196,9 @@ describe('render', () => {
     }
 
     expect(groups).toMatchObject(expectedGroups)
-    expect(collectNodes(root).find((node) => node.type === 'img')).toMatchObject(expectedFooterIcon)
+    expect(collectNodes(root).find((node) => node.props.height === 32)).toMatchObject(
+      expectedFooterIcon,
+    )
     expect(findByText(root, 'Guides › Parsing')).toMatchObject(expectedEyebrow)
     expect(findByText(root, 'Parsing namespaces')).toMatchObject(expectedTitle)
     expect(findByText(root, 'Test Tosterone')).toMatchObject(expectedByline)
@@ -205,16 +207,20 @@ describe('render', () => {
     expect(findByText(root, 'Page 3')).toMatchObject(expectedAside)
   })
 
-  it('should render the header, the title and the dots with minimal properties', () => {
+  it('should render the header, the title and the pattern rail with minimal properties', () => {
     const root = render(baseContext)
-    const nodes = collectNodes(root)
     const expected = {
       props: { style: { fontSize: 72, fontWeight: 700, lineHeight: 1.15 } },
+    }
+    const expectedRail = {
+      type: 'img',
+      props: { style: { position: 'absolute', right: 0, width: 600, height: 630 } },
     }
 
     expect(findByText(root, 'feedsmith')).toBeDefined()
     expect(findByText(root, 'Parsing namespaces')).toMatchObject(expected)
-    expect(nodes.filter((node) => node.type === 'circle').length).toBeGreaterThan(0)
+    expect(findByStyle(root, 'right', 0)).toMatchObject(expectedRail)
+    expect(findByStyle(root, 'right', 0)?.props.src).toStartWith('data:image/svg+xml;base64,')
     expect(findByStyle(root, 'background', '#ff8c4d')).toBeUndefined()
   })
 
@@ -393,7 +399,7 @@ describe('render', () => {
     expect(findByText(render(value), description)).toMatchObject(expected)
   })
 
-  it('should render a background image instead of the dots', () => {
+  it('should render a background image instead of the pattern rail', () => {
     const value: RenderContext = {
       ...baseContext,
       background: { image: { svg: '' } },
@@ -406,7 +412,7 @@ describe('render', () => {
     }
 
     expect(nodes.find((node) => node.type === 'img')).toMatchObject(expected)
-    expect(nodes.filter((node) => node.type === 'circle')).toEqual([])
+    expect(findByStyle(render(value), 'right', 0)).toBeUndefined()
   })
 
   it('should draw the image on the right half and keep the text on the left half', () => {
@@ -438,7 +444,7 @@ describe('render', () => {
     }
     const group = findByStyle(root, 'maxWidth', 472)
 
-    expect(collectNodes(root).find((node) => node.type === 'img')).toEqual(expectedImage)
+    expect(findByStyle(root, 'objectFit', 'cover')).toEqual(expectedImage)
     expect(findByStyle(root, 'marginRight', 600)).toMatchObject(expectedHeadlineRow)
     expect(group).toMatchObject(expectedGroup)
     expect(group).not.toHaveProperty('props.style.marginRight')
@@ -462,7 +468,7 @@ describe('render', () => {
     }
     const group = findByStyle(root, 'maxWidth', 472)
 
-    expect(collectNodes(root).find((node) => node.type === 'img')).toMatchObject(expectedImage)
+    expect(findByStyle(root, 'left', 0)).toMatchObject(expectedImage)
     expect(findByStyle(root, 'justifyContent', 'flex-start')).toMatchObject(expectedHeadlineRow)
     expect(group).toMatchObject(expectedGroup)
     expect(group).not.toHaveProperty('props.style.marginLeft')
