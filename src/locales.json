@@ -3,7 +3,7 @@
     "cardNeedsText": "A card needs a title or a description.",
     "faviconNeedsSvg": "A favicon is rendered from SVG markup or an SVG file.",
     "fontFilesEmpty": "Fonts for \"{{name}}\" are an empty list. Pass at least one font file, or a fontsource family.",
-    "fontNotInstalled": "Font \"{{family}}\" has no files for weights {{weights}}. Install it: npm install @fontsource/{{family}}.",
+    "fontNotInstalled": "Font \"{{family}}\" is not installed. Install it: npm install @fontsource/{{family}}.",
     "iconNotFound": "Icon \"{{file}}\" was not found. A package path needs its package installed.",
     "imageNotSupported": "Image \"{{file}}\" is in a format ogier cannot draw. Use an SVG, PNG, JPEG or WebP file.",
     "liteFontNeedsFiles": "Font \"{{family}}\" is a fontsource family, which ogier/lite cannot read. Pass font files for every role, or import from ogier.",
