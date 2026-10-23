@@ -114,8 +114,6 @@ export const createRenderer = (style: Style = {}) => {
 
     const svg = await renderSvg(card)
 
-    // Loaded on first use: runtimes without native modules, such as Cloudflare Workers, can then
-    // import ogier for renderElement.
     const { Resvg } = await import('@resvg/resvg-js')
 
     return new Resvg(svg).render().asPng()
