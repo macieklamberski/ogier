@@ -10,9 +10,13 @@ export type NextImageProps = {
 
 export type NextResolve = (params: NextParams) => Card | Promise<Card>
 
+export type NextOptions = {
+  headers?: HeadersInit
+}
+
 // The image file exports the returned `default`, `size` and `contentType`, and Next writes the
 // Open Graph tags from them. The params arrive as a promise in Next 15 and later.
-export const next = (style: Style, resolve: NextResolve) => {
+export const next = (style: Style, resolve: NextResolve, options: NextOptions = {}) => {
   const renderer = createRenderer(style)
   const sizes = resolveSizes(style.sizes)
 
@@ -20,7 +24,12 @@ export const next = (style: Style, resolve: NextResolve) => {
     const card = await resolve(await params)
     const png = await renderer.renderPng(card)
 
-    return new Response(new Uint8Array(png), { headers: { 'Content-Type': 'image/png' } })
+    const headers = new Headers(options.headers)
+
+    // The body is always a PNG, so a caller's Content-Type never reaches the response.
+    headers.set('Content-Type', 'image/png')
+
+    return new Response(new Uint8Array(png), { headers })
   }
 
   return {

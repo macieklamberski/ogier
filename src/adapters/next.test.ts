@@ -26,4 +26,20 @@ describe('next', () => {
     expect(response.headers.get('Content-Type')).toBe('image/png')
     expect(Buffer.from(body.subarray(0, 8)).toString('hex')).toBe(expected)
   })
+
+  it('should add the headers from the options to the response', async () => {
+    const image = next({}, resolve, { headers: { 'Cache-Control': 'public, max-age=86400' } })
+    const response = await image.default({ params: Promise.resolve({ slug: 'hello' }) })
+    const expected = 'public, max-age=86400'
+
+    expect(response.headers.get('Cache-Control')).toBe(expected)
+  })
+
+  it('should keep the PNG content type when the headers set another one', async () => {
+    const image = next({}, resolve, { headers: { 'Content-Type': 'text/plain' } })
+    const response = await image.default({ params: Promise.resolve({ slug: 'hello' }) })
+    const expected = 'image/png'
+
+    expect(response.headers.get('Content-Type')).toBe(expected)
+  })
 })
