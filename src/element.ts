@@ -59,9 +59,11 @@ export const getBackgroundImage = (style: Style) => {
 }
 
 // The fonts are loaded on the first render and shared by every render after it, so a site
-// renders its pages through one renderer. Icons and images are loaded per render.
+// renders its pages through one renderer. Icons and images are loaded per render. The size is
+// known before any render, so page metadata can state the image's width and height.
 export const createElementRenderer = (style: Style, loaders: Loaders) => {
   const sizes = resolveSizes(style.sizes)
+  const size = { width: sizes.cardWidth, height: sizes.cardHeight }
   const { background } = style
   const backgroundImage = getBackgroundImage(style)
   const { loadFamily, loadFile } = loaders
@@ -103,10 +105,9 @@ export const createElementRenderer = (style: Style, loaders: Loaders) => {
     return {
       element: { ...render(context), key: null },
       fonts,
-      width: sizes.cardWidth,
-      height: sizes.cardHeight,
+      ...size,
     }
   }
 
-  return { renderElement }
+  return { renderElement, size }
 }

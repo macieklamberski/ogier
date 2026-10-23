@@ -205,6 +205,20 @@ describe('createRenderer', () => {
     expect({ width: result.width, height: result.height }).toEqual(expected)
   })
 
+  it('should return the default card size before any render', () => {
+    const renderer = createRenderer()
+    const expected = { width: 1200, height: 630 }
+
+    expect(renderer.size).toEqual(expected)
+  })
+
+  it('should return the card size from the style before any render', () => {
+    const renderer = createRenderer({ sizes: { cardWidth: 600, cardHeight: 315 } })
+    const expected = { width: 600, height: 315 }
+
+    expect(renderer.size).toEqual(expected)
+  })
+
   it('should return a PNG from renderPng', async () => {
     const renderer = createRenderer()
     const result = await renderer.renderPng(card)

@@ -123,7 +123,7 @@ for (const page of pages) {
 }
 ```
 
-The renderer has `renderElement`, `renderSvg` and `renderPng`, and they all share the fonts.
+The renderer has `renderElement`, `renderSvg` and `renderPng`, and they all share the fonts. Its `size` holds the card's `width` and `height` before any render, for the `og:image` tags of a page whose image is drawn later.
 
 ### `renderElement(card, style?)`
 

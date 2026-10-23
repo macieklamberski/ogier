@@ -26,7 +26,7 @@ const findWebpFile = (refs: Array<ImageRef | undefined>) => {
 }
 
 export const createRenderer = (style: Style = {}) => {
-  const { renderElement } = createElementRenderer(style, loaders)
+  const { renderElement, size } = createElementRenderer(style, loaders)
   const backgroundImage = getBackgroundImage(style)
 
   const renderSvg = async (card: Card): Promise<string> => {
@@ -55,7 +55,7 @@ export const createRenderer = (style: Style = {}) => {
     return new Resvg(svg).render().asPng()
   }
 
-  return { renderElement, renderSvg, renderPng }
+  return { renderElement, renderSvg, renderPng, size }
 }
 
 export const renderElement = (card: Card, style?: Style): Promise<RenderedElement> => {
