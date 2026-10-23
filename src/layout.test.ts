@@ -555,7 +555,7 @@ describe('render', () => {
       {
         type: 'img',
         props: {
-          src: `data:image/svg+xml;base64,${Buffer.from('<svg><path stroke="#f0f0f0" /></svg>').toString('base64')}`,
+          src: 'data:image/svg+xml;base64,PHN2Zz48cGF0aCBzdHJva2U9IiNmMGYwZjAiIC8+PC9zdmc+',
           height: 88,
           style: { borderRadius: 0 },
         },

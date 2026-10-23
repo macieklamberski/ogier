@@ -1,17 +1,6 @@
-import type { Background, Sizes, Theme } from './types/index.js'
-
-export type Pattern = 'dots' | 'stripes' | 'grid' | 'crosses' | 'waves' | 'checks'
+import type { Background, Pattern, Sizes, Theme } from './types/index.js'
 
 type Tile = (sizes: Sizes, color: string) => { width: number; height: number; markup: string }
-
-const defaultAngles: Record<Pattern, number> = {
-  dots: 0,
-  stripes: 45,
-  grid: 0,
-  crosses: 0,
-  waves: 0,
-  checks: 0,
-}
 
 // Each tile is railStep square, except the wave, which is two steps wide for a long, shallow
 // swell, and repeats in both directions.
@@ -61,7 +50,7 @@ export const renderPattern = (
   sizes: Sizes,
   theme: Theme,
 ): string => {
-  const { pattern, angle = defaultAngles[pattern], fade = true } = background
+  const { pattern, angle = pattern === 'stripes' ? 45 : 0, fade = true } = background
   const { railWidth, cardHeight } = sizes
   const tile = tiles[pattern](sizes, theme.pattern)
   const maskAttribute = fade ? ' mask="url(#mask)"' : ''

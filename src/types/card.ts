@@ -107,9 +107,11 @@ export type FontFile = {
 
 export type Fonts = Partial<Record<FontRole, string | Array<FontFile>>>
 
+export type Pattern = 'dots' | 'stripes' | 'grid' | 'crosses' | 'waves' | 'checks'
+
 export type Background =
   | {
-      pattern: 'dots' | 'stripes' | 'grid' | 'crosses' | 'waves' | 'checks'
+      pattern: Pattern
       angle?: number
       fade?: boolean
     }
