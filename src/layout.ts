@@ -238,8 +238,19 @@ const getTitleSize = (sizes: Sizes, text: string) => {
   return sizes.titleText
 }
 
-const getLineHeight = (text: number | false, icon: number | false, sizes: Sizes) => {
-  return Math.max(text ? text * sizes.slotLineHeight : 0, icon || 0)
+// The height of a header or footer line: its text line or its icon, whichever is taller.
+const getSlotHeight = (context: RenderContext, role: LineRole) => {
+  const { card, sizes } = context
+  const slot = card[role]
+
+  if (!slot) {
+    return 0
+  }
+
+  const text = slot.text ? sizes[`${role}Text`] * sizes.slotLineHeight : 0
+  const icon = context[`${role}Icon`] ? sizes[`${role}Icon`] : 0
+
+  return Math.max(text, icon)
 }
 
 // A title with no eyebrow or description takes the lines that fit between the header and the
@@ -247,20 +258,8 @@ const getLineHeight = (text: number | false, icon: number | false, sizes: Sizes)
 const getFreeLines = (context: RenderContext, fontSize: number) => {
   const { card, sizes } = context
   const { top = 0, bottom = 0 } = sizes.cardPadding
-  const header = card.header
-    ? getLineHeight(
-        !!card.header.text && sizes.headerText,
-        !!context.headerIcon && sizes.headerIcon,
-        sizes,
-      )
-    : 0
-  const footer = card.footer
-    ? getLineHeight(
-        !!card.footer.text && sizes.footerText,
-        !!context.footerIcon && sizes.footerIcon,
-        sizes,
-      )
-    : 0
+  const header = getSlotHeight(context, 'header')
+  const footer = getSlotHeight(context, 'footer')
   const icon = context.icon ? sizes.iconSize + headlineGap : 0
   const byline = card.byline ? sizes.bylineText * sizes.slotLineHeight + headlineGap : 0
   const free = sizes.cardHeight - top - bottom - sizes.barHeight - header - footer - icon - byline
