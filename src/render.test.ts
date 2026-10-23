@@ -113,6 +113,20 @@ describe('renderSvg', () => {
     expect(await renderSvg(card, style)).toBe(expected)
   })
 
+  it('should draw labels in weight 500 when label font files carry several weights', async () => {
+    const readWeight = async (weight: number) => {
+      const file = await readFile(
+        `node_modules/@fontsource/jetbrains-mono/files/jetbrains-mono-latin-${weight}-normal.woff`,
+      )
+
+      return { data: new Uint8Array(file), weight }
+    }
+    const style = { fonts: { label: await Promise.all([400, 500, 700].map(readWeight)) } }
+    const expected = await renderSvg(card)
+
+    expect(await renderSvg(card, style)).toBe(expected)
+  })
+
   it('should render the card icon in the headline', async () => {
     const value: Card = {
       ...card,
