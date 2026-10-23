@@ -14,8 +14,11 @@ export const renderFavicon = async (ref: ImageRef, size = faviconSize): Promise<
 
   const { Resvg } = await import('@resvg/resvg-js')
 
-  // biome-ignore lint/correctness/noUnusedInstantiation: The parse throws for invalid SVG, which the image element draws blank.
-  new Resvg(image.svg)
+  const resvg = new Resvg(image.svg, { fitTo: { mode: 'width', value: size } })
+
+  if (resvg.width === resvg.height) {
+    return resvg.render().asPng()
+  }
 
   // The image element scales the SVG to fit the square and centres it.
   const href = toDataUri(image.svg, 'image/svg+xml')
