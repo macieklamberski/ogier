@@ -4,10 +4,15 @@ import { colorSvg, toDataUri } from './utils/icons.js'
 
 type LineRole = 'header' | 'footer'
 
+// Satori draws text with no fontWeight at 400, so label and body text set the weight loaded for
+// them, and font files passed for a role are picked by that weight too.
+const labelWeight = 500
+const bodyWeight = 400
+
 const fontWeights: Record<FontRole, Array<number>> = {
   title: [400, 500, 700],
-  body: [400],
-  label: [500],
+  body: [bodyWeight],
+  label: [labelWeight],
 }
 
 // Satori draws a weight that was not loaded in the nearest one it has, so a title weight set in
@@ -143,6 +148,7 @@ const renderAside = (context: RenderContext, role: LineRole, aside: string): Nod
     ...getAsideShift(sizes, role),
     maxWidth: sizes.lineMaxWidth,
     fontFamily: fonts.label,
+    fontWeight: labelWeight,
     fontSize: sizes.asideText,
     lineHeight: sizes.slotLineHeight,
     letterSpacing: sizes.asideTracking,
@@ -175,6 +181,7 @@ const renderLine = (context: RenderContext, role: LineRole, slot: Slot): Node =>
     maxWidth: sizes.lineMaxWidth,
     flexShrink: 1,
     fontFamily: fonts.label,
+    fontWeight: labelWeight,
     fontSize: sizes[`${role}Text`],
     lineHeight: sizes.slotLineHeight,
     letterSpacing: sizes[`${role}Tracking`],
@@ -200,6 +207,7 @@ const renderCardIcon = (context: RenderContext, icon: Icon): Node => {
 const renderEyebrow = (context: RenderContext, eyebrow: string): Node => {
   const style = {
     fontFamily: context.fonts.label,
+    fontWeight: labelWeight,
     fontSize: context.sizes.eyebrowText,
     color: context.theme.eyebrow ?? context.theme.accent,
     textTransform: 'uppercase',
@@ -255,6 +263,7 @@ const renderByline = (context: RenderContext, byline: string): Node => {
   const style = {
     color: context.theme.byline ?? context.theme.text,
     fontFamily: context.fonts.label,
+    fontWeight: labelWeight,
     fontSize: context.sizes.bylineText,
     letterSpacing: context.sizes.bylineTracking,
     display: 'block',
@@ -267,6 +276,7 @@ const renderByline = (context: RenderContext, byline: string): Node => {
 const renderDescription = (context: RenderContext, text: string): Node => {
   const style = {
     fontFamily: context.fonts.body,
+    fontWeight: bodyWeight,
     fontSize: context.sizes.descriptionText,
     lineHeight: context.sizes.descriptionLineHeight,
     letterSpacing: context.sizes.descriptionTracking,
