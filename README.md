@@ -175,10 +175,13 @@ Each page gets the tags from `transformHead` and a PNG under `og/` from `buildEn
 import { next } from 'ogier/adapters'
 import { getPost } from '../../../lib/posts'
 
-const image = next({ background: { pattern: 'dots' } }, async ({ slug }) => {
-  const post = await getPost(String(slug))
+const image = next({
+  style: { background: { pattern: 'dots' } },
+  card: async ({ slug }) => {
+    const post = await getPost(String(slug))
 
-  return { header: { text: 'feedstand', aside: post.date }, title: post.title }
+    return { header: { text: 'feedstand', aside: post.date }, title: post.title }
+  },
 })
 
 export default image.default
@@ -187,8 +190,10 @@ export const { size, contentType } = image
 
 The file's default export takes the route params, resolves the card and responds with the PNG. `size` and `contentType` feed the `og:image` width, height and type. A `twitter-image.tsx` beside it re-exports the same three names. Every card in the file renders through one renderer, so the fonts are read once.
 
-A third argument sets response headers, such as a cache policy for the CDN. The `Content-Type` stays `image/png` whatever the headers say.
+`headers` sets response headers, such as a cache policy for the CDN. The `Content-Type` stays `image/png` whatever the headers say.
 
 ```typescript
-const image = next(style, resolve, { headers: { 'Cache-Control': 'public, max-age=86400' } })
+const image = next({ style, card, headers: { 'Cache-Control': 'public, max-age=86400' } })
 ```
+
+The older `next(style, card)` form still works and is deprecated.
