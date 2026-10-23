@@ -1,10 +1,10 @@
 import { Resvg } from '@resvg/resvg-js'
 import satori from 'satori'
 import { t } from 'trousse'
-import { defaultSizes, getFontWeights, render } from './layout.js'
+import { getFontWeights, render, resolveSizes } from './layout.js'
 import locales from './locales.json' with { type: 'json' }
 import { dark } from './themes/dark.js'
-import type { Card, ImageRef, RenderContext, Sizes, Slot, Style } from './types/index.js'
+import type { Card, ImageRef, RenderContext, Slot, Style } from './types/index.js'
 import { type LoadedFonts, loadFonts } from './utils/fonts.js'
 import { loadIcon, loadImage } from './utils/icons.js'
 
@@ -61,7 +61,7 @@ const normalizeCard = (card: Card): Card => {
 // The fonts are read from disk on the first render and shared by every render after it, so a
 // site renders its pages through one renderer. Icons and images are read per render.
 export const createRenderer = (style: Style = {}) => {
-  const sizes: Sizes = { ...defaultSizes, ...style.sizes }
+  const sizes = resolveSizes(style.sizes)
   const { background } = style
   const backgroundImage = background && 'image' in background ? background.image : undefined
   let loadedFonts: Promise<LoadedFonts> | undefined

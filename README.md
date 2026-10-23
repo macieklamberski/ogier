@@ -39,7 +39,7 @@ Each card below is rendered from a preset in [examples](examples). Click a card 
 | [![Docs page on a dark theme with the dot rail](examples/output/docs.png)](examples/presets/docs.ts) | [![Book club card in Young Serif and IBM Plex Mono on red with a painting on the right](examples/output/bookclub.png)](examples/presets/bookclub.ts) |
 | [![Essay in DM Serif Display and Inter with a still life on the left and right-aligned text](examples/output/editorial.png)](examples/presets/editorial.ts) | [![Blog post in Literata and DM Sans with the headline at the bottom and an accent bar](examples/output/post.png)](examples/presets/post.ts) |
 | [![Wordmark card in JetBrains Mono](examples/output/wordmark.png)](examples/presets/wordmark.ts) | [![Research post in Epunda Slab with yellow text over a full-bleed aerial photo of a river](examples/output/cover.png)](examples/presets/cover.ts) |
-| [![Changelog card in Space Mono and Space Grotesk on blue with the dot rail](examples/output/launch.png)](examples/presets/launch.ts) | [![Personal card with an icon and a name and role in Commit Mono](examples/output/personal.png)](examples/presets/personal.ts) |
+| [![Changelog card in Space Mono and Space Grotesk on blue with diagonal waves](examples/output/launch.png)](examples/presets/launch.ts) | [![Personal card with an icon and a name and role in Commit Mono](examples/output/personal.png)](examples/presets/personal.ts) |
 | [![Landing page in Bricolage Grotesque with centered text](examples/output/centered.png)](examples/presets/centered.ts) | [![Research post in Geist and Geist Mono on black with a paint swirl on the right](examples/output/research.png)](examples/presets/research.ts) |
 
 ## API
@@ -79,14 +79,14 @@ type Style = {
   theme?: Theme
   sizes?: Partial<Sizes>
   fonts?: { title?: string; body?: string; label?: string }
-  background?: { pattern: 'dots' } | { image: ImageRef }
+  background?: { pattern: Pattern; angle?: number; fade?: boolean } | { image: ImageRef }
 }
 ```
 
 - `theme`: the colors. `dark` and `light` come from `ogier/themes`. Spread one and change a value, or give a text its own color with `title`, `description`, `aside` and the other text names.
 - `sizes`: the numbers. Card size and padding, the type scale, the accent bar along the bottom edge. Every key has a default, so set only what you change. The [examples](examples) show the ones that matter in practice, and the `Sizes` type lists them all.
 - `fonts`: a fontsource family per role. `title` for the title, `body` for the description, `label` for the rest. Inter and JetBrains Mono ship with ogier. Any other family needs its `@fontsource/<slug>` package installed in your project.
-- `background`: `{ pattern: 'dots' }` for the dot rail on the right, or `{ image }` for a picture behind the whole card.
+- `background`: `{ pattern }` for a rail on the right that fades in from the middle of the card. The pattern is `dots`, `stripes`, `grid`, `crosses`, `waves` or `checks`, drawn in the theme's `pattern` color, with an optional `angle` in degrees and `fade: false` for a flat rail. Or `{ image }` for a picture behind the whole card.
 
 ```typescript
 import { renderPng } from 'ogier'
