@@ -1,6 +1,6 @@
 import { mkdir, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import { isFunction, t } from 'trousse'
+import { isFunction, parseUrl, t } from 'trousse'
 import type {
   DefaultTheme,
   HeadConfig,
@@ -35,8 +35,8 @@ type Page = {
 
 const mdRegex = /\.md$/
 const indexRegex = /(^|\/)index$/
+const indexNameRegex = /index$/
 const slashRegex = /\//g
-const titlePrefixRegex = /^[^:]+:\s*/
 
 const getTrail = (
   items: Array<DefaultTheme.SidebarItem>,
@@ -63,6 +63,16 @@ const getEyebrow = (sidebar: DefaultTheme.Sidebar | undefined, path: string) => 
   const trail = getTrail(sidebar, `/${path.replace(indexRegex, '')}`)
 
   return trail?.join(' › ')
+}
+
+// The page's path as VitePress serves it: an index page by its folder, any other page with .html
+// unless cleanUrls drops it.
+const getPageUrl = (path: string, siteData: VitepressSiteData) => {
+  if (indexRegex.test(path)) {
+    return path.replace(indexNameRegex, '')
+  }
+
+  return siteData.cleanUrls ? path : `${path}.html`
 }
 
 export const vitepress = (options: VitepressOptions) => {
@@ -98,16 +108,18 @@ export const vitepress = (options: VitepressOptions) => {
       ? homeCard
       : {
           eyebrow: getEyebrow(siteData.themeConfig.sidebar, path),
-          title: title.replace(titlePrefixRegex, ''),
+          title,
         }
     const overrides = isFunction(cardOption) ? cardOption(pageData, siteData) : cardOption
     const card: Card = { ...defaults, ...overrides }
-    const image = imageUrl ? imageUrl(path) : getImageUrl(hostname, path, imageDir)
+    // The base is absolute, so it takes the place of any path in the hostname.
+    const siteUrl = parseUrl(siteData.base, hostname)?.href ?? hostname
+    const image = imageUrl ? imageUrl(path) : getImageUrl(siteUrl, path, imageDir)
 
     pages.push({ file, card })
 
     const metadata = composeMetadata({
-      url: `${hostname}/${path.replace(indexRegex, '')}`,
+      url: parseUrl(getPageUrl(path, siteData), siteUrl)?.href ?? siteUrl,
       title,
       description,
       image: { url: image, width: style.sizes?.cardWidth, height: style.sizes?.cardHeight },

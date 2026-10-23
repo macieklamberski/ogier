@@ -9,6 +9,7 @@ import { vitepress } from './vitepress.js'
 
 const siteData: SiteData<DefaultTheme.Config> = {
   base: '/',
+  cleanUrls: true,
   lang: 'en-US',
   dir: 'ltr',
   title: 'Feedsmith',
@@ -30,6 +31,7 @@ const svg =
 const getContext = (
   relativePath: string,
   title: string,
+  site = siteData,
 ): Pick<TransformContext<DefaultTheme.Config>, 'pageData' | 'siteData' | 'description'> => {
   const pageData: PageData = {
     relativePath,
@@ -42,7 +44,7 @@ const getContext = (
 
   return {
     pageData,
-    siteData,
+    siteData: site,
     description: 'Page description.',
   }
 }
@@ -71,6 +73,54 @@ describe('vitepress', () => {
     ]
 
     expect(vitepress(options).transformHead(value)).toEqual(expected)
+  })
+
+  it('should end the page url in .html when clean urls are off', () => {
+    const value = getContext('guides/parsing.md', 'Parsing', { ...siteData, cleanUrls: false })
+    const expected: HeadConfig = [
+      'meta',
+      { property: 'og:url', content: 'https://example.com/guides/parsing.html' },
+    ]
+
+    expect(vitepress(options).transformHead(value)).toContainEqual(expected)
+  })
+
+  it('should point an index page at its folder', () => {
+    const value = getContext('guides/index.md', 'Guides')
+    const expected: HeadConfig = [
+      'meta',
+      { property: 'og:url', content: 'https://example.com/guides/' },
+    ]
+
+    expect(vitepress(options).transformHead(value)).toContainEqual(expected)
+  })
+
+  it('should put the site base in the page and image urls', () => {
+    const value = getContext('guides/parsing.md', 'Parsing', { ...siteData, base: '/docs/' })
+    const expectedUrl: HeadConfig = [
+      'meta',
+      { property: 'og:url', content: 'https://example.com/docs/guides/parsing' },
+    ]
+    const expectedImage: HeadConfig = [
+      'meta',
+      { property: 'og:image', content: 'https://example.com/docs/og/guides-parsing.png' },
+    ]
+
+    const tags = vitepress(options).transformHead(value)
+
+    expect(tags).toContainEqual(expectedUrl)
+    expect(tags).toContainEqual(expectedImage)
+  })
+
+  it('should not double the slash after a hostname that ends in one', () => {
+    const value = getContext('guides/parsing.md', 'Parsing')
+    const expected: HeadConfig = [
+      'meta',
+      { property: 'og:url', content: 'https://example.com/guides/parsing' },
+    ]
+    const og = vitepress({ ...options, site: { hostname: 'https://example.com/' } })
+
+    expect(og.transformHead(value)).toContainEqual(expected)
   })
 
   it('should take the image url from the callback when given', () => {

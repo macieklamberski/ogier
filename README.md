@@ -202,7 +202,7 @@ export default defineConfig({
 })
 ```
 
-Each page gets the tags from `transformHead` and a PNG under `og/` from `buildEnd`. The eyebrow is the sidebar trail to the page, the title is the page title with any `Prefix:` removed, and the home page shows the site description.
+Each page gets the tags from `transformHead` and a PNG under `og/` from `buildEnd`. The eyebrow is the sidebar trail to the page, the title is the page title, and the home page shows the site description.
 
 | Option | What it holds |
 |---|---|

@@ -432,6 +432,18 @@ describe('render', () => {
     expect(findByText(root, 'Every tag the parser reads.')).toMatchObject(expectedDescription)
   })
 
+  it('should clamp a title alone to the lines that fit between the header and the footer', () => {
+    const value: RenderContext = {
+      ...baseContext,
+      card: { ...baseContext.card, footer: { text: 'example/repo' } },
+    }
+    const expected = {
+      props: { style: { lineClamp: 5 } },
+    }
+
+    expect(findByText(render(value), 'Parsing namespaces')).toMatchObject(expected)
+  })
+
   it('should step the title down past the long length', () => {
     const title = 'A title that runs past the forty character step'
     const value: RenderContext = {

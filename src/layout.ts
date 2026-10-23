@@ -5,6 +5,8 @@ import { colorSvg, toDataUri } from './utils/images.js'
 
 type LineRole = 'header' | 'footer'
 
+const headlineGap = 16
+
 const titleWeights = [400, 500, 700]
 
 // Satori draws a weight that was not loaded in the nearest one it has, so a title weight set in
@@ -236,7 +238,37 @@ const getTitleSize = (sizes: Sizes, text: string) => {
   return sizes.titleText
 }
 
-const getTitleClamp = (context: RenderContext): number | undefined => {
+const getLineHeight = (text: number | false, icon: number | false, sizes: Sizes) => {
+  return Math.max(text ? text * sizes.slotLineHeight : 0, icon || 0)
+}
+
+// A title with no eyebrow or description takes the lines that fit between the header and the
+// footer, so a long one ends in an ellipsis and does not push the footer off the card.
+const getFreeLines = (context: RenderContext, fontSize: number) => {
+  const { card, sizes } = context
+  const { top = 0, bottom = 0 } = sizes.cardPadding
+  const header = card.header
+    ? getLineHeight(
+        !!card.header.text && sizes.headerText,
+        !!context.headerIcon && sizes.headerIcon,
+        sizes,
+      )
+    : 0
+  const footer = card.footer
+    ? getLineHeight(
+        !!card.footer.text && sizes.footerText,
+        !!context.footerIcon && sizes.footerIcon,
+        sizes,
+      )
+    : 0
+  const icon = context.icon ? sizes.iconSize + headlineGap : 0
+  const byline = card.byline ? sizes.bylineText * sizes.slotLineHeight + headlineGap : 0
+  const free = sizes.cardHeight - top - bottom - sizes.barHeight - header - footer - icon - byline
+
+  return Math.max(1, Math.floor(free / (fontSize * sizes.titleLineHeight)))
+}
+
+const getTitleClamp = (context: RenderContext, fontSize: number): number => {
   const { card, sizes } = context
 
   if (card.description && card.title) {
@@ -246,24 +278,26 @@ const getTitleClamp = (context: RenderContext): number | undefined => {
   if (card.eyebrow) {
     return sizes.titleMaxLines
   }
+
+  return getFreeLines(context, fontSize)
 }
 
 const renderTitle = (context: RenderContext, text: string): Node => {
   const { fonts, sizes, theme } = context
-  const clamp = getTitleClamp(context)
+  const fontSize = getTitleSize(sizes, text)
   const isLong = text.length > sizes.titleLongestLength
   const style = {
     color: theme.title ?? theme.text,
     fontFamily: fonts.title,
-    fontSize: getTitleSize(sizes, text),
+    fontSize,
     fontWeight: isLong ? sizes.titleWeightLong : sizes.titleWeight,
     lineHeight: sizes.titleLineHeight,
     letterSpacing: isLong ? sizes.titleTrackingLong : sizes.titleTracking,
     display: 'block',
+    lineClamp: getTitleClamp(context, fontSize),
   }
 
-  // Satori throws on lineClamp: undefined, so the key is added only when set.
-  return h('div', clamp ? { ...style, lineClamp: clamp } : style, text)
+  return h('div', style, text)
 }
 
 const renderByline = (context: RenderContext, byline: string): Node => {
@@ -333,7 +367,7 @@ const renderHeadline = (context: RenderContext): Node => {
   const columnStyle = {
     display: 'flex',
     flexDirection: 'column',
-    gap: 16,
+    gap: headlineGap,
     width: '100%',
     maxWidth: context.sizes.contentWidth,
     alignItems: flexAlign[horizontal],
@@ -416,7 +450,7 @@ const renderBody = (context: RenderContext): Node => {
     paddingBottom: bottom,
     paddingLeft: left,
   }
-  const groupStyle = { display: 'flex', flexDirection: 'column', gap: 16 }
+  const groupStyle = { display: 'flex', flexDirection: 'column', gap: headlineGap }
   const header = card.header ? renderLine(context, 'header', card.header) : undefined
   const footer = card.footer ? renderLine(context, 'footer', card.footer) : undefined
   const headline = renderHeadline(context)
