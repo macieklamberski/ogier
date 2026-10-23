@@ -3,6 +3,7 @@ import { readFile } from 'node:fs/promises'
 import { t } from 'trousse'
 import locales from './locales.json' with { type: 'json' }
 import { createRenderer, renderElement, renderPng, renderSvg } from './render.js'
+import { dark } from './themes/dark.js'
 import type { Card, Fonts } from './types/index.js'
 
 const card: Card = {
@@ -135,6 +136,67 @@ describe('renderSvg', () => {
       },
     }
     const expected = '<image x="64" y="'
+
+    expect(await renderSvg(value)).toContain(expected)
+  })
+
+  it('should render a header icon from an element in the header color', async () => {
+    const element = {
+      type: 'svg',
+      props: {
+        viewBox: '0 0 8 8',
+        children: { type: 'rect', props: { width: 8, height: 8, fill: 'currentColor' } },
+      },
+    }
+    const value: Card = { ...card, header: { text: 'feedsmith', icon: { element } } }
+    const style = { theme: { ...dark, header: '#123456' } }
+    const expected = 'fill=%22%23123456%22'
+
+    expect(await renderSvg(value, style)).toContain(expected)
+  })
+
+  it('should set no style property to undefined around a header element icon', async () => {
+    const findUndefinedStyles = (node: unknown): Array<string> => {
+      if (!node || typeof node !== 'object') {
+        return []
+      }
+
+      const { props } = node as { props?: { style?: Record<string, unknown>; children?: unknown } }
+      const style = props?.style ?? {}
+      const own = Object.keys(style).filter((key) => style[key] === undefined)
+      const children = [props?.children].flat()
+
+      return [...own, ...children.flatMap(findUndefinedStyles)]
+    }
+    const element = { type: 'svg', props: { viewBox: '0 0 8 8' } }
+    const value: Card = { ...card, header: { text: 'feedsmith', icon: { element } } }
+    const result = await renderElement(value)
+
+    expect(findUndefinedStyles(result.element)).toEqual([])
+  })
+
+  it('should pass the icon height to an element that sets none', async () => {
+    const element = { type: 'svg', props: { viewBox: '0 0 8 8' } }
+    const value: Card = { ...card, header: { text: 'feedsmith', icon: { element } } }
+    const result = await renderElement(value)
+    const expected = '"viewBox":"0 0 8 8","height":56'
+
+    expect(JSON.stringify(result.element)).toContain(expected)
+  })
+
+  it('should keep the height an element sets itself', async () => {
+    const element = { type: 'svg', props: { viewBox: '0 0 8 8', height: 20 } }
+    const value: Card = { ...card, header: { text: 'feedsmith', icon: { element } } }
+    const result = await renderElement(value)
+    const expected = '"viewBox":"0 0 8 8","height":20'
+
+    expect(JSON.stringify(result.element)).toContain(expected)
+  })
+
+  it('should render the card icon from an element at the icon size', async () => {
+    const element = { type: 'svg', props: { viewBox: '0 0 8 8' } }
+    const value: Card = { ...card, icon: { element } }
+    const expected = 'width="88" height="88"'
 
     expect(await renderSvg(value)).toContain(expected)
   })

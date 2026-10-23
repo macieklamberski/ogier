@@ -1,6 +1,16 @@
-import { trimObject } from 'trousse'
+import { isObject, trimObject } from 'trousse'
 import { renderPattern } from './patterns.js'
-import type { Align, FontElement, Icon, Node, RenderContext, Sizes, Slot } from './types/index.js'
+import type {
+  Align,
+  ElementIcon,
+  Extra,
+  FontElement,
+  Icon,
+  Node,
+  RenderContext,
+  Sizes,
+  Slot,
+} from './types/index.js'
 import { colorSvg, toDataUri } from './utils/images.js'
 
 type LineRole = 'header' | 'footer'
@@ -103,12 +113,50 @@ const getImageSrc = (image: Icon) => {
   return 'src' in image ? image.src : toDataUri(image.svg, 'image/svg+xml')
 }
 
-// Satori embeds an SVG as an image, so the slot color is written into the markup first. The
-// width comes from the markup, so a wordmark keeps its shape.
-const renderIcon = (icon: Icon, height: number, color: string): Node => {
-  const src = 'src' in icon ? icon.src : toDataUri(colorSvg(icon.svg, color), 'image/svg+xml')
+// The satori in Next's ImageResponse stretches an SVG without a height across the whole line, so
+// an element that sets no height of its own gets the icon's. A component that passes its props
+// on to its SVG takes it too.
+const withHeight = (element: Extra, height: number): unknown => {
+  if (!isObject(element) || !('props' in element) || !isObject(element.props)) {
+    return element
+  }
 
-  return { type: 'img', props: { src, height } }
+  if ('height' in element.props && element.props.height !== undefined) {
+    return element
+  }
+
+  return { ...element, props: { ...element.props, height } }
+}
+
+// Satori embeds an SVG as an image, so the slot color is written into the markup first. The
+// width comes from the markup, so a wordmark keeps its shape. An element goes in a box of the
+// icon's height whose color its currentColor takes, and an SVG element takes its width from its
+// viewBox.
+const renderIcon = (
+  icon: Icon | ElementIcon,
+  height: number,
+  color: string,
+  borderRadius?: number,
+): Node => {
+  if ('element' in icon) {
+    // The satori Next's ImageResponse bundles throws on a style property set to undefined, so
+    // the radius is only added when there is one.
+    const style = {
+      display: 'flex',
+      height,
+      flexShrink: 0,
+      overflow: 'hidden',
+      color: icon.color ?? color,
+      ...(borderRadius === undefined ? {} : { borderRadius }),
+    }
+
+    return h('div', style, withHeight(icon.element, height))
+  }
+
+  const src = 'src' in icon ? icon.src : toDataUri(colorSvg(icon.svg, color), 'image/svg+xml')
+  const style = borderRadius === undefined ? undefined : { borderRadius }
+
+  return { type: 'img', props: { src, height, style } }
 }
 
 // The image covers half the card, so the text beside it keeps to the other half.
@@ -199,13 +247,6 @@ const renderLine = (context: RenderContext, role: LineRole, slot: Slot): Node =>
     group,
     slot.aside ? renderAside(context, role, slot.aside) : undefined,
   ])
-}
-
-const renderCardIcon = (context: RenderContext, icon: Icon): Node => {
-  const { sizes, theme } = context
-  const node = renderIcon(icon, sizes.iconSize, theme.text)
-
-  return { ...node, props: { ...node.props, style: { borderRadius: sizes.iconRadius } } }
 }
 
 const renderEyebrow = (context: RenderContext, eyebrow: string): Node => {
@@ -326,9 +367,11 @@ const renderDescription = (context: RenderContext, text: string): Node => {
 // A description alone takes the title's place, which is what a home page card wants. Satori
 // aligns only the wrapped lines of a text, so a one-line text is moved by the column instead.
 const renderHeadline = (context: RenderContext): Node => {
-  const { card } = context
+  const { card, sizes, theme } = context
   const children: Array<Node | undefined> = [
-    context.icon ? renderCardIcon(context, context.icon) : undefined,
+    context.icon
+      ? renderIcon(context.icon, sizes.iconSize, theme.text, sizes.iconRadius)
+      : undefined,
     card.eyebrow ? renderEyebrow(context, card.eyebrow) : undefined,
   ]
 
@@ -363,7 +406,7 @@ const renderHeadline = (context: RenderContext): Node => {
     flexDirection: 'column',
     gap: headlineGap,
     width: '100%',
-    maxWidth: context.sizes.contentWidth,
+    maxWidth: sizes.contentWidth,
     alignItems: flexAlign[horizontal],
     textAlign: horizontal,
   }

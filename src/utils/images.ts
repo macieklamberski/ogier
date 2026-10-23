@@ -1,5 +1,5 @@
 import { isString } from 'trousse'
-import type { Icon, ImageRef } from '../types/index.js'
+import type { ElementIcon, Icon, IconRef, ImageRef } from '../types/index.js'
 
 // Loads an image given as a file, which needs a file system.
 export type LoadFile = (file: string | URL, color?: string) => Promise<Icon>
@@ -37,4 +37,12 @@ export const loadImage = (ref: ImageRef, loadFile: LoadFile, color?: string): Pr
   }
 
   return loadFile(ref.file, color)
+}
+
+export const loadIcon = (ref: IconRef, loadFile: LoadFile): Promise<Icon | ElementIcon> => {
+  if ('element' in ref) {
+    return Promise.resolve({ element: ref.element, color: ref.color })
+  }
+
+  return loadImage(ref, loadFile, ref.color)
 }
