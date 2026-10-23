@@ -1,7 +1,7 @@
 import { trimObject } from 'trousse'
 import { renderPattern } from './patterns.js'
 import type { Align, FontElement, Icon, Node, RenderContext, Sizes, Slot } from './types/index.js'
-import { colorSvg, toDataUri } from './utils/icons.js'
+import { colorSvg, toDataUri } from './utils/images.js'
 
 type LineRole = 'header' | 'footer'
 

@@ -29,6 +29,10 @@
       "types": "./dist/index.d.mts",
       "default": "./dist/index.mjs"
     },
+    "./lite": {
+      "types": "./dist/lite.d.mts",
+      "default": "./dist/lite.mjs"
+    },
     "./themes": {
       "types": "./dist/themes/index.d.mts",
       "default": "./dist/themes/index.mjs"
@@ -47,7 +51,7 @@
   },
   "scripts": {
     "prepare": "lefthook install",
-    "build": "tsdown src/index.ts src/themes/index.ts src/adapters/index.ts --format esm --dts --clean",
+    "build": "tsdown src/index.ts src/lite.ts src/themes/index.ts src/adapters/index.ts --format esm --dts --clean",
     "test": "bun test",
     "examples": "cd examples && bun install && bun index.ts"
   },

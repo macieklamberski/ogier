@@ -1,19 +1,24 @@
-import { readFile } from 'node:fs/promises'
 import type { Font } from 'satori'
 import { t } from 'trousse'
 import locales from '../locales.json' with { type: 'json' }
 import type { FontElement, FontFile, FontRole, Fonts } from '../types/index.js'
-import { resolvePackageFile } from './packages.js'
 
 export type LoadedFonts = {
   fonts: Array<Font>
   families: Record<FontElement, string>
 }
 
-type FontKey = FontRole | FontElement
+export type FontKey = FontRole | FontElement
+
+// Loads a family given by name, under the key's font names.
+export type LoadFamily = (
+  key: FontKey,
+  family: string,
+  weights: Array<number>,
+) => Promise<{ fonts: Array<Font>; family: string }>
+
 type FontSource = string | Array<FontFile>
 
-const subsets = ['latin', 'latin-ext']
 const defaultFonts: Record<FontRole, string> = {
   title: 'inter',
   body: 'inter',
@@ -29,41 +34,6 @@ const elementRoles: Record<FontElement, FontRole> = {
   eyebrow: 'label',
   byline: 'label',
   footer: 'label',
-}
-
-const resolveFontFile = (family: string, subset: string, weight: number) => {
-  return resolvePackageFile(`@fontsource/${family}/files/${family}-${subset}-${weight}-normal.woff`)
-}
-
-// Satori keeps one file per font name and weight, so each subset gets its own name and the
-// role's family list names them in fallback order.
-const loadFamily = async (key: FontKey, family: string, weights: Array<number>) => {
-  const fonts: Array<Font> = []
-  const names: Array<string> = []
-
-  for (const subset of subsets) {
-    const name = `${key}-${subset}`
-
-    for (const weight of weights) {
-      const file = resolveFontFile(family, subset, weight)
-
-      if (!file) {
-        continue
-      }
-
-      fonts.push({ name, weight: weight as Font['weight'], data: await readFile(file) })
-    }
-
-    if (fonts.some((font) => font.name === name)) {
-      names.push(name)
-    }
-  }
-
-  if (fonts.length === 0) {
-    throw new Error(t(locales.errors.fontNotInstalled, { family, weights: weights.join(', ') }))
-  }
-
-  return { fonts, family: names.join(', ') }
 }
 
 const loadFiles = (key: FontKey, files: Array<FontFile>) => {
@@ -89,6 +59,7 @@ const loadFiles = (key: FontKey, files: Array<FontFile>) => {
 export const loadFonts = async (
   fonts: Fonts | undefined,
   weights: Record<FontElement, Array<number>>,
+  loadFamily: LoadFamily,
 ): Promise<LoadedFonts> => {
   const groups = new Map<FontKey, { source: FontSource; elements: Array<FontElement> }>()
 

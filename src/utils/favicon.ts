@@ -1,6 +1,7 @@
 import locales from '../locales.json' with { type: 'json' }
 import type { ImageRef } from '../types/index.js'
-import { loadImage, toDataUri } from './icons.js'
+import { loadImage } from './icons.js'
+import { toDataUri } from './images.js'
 
 export const faviconSize = 192
 
