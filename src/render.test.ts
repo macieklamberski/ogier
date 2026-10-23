@@ -62,6 +62,22 @@ describe('renderSvg', () => {
     expect(await renderSvg(value)).toContain(expected)
   })
 
+  it('should render a card image from png bytes', async () => {
+    const value: Card = {
+      title: 'Parsing namespaces',
+      image: {
+        data: Buffer.from(
+          'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGNkYGD4DwABCQEBKdHA9AAAAABJRU5ErkJggg==',
+          'base64',
+        ),
+        type: 'image/png',
+      },
+    }
+    const expected = '<image x="585" y="0" width="630" height="630" href="data:image/png;base64,'
+
+    expect(await renderSvg(value)).toContain(expected)
+  })
+
   it('should throw when the card has neither a title nor a description', async () => {
     const value = { header: { text: 'feedsmith' } }
     const throwing = () => renderSvg(value)
