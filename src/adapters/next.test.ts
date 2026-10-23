@@ -43,12 +43,17 @@ describe('next', () => {
     expect(response.headers.get('Content-Type')).toBe(expected)
   })
 
-  it('should still take the style and the resolve function as two arguments', async () => {
+  it('should take the style as the first of two arguments', () => {
     const image = next({ sizes: { cardWidth: 600, cardHeight: 315 } }, resolve)
-    const response = await image.default({ params: Promise.resolve({ slug: 'hello' }) })
     const expected = { width: 600, height: 315 }
 
     expect(image.size).toEqual(expected)
+  })
+
+  it('should render the card from the resolve function as the second of two arguments', async () => {
+    const image = next({}, resolve)
+    const response = await image.default({ params: Promise.resolve({ slug: 'hello' }) })
+
     expect(response.headers.get('Content-Type')).toBe('image/png')
   })
 })

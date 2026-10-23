@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'bun:test'
 import { defaultSizes } from './layout.js'
-import { type Pattern, renderPattern } from './patterns.js'
+import { renderPattern } from './patterns.js'
 import { dark } from './themes/dark.js'
+import type { Pattern } from './types/index.js'
 
 const tileCases: Array<[Pattern, string, number]> = [
   ['dots', '<circle cx="12" cy="12" r="2" fill="#5c5c5c" />', 0],
@@ -40,10 +41,15 @@ describe('renderPattern', () => {
     }
   })
 
-  it('should take an angle and drop the fade when asked', () => {
-    const result = renderPattern({ pattern: 'stripes', angle: 90, fade: false }, defaultSizes, dark)
+  it('should rotate the tile by the given angle', () => {
+    const result = renderPattern({ pattern: 'stripes', angle: 90 }, defaultSizes, dark)
 
     expect(result).toContain('patternTransform="rotate(90)"')
+  })
+
+  it('should drop the fade when fade is false', () => {
+    const result = renderPattern({ pattern: 'stripes', fade: false }, defaultSizes, dark)
+
     expect(result).not.toContain('mask')
   })
 })
