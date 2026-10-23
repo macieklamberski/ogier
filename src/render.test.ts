@@ -155,6 +155,26 @@ describe('renderSvg', () => {
     expect(await renderSvg(value, style)).toContain(expected)
   })
 
+  it('should set no style property to undefined around a header element icon', async () => {
+    const findUndefinedStyles = (node: unknown): Array<string> => {
+      if (!node || typeof node !== 'object') {
+        return []
+      }
+
+      const { props } = node as { props?: { style?: Record<string, unknown>; children?: unknown } }
+      const style = props?.style ?? {}
+      const own = Object.keys(style).filter((key) => style[key] === undefined)
+      const children = [props?.children].flat()
+
+      return [...own, ...children.flatMap(findUndefinedStyles)]
+    }
+    const element = { type: 'svg', props: { viewBox: '0 0 8 8' } }
+    const value: Card = { ...card, header: { text: 'feedsmith', icon: { element } } }
+    const result = await renderElement(value)
+
+    expect(findUndefinedStyles(result.element)).toEqual([])
+  })
+
   it('should render the card icon from an element at the icon size', async () => {
     const element = { type: 'svg', props: { viewBox: '0 0 8 8' } }
     const value: Card = { ...card, icon: { element } }

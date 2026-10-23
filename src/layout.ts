@@ -123,13 +123,15 @@ const renderIcon = (
   borderRadius?: number,
 ): Node => {
   if ('element' in icon) {
+    // The satori Next's ImageResponse bundles throws on a style property set to undefined, so
+    // the radius is only added when there is one.
     const style = {
       display: 'flex',
       height,
       flexShrink: 0,
       overflow: 'hidden',
-      borderRadius,
       color: icon.color ?? color,
+      ...(borderRadius === undefined ? {} : { borderRadius }),
     }
 
     return h('div', style, icon.element)
