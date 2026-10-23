@@ -73,6 +73,8 @@ export type Sizes = {
   titleLongestLength: number
   titleWeight: number
   titleWeightLong: number
+  labelWeight: number
+  bodyWeight: number
   titleLineHeight: number
   titleTracking: string
   titleTrackingLong: string

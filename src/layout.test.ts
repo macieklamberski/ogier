@@ -711,4 +711,11 @@ describe('getFontWeights', () => {
 
     expect(getFontWeights(value)).toEqual(expected)
   })
+
+  it('should load the label and body weights set in the sizes', () => {
+    const value = { ...defaultSizes, labelWeight: 600, bodyWeight: 300 }
+    const expected = { title: [400, 500, 700], body: [300], label: [600] }
+
+    expect(getFontWeights(value)).toEqual(expected)
+  })
 })
