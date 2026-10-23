@@ -756,6 +756,10 @@ describe('resolveSizes', () => {
 
     expect(resolveSizes({ railDotStep: 32, railStep: 16 })).toEqual(expected)
   })
+
+  it('should keep the default for a size given as undefined', () => {
+    expect(resolveSizes({ cardWidth: undefined })).toEqual(defaultSizes)
+  })
 })
 
 describe('getFontWeights', () => {

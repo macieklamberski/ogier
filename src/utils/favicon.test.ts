@@ -23,6 +23,16 @@ describe('renderFavicon', () => {
     expect([png.readUInt32BE(16), png.readUInt32BE(20)]).toEqual([48, 48])
   })
 
+  it('should render a square png from a non-square svg', async () => {
+    const value = {
+      svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100"><rect width="200" height="100" fill="#ff6602" /></svg>',
+    }
+
+    const png = await renderFavicon(value)
+
+    expect([png.readUInt32BE(16), png.readUInt32BE(20)]).toEqual([192, 192])
+  })
+
   it('should reject markup that is not svg', async () => {
     const throwing = () => renderFavicon({ svg: 'not svg' })
 

@@ -1,3 +1,4 @@
+import { trimObject } from 'trousse'
 import { renderPattern } from './patterns.js'
 import type { Align, FontElement, Icon, Node, RenderContext, Sizes, Slot } from './types/index.js'
 import { colorSvg, toDataUri } from './utils/icons.js'
@@ -82,7 +83,7 @@ export const resolveSizes = (sizes: Partial<Sizes> = {}): Sizes => {
   return {
     ...defaultSizes,
     railStep: railDotStep ?? defaultSizes.railStep,
-    ...rest,
+    ...trimObject(rest),
   }
 }
 

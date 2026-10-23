@@ -155,6 +155,19 @@ describe('loadFonts', () => {
     expect(fonts.at(-1)?.data).toEqual(expected)
   })
 
+  it('should load the default family for a role given as undefined', async () => {
+    const value = { title: undefined }
+    const expected = {
+      title: 'title-latin, title-latin-ext',
+      description: 'body-latin, body-latin-ext',
+      ...labelFamilies,
+    }
+
+    const { families } = await loadFonts(value, weights)
+
+    expect(families).toEqual(expected)
+  })
+
   it('should throw when a role is given an empty list of font files', async () => {
     const value = { body: [] }
     const throwing = () => loadFonts(value, weights)
