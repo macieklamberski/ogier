@@ -7,6 +7,8 @@ export type ImageRef =
 
 export type IconRef = ImageRef & { color?: string }
 
+export type Extra = Parameters<typeof satori>[0]
+
 export type Slot = {
   text?: string
   icon?: IconRef
@@ -28,7 +30,7 @@ export type Card = {
   footer?: Slot
   image?: ImageRef & { position?: 'left' | 'right' }
   align?: Align
-  extra?: Parameters<typeof satori>[0]
+  extra?: Extra
 }
 
 export type Theme = {

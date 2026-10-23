@@ -61,7 +61,7 @@ type Card = {
   footer?: { text?: string; icon?: IconRef; aside?: string }
   image?: ImageRef & { position?: 'left' | 'right' }
   align?: { horizontal?: 'left' | 'center' | 'right'; vertical?: 'top' | 'center' | 'bottom' }
-  extra?: ReactNode
+  extra?: Extra
 }
 ```
 
