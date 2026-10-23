@@ -1,6 +1,9 @@
 import type satori from 'satori'
 
-export type ImageRef = { file: string | URL } | { svg: string | Uint8Array }
+export type ImageRef =
+  | { file: string | URL }
+  | { svg: string | Uint8Array }
+  | { data: Uint8Array; type: 'image/png' | 'image/jpeg' }
 
 export type IconRef = ImageRef & { color?: string }
 

@@ -1,10 +1,9 @@
-import { Resvg } from '@resvg/resvg-js'
-import satori from 'satori'
+import satori, { type Font } from 'satori'
 import { t } from 'trousse'
 import { getFontWeights, render, resolveSizes } from './layout.js'
 import locales from './locales.json' with { type: 'json' }
 import { dark } from './themes/dark.js'
-import type { Card, ImageRef, RenderContext, Slot, Style } from './types/index.js'
+import type { Card, ImageRef, Node, RenderContext, Slot, Style } from './types/index.js'
 import { type LoadedFonts, loadFonts } from './utils/fonts.js'
 import { loadIcon, loadImage } from './utils/icons.js'
 
@@ -23,6 +22,13 @@ const findWebpFile = (refs: Array<ImageRef | undefined>) => {
       return file
     }
   }
+}
+
+export type RenderedElement = {
+  element: Node & { key: null } // The key types it as the React element ImageResponse takes
+  fonts: Array<Font>
+  width: number
+  height: number
 }
 
 const normalizeText = (text: string | undefined) => {
@@ -68,7 +74,7 @@ export const createRenderer = (style: Style = {}) => {
   const backgroundImage = background && 'image' in background ? background.image : undefined
   let loadedFonts: Promise<LoadedFonts> | undefined
 
-  const renderSvg = async (card: Card): Promise<string> => {
+  const renderElement = async (card: Card): Promise<RenderedElement> => {
     loadedFonts ??= loadFonts(style.fonts, getFontWeights(sizes))
 
     const { fonts, families } = await loadedFonts
@@ -85,11 +91,18 @@ export const createRenderer = (style: Style = {}) => {
       backgroundImage: backgroundImage ? await loadImage(backgroundImage) : undefined,
     }
 
-    return satori(render(context), {
+    return {
+      element: { ...render(context), key: null },
+      fonts,
       width: sizes.cardWidth,
       height: sizes.cardHeight,
-      fonts,
-    })
+    }
+  }
+
+  const renderSvg = async (card: Card): Promise<string> => {
+    const { element, fonts, width, height } = await renderElement(card)
+
+    return satori(element, { width, height, fonts })
   }
 
   const renderPng = async (card: Card): Promise<Buffer> => {
@@ -99,10 +112,20 @@ export const createRenderer = (style: Style = {}) => {
       throw new Error(t(locales.errors.webpInPng, { file: webpFile }))
     }
 
-    return new Resvg(await renderSvg(card)).render().asPng()
+    const svg = await renderSvg(card)
+
+    // Loaded on first use: runtimes without native modules, such as Cloudflare Workers, can then
+    // import ogier for renderElement.
+    const { Resvg } = await import('@resvg/resvg-js')
+
+    return new Resvg(svg).render().asPng()
   }
 
-  return { renderSvg, renderPng }
+  return { renderElement, renderSvg, renderPng }
+}
+
+export const renderElement = (card: Card, style?: Style): Promise<RenderedElement> => {
+  return createRenderer(style).renderElement(card)
 }
 
 export const renderSvg = (card: Card, style?: Style): Promise<string> => {

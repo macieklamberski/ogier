@@ -47,6 +47,28 @@ describe('loadIcon', () => {
     expect(await loadIcon(value)).toEqual(expected)
   })
 
+  it('should embed image bytes with the given media type', async () => {
+    const value = { data: Buffer.from([255, 216, 255, 224]), type: 'image/jpeg' as const }
+    const expected: Icon = {
+      src: 'data:image/jpeg;base64,/9j/4A==',
+    }
+
+    expect(await loadIcon(value)).toEqual(expected)
+  })
+
+  it('should ignore the color for image bytes', async () => {
+    const value = {
+      data: Buffer.from([137, 80, 78, 71]),
+      type: 'image/png' as const,
+      color: '#ff8c4d',
+    }
+    const expected: Icon = {
+      src: 'data:image/png;base64,iVBORw==',
+    }
+
+    expect(await loadIcon(value)).toEqual(expected)
+  })
+
   it('should throw for a package path that does not resolve', async () => {
     const value = { file: 'no-such-package/icons/rss.svg' }
     const throwing = () => loadIcon(value)
