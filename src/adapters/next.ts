@@ -1,4 +1,4 @@
-import { defaultSizes } from '../layout.js'
+import { resolveSizes } from '../layout.js'
 import { createRenderer } from '../render.js'
 import type { Card, Style } from '../types/index.js'
 
@@ -14,7 +14,7 @@ export type NextResolve = (params: NextParams) => Card | Promise<Card>
 // Open Graph tags from them. The params arrive as a promise in Next 15 and later.
 export const next = (style: Style, resolve: NextResolve) => {
   const renderer = createRenderer(style)
-  const sizes = { ...defaultSizes, ...style.sizes }
+  const sizes = resolveSizes(style.sizes)
 
   const image = async ({ params }: NextImageProps): Promise<Response> => {
     const card = await resolve(await params)

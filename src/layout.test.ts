@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { defaultSizes, render } from './layout.js'
+import { defaultSizes, render, resolveSizes } from './layout.js'
 import { dark } from './themes/dark.js'
 import type { Node, RenderContext } from './types/index.js'
 
@@ -608,5 +608,23 @@ describe('render', () => {
     }
 
     expect(findByText(render(value), 'Parsing namespaces')).toMatchObject(expected)
+  })
+})
+
+describe('resolveSizes', () => {
+  it('should return the defaults when no sizes are given', () => {
+    expect(resolveSizes()).toEqual(defaultSizes)
+  })
+
+  it('should read the deprecated railDotStep as railStep', () => {
+    const expected = { ...defaultSizes, railStep: 32 }
+
+    expect(resolveSizes({ railDotStep: 32 })).toEqual(expected)
+  })
+
+  it('should prefer railStep over the deprecated railDotStep', () => {
+    const expected = { ...defaultSizes, railStep: 16 }
+
+    expect(resolveSizes({ railDotStep: 32, railStep: 16 })).toEqual(expected)
   })
 })

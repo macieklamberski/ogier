@@ -55,6 +55,16 @@ export const defaultSizes: Sizes = {
   railStrokeWidth: 1,
 }
 
+export const resolveSizes = (sizes: Partial<Sizes> = {}): Sizes => {
+  const { railDotStep, ...rest } = sizes
+
+  return {
+    ...defaultSizes,
+    railStep: railDotStep ?? defaultSizes.railStep,
+    ...rest,
+  }
+}
+
 const lineAlign: Record<LineRole, string> = {
   header: 'flex-start',
   footer: 'flex-end',

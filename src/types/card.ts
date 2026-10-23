@@ -80,6 +80,8 @@ export type Sizes = {
   barHeight: number
   railWidth: number
   railStep: number
+  /** @deprecated Use `railStep` instead. */
+  railDotStep?: number
   railDotRadius: number
   railStrokeWidth: number
 }
