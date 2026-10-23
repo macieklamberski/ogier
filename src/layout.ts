@@ -87,11 +87,6 @@ export const resolveSizes = (sizes: Partial<Sizes> = {}): Sizes => {
   }
 }
 
-const lineAlign: Record<LineRole, string> = {
-  header: 'flex-start',
-  footer: 'flex-end',
-}
-
 const flexAlign: Record<NonNullable<Align['horizontal']>, string> = {
   left: 'flex-start',
   center: 'center',
@@ -175,7 +170,7 @@ const renderLine = (context: RenderContext, role: LineRole, slot: Slot): Node =>
   const color = theme[role] ?? (role === 'header' ? theme.text : theme.muted)
   const lineStyle = {
     display: 'flex',
-    alignItems: lineAlign[role],
+    alignItems: role === 'header' ? 'flex-start' : 'flex-end',
     gap: sizes[`${role}Gap`],
   }
   const groupStyle = {

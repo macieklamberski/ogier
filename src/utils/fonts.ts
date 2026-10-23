@@ -38,7 +38,7 @@ const elementRoles: Record<FontElement, FontRole> = {
 
 const loadFiles = (key: FontKey, files: Array<FontFile>) => {
   if (files.length === 0) {
-    throw new Error(t(locales.errors.fontFilesEmpty, { role: key }))
+    throw new Error(t(locales.errors.fontFilesEmpty, { name: key }))
   }
 
   const fonts: Array<Font> = files.map((file) => {
@@ -61,19 +61,20 @@ export const loadFonts = async (
   weights: Record<FontElement, Array<number>>,
   loadFamily: LoadFamily,
 ): Promise<LoadedFonts> => {
-  const groups = new Map<FontKey, { source: FontSource; elements: Array<FontElement> }>()
+  const groups: Array<{ key: FontKey; source: FontSource; elements: Array<FontElement> }> = []
 
   for (const element of Object.keys(elementRoles) as Array<FontElement>) {
     const role = elementRoles[element]
     const own = fonts?.[element]
     const key = own ? element : role
-    const group = groups.get(key) ?? {
-      source: own ?? fonts?.[role] ?? defaultFonts[role],
-      elements: [],
+    let group = groups.find((item) => item.key === key)
+
+    if (!group) {
+      group = { key, source: own ?? fonts?.[role] ?? defaultFonts[role], elements: [] }
+      groups.push(group)
     }
 
     group.elements.push(element)
-    groups.set(key, group)
   }
 
   const loaded: LoadedFonts = {
@@ -89,7 +90,7 @@ export const loadFonts = async (
     },
   }
 
-  for (const [key, { source, elements }] of groups) {
+  for (const { key, source, elements } of groups) {
     const keyWeights = new Set(elements.flatMap((element) => weights[element]))
     const sorted = [...keyWeights].sort((a, b) => a - b)
     const result = Array.isArray(source)

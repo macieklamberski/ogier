@@ -1,18 +1,21 @@
 import { isString } from 'trousse'
-import type { Icon, IconRef, ImageRef } from '../types/index.js'
+import type { Icon, ImageRef } from '../types/index.js'
 
 // Loads an image given as a file, which needs a file system.
 export type LoadFile = (file: string | URL, color?: string) => Promise<Icon>
 
 const currentColorRegex = /currentColor/g
 
-// btoa takes a binary string, built in chunks so a large image does not overflow the call stack.
+// btoa takes a binary string, built in chunks of 32 KB so a large image does not overflow the
+// call stack when spread into String.fromCharCode.
+const chunkSize = 0x8000
+
 export const toDataUri = (data: string | Uint8Array, mimeType: string) => {
   const bytes = isString(data) ? new TextEncoder().encode(data) : data
   let binary = ''
 
-  for (let index = 0; index < bytes.length; index += 0x8000) {
-    binary += String.fromCharCode(...bytes.subarray(index, index + 0x8000))
+  for (let index = 0; index < bytes.length; index += chunkSize) {
+    binary += String.fromCharCode(...bytes.subarray(index, index + chunkSize))
   }
 
   return `data:${mimeType};base64,${btoa(binary)}`
@@ -34,8 +37,4 @@ export const loadImage = (ref: ImageRef, loadFile: LoadFile, color?: string): Pr
   }
 
   return loadFile(ref.file, color)
-}
-
-export const loadIcon = (ref: IconRef, loadFile: LoadFile): Promise<Icon> => {
-  return loadImage(ref, loadFile, ref.color)
 }

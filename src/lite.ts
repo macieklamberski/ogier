@@ -26,23 +26,4 @@ export const renderElement = (card: Card, style?: Style): Promise<RenderedElemen
 
 export type { RenderedElement } from './element.js'
 export { composeMetadata, composeMetaTags, getImageUrl } from './metadata.js'
-export type {
-  Background,
-  Card,
-  Extra,
-  FontElement,
-  FontFile,
-  FontRole,
-  Fonts,
-  IconRef,
-  ImageRef,
-  Metadata,
-  MetadataImage,
-  MetadataInput,
-  MetaTag,
-  Pattern,
-  Sizes,
-  Slot,
-  Style,
-  Theme,
-} from './types/index.js'
+export type * from './types/public.js'

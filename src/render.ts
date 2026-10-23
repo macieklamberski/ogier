@@ -1,6 +1,11 @@
 import satori from 'satori'
 import { t } from 'trousse'
-import { createElementRenderer, type Loaders, type RenderedElement } from './element.js'
+import {
+  createElementRenderer,
+  getBackgroundImage,
+  type Loaders,
+  type RenderedElement,
+} from './element.js'
 import locales from './locales.json' with { type: 'json' }
 import type { Card, ImageRef, Style } from './types/index.js'
 import { loadFontsourceFamily } from './utils/fontsource.js'
@@ -22,8 +27,7 @@ const findWebpFile = (refs: Array<ImageRef | undefined>) => {
 
 export const createRenderer = (style: Style = {}) => {
   const { renderElement } = createElementRenderer(style, loaders)
-  const { background } = style
-  const backgroundImage = background && 'image' in background ? background.image : undefined
+  const backgroundImage = getBackgroundImage(style)
 
   const renderSvg = async (card: Card): Promise<string> => {
     const { element, fonts, width, height } = await renderElement(card)

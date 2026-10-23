@@ -4,7 +4,7 @@ import locales from './locales.json' with { type: 'json' }
 import { dark } from './themes/dark.js'
 import type { Card, Node, RenderContext, Slot, Style } from './types/index.js'
 import { type LoadedFonts, type LoadFamily, loadFonts } from './utils/fonts.js'
-import { type LoadFile, loadIcon, loadImage } from './utils/images.js'
+import { type LoadFile, loadImage } from './utils/images.js'
 
 export type RenderedElement = {
   element: Node & { key: null } // The key types it as the React element ImageResponse takes
@@ -54,12 +54,16 @@ const normalizeCard = (card: Card): Card => {
   }
 }
 
+export const getBackgroundImage = (style: Style) => {
+  return style.background && 'image' in style.background ? style.background.image : undefined
+}
+
 // The fonts are loaded on the first render and shared by every render after it, so a site
 // renders its pages through one renderer. Icons and images are loaded per render.
 export const createElementRenderer = (style: Style, loaders: Loaders) => {
   const sizes = resolveSizes(style.sizes)
   const { background } = style
-  const backgroundImage = background && 'image' in background ? background.image : undefined
+  const backgroundImage = getBackgroundImage(style)
   const { loadFamily, loadFile } = loaders
   let loadedFonts: Promise<LoadedFonts> | undefined
 
@@ -84,9 +88,13 @@ export const createElementRenderer = (style: Style, loaders: Loaders) => {
       theme: style.theme ?? dark,
       sizes,
       fonts: families,
-      headerIcon: card.header?.icon ? await loadIcon(card.header.icon, loadFile) : undefined,
-      icon: card.icon ? await loadIcon(card.icon, loadFile) : undefined,
-      footerIcon: card.footer?.icon ? await loadIcon(card.footer.icon, loadFile) : undefined,
+      headerIcon: card.header?.icon
+        ? await loadImage(card.header.icon, loadFile, card.header.icon.color)
+        : undefined,
+      icon: card.icon ? await loadImage(card.icon, loadFile, card.icon.color) : undefined,
+      footerIcon: card.footer?.icon
+        ? await loadImage(card.footer.icon, loadFile, card.footer.icon.color)
+        : undefined,
       image: card.image ? await loadImage(card.image, loadFile) : undefined,
       background,
       backgroundImage: backgroundImage ? await loadImage(backgroundImage, loadFile) : undefined,
