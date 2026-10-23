@@ -9,6 +9,7 @@ export type {
   Fonts,
   IconRef,
   ImageRef,
+  Pattern,
   Sizes,
   Slot,
   Theme,

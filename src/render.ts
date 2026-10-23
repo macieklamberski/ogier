@@ -7,6 +7,13 @@ import type { Card, ImageRef, Node, RenderContext, Slot, Style } from './types/i
 import { type LoadedFonts, loadFonts } from './utils/fonts.js'
 import { loadIcon, loadImage } from './utils/icons.js'
 
+export type RenderedElement = {
+  element: Node & { key: null } // The key types it as the React element ImageResponse takes
+  fonts: Array<Font>
+  width: number
+  height: number
+}
+
 // U+2011 is the non-breaking hyphen, which the fontsource latin subsets lack.
 const nonBreakingHyphenRegex = /‑/g
 
@@ -22,13 +29,6 @@ const findWebpFile = (refs: Array<ImageRef | undefined>) => {
       return file
     }
   }
-}
-
-export type RenderedElement = {
-  element: Node & { key: null } // The key types it as the React element ImageResponse takes
-  fonts: Array<Font>
-  width: number
-  height: number
 }
 
 const normalizeText = (text: string | undefined) => {
@@ -53,16 +53,13 @@ const normalizeCard = (card: Card): Card => {
   }
 
   return {
+    ...card,
     header: normalizeSlot(card.header),
-    icon: card.icon,
     eyebrow: normalizeText(card.eyebrow),
     title: normalizeText(card.title),
     byline: normalizeText(card.byline),
     description: normalizeText(card.description),
     footer: normalizeSlot(card.footer),
-    image: card.image,
-    align: card.align,
-    extra: card.extra,
   }
 }
 
@@ -114,8 +111,6 @@ export const createRenderer = (style: Style = {}) => {
 
     const svg = await renderSvg(card)
 
-    // Loaded on first use: runtimes without native modules, such as Cloudflare Workers, can then
-    // import ogier for renderElement.
     const { Resvg } = await import('@resvg/resvg-js')
 
     return new Resvg(svg).render().asPng()
