@@ -1,5 +1,5 @@
 import { renderPattern } from './patterns.js'
-import type { Align, FontRole, Icon, Node, RenderContext, Sizes, Slot } from './types/index.js'
+import type { Align, FontElement, Icon, Node, RenderContext, Sizes, Slot } from './types/index.js'
 import { colorSvg, toDataUri } from './utils/icons.js'
 
 type LineRole = 'header' | 'footer'
@@ -8,14 +8,18 @@ const titleWeights = [400, 500, 700]
 
 // Satori draws a weight that was not loaded in the nearest one it has, so a title weight set in
 // the sizes is loaded next to the defaults. Satori also draws text with no fontWeight at 400, so
-// every text node sets the weight of its role, and font files passed for a role are picked by it.
-export const getFontWeights = (sizes: Sizes): Record<FontRole, Array<number>> => {
+// every text node sets its weight, and font files passed for it are picked by that weight.
+export const getFontWeights = (sizes: Sizes): Record<FontElement, Array<number>> => {
   const title = new Set([...titleWeights, sizes.titleWeight, sizes.titleWeightLong])
 
   return {
     title: [...title].sort((a, b) => a - b),
-    body: [sizes.bodyWeight],
-    label: [sizes.labelWeight],
+    description: [sizes.descriptionWeight],
+    header: [sizes.headerWeight],
+    aside: [sizes.asideWeight],
+    eyebrow: [sizes.eyebrowWeight],
+    byline: [sizes.bylineWeight],
+    footer: [sizes.footerWeight],
   }
 }
 
@@ -26,9 +30,11 @@ export const defaultSizes: Sizes = {
   contentWidth: 800,
   headerIcon: 56,
   headerText: 44,
+  headerWeight: 500,
   headerGap: 20,
   headerTracking: '0em',
   asideText: 26,
+  asideWeight: 500,
   asideBaseline: 0.73,
   asideTracking: '0em',
   lineMaxWidth: 536,
@@ -36,6 +42,7 @@ export const defaultSizes: Sizes = {
   iconRadius: 0,
   slotLineHeight: 1.2,
   eyebrowText: 26,
+  eyebrowWeight: 500,
   eyebrowTracking: '0.12em',
   titleText: 72,
   titleTextLong: 56,
@@ -44,21 +51,22 @@ export const defaultSizes: Sizes = {
   titleLongestLength: 90,
   titleWeight: 700,
   titleWeightLong: 400,
-  labelWeight: 500,
-  bodyWeight: 400,
   titleLineHeight: 1.15,
   titleTracking: '-0.025em',
   titleTrackingLong: '-0.0125em',
   titleMaxLines: 3,
   titleMaxLinesWithDescription: 2,
   bylineText: 28,
+  bylineWeight: 500,
   bylineTracking: '0em',
   descriptionText: 30,
+  descriptionWeight: 400,
   descriptionLineHeight: 1.35,
   descriptionMaxLines: 2,
   descriptionTracking: '0em',
   footerIcon: 32,
   footerText: 28,
+  footerWeight: 500,
   footerGap: 14,
   footerTracking: '0em',
   barHeight: 0,
@@ -145,8 +153,8 @@ const renderAside = (context: RenderContext, role: LineRole, aside: string): Nod
     marginLeft: 'auto',
     ...getAsideShift(sizes, role),
     maxWidth: sizes.lineMaxWidth,
-    fontFamily: fonts.label,
-    fontWeight: sizes.labelWeight,
+    fontFamily: fonts.aside,
+    fontWeight: sizes.asideWeight,
     fontSize: sizes.asideText,
     lineHeight: sizes.slotLineHeight,
     letterSpacing: sizes.asideTracking,
@@ -178,8 +186,8 @@ const renderLine = (context: RenderContext, role: LineRole, slot: Slot): Node =>
   const textStyle = {
     maxWidth: sizes.lineMaxWidth,
     flexShrink: 1,
-    fontFamily: fonts.label,
-    fontWeight: sizes.labelWeight,
+    fontFamily: fonts[role],
+    fontWeight: sizes[`${role}Weight`],
     fontSize: sizes[`${role}Text`],
     lineHeight: sizes.slotLineHeight,
     letterSpacing: sizes[`${role}Tracking`],
@@ -204,8 +212,8 @@ const renderCardIcon = (context: RenderContext, icon: Icon): Node => {
 
 const renderEyebrow = (context: RenderContext, eyebrow: string): Node => {
   const style = {
-    fontFamily: context.fonts.label,
-    fontWeight: context.sizes.labelWeight,
+    fontFamily: context.fonts.eyebrow,
+    fontWeight: context.sizes.eyebrowWeight,
     fontSize: context.sizes.eyebrowText,
     color: context.theme.eyebrow ?? context.theme.accent,
     textTransform: 'uppercase',
@@ -260,8 +268,8 @@ const renderTitle = (context: RenderContext, text: string): Node => {
 const renderByline = (context: RenderContext, byline: string): Node => {
   const style = {
     color: context.theme.byline ?? context.theme.text,
-    fontFamily: context.fonts.label,
-    fontWeight: context.sizes.labelWeight,
+    fontFamily: context.fonts.byline,
+    fontWeight: context.sizes.bylineWeight,
     fontSize: context.sizes.bylineText,
     letterSpacing: context.sizes.bylineTracking,
     display: 'block',
@@ -273,8 +281,8 @@ const renderByline = (context: RenderContext, byline: string): Node => {
 
 const renderDescription = (context: RenderContext, text: string): Node => {
   const style = {
-    fontFamily: context.fonts.body,
-    fontWeight: context.sizes.bodyWeight,
+    fontFamily: context.fonts.description,
+    fontWeight: context.sizes.descriptionWeight,
     fontSize: context.sizes.descriptionText,
     lineHeight: context.sizes.descriptionLineHeight,
     letterSpacing: context.sizes.descriptionTracking,

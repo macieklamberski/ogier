@@ -5,7 +5,22 @@ import type { LoadedFonts } from './fonts.js'
 import { loadFonts } from './fonts.js'
 
 describe('loadFonts', () => {
-  const weights = { title: [400, 700], body: [400], label: [500] }
+  const weights = {
+    title: [400, 700],
+    description: [400],
+    header: [500],
+    aside: [500],
+    eyebrow: [500],
+    byline: [500],
+    footer: [500],
+  }
+  const labelFamilies = {
+    header: 'label-latin, label-latin-ext',
+    aside: 'label-latin, label-latin-ext',
+    eyebrow: 'label-latin, label-latin-ext',
+    byline: 'label-latin, label-latin-ext',
+    footer: 'label-latin, label-latin-ext',
+  }
 
   it('should load the default families with one name per subset', async () => {
     const expected: LoadedFonts = {
@@ -21,8 +36,8 @@ describe('loadFonts', () => {
       ],
       families: {
         title: 'title-latin, title-latin-ext',
-        body: 'body-latin, body-latin-ext',
-        label: 'label-latin, label-latin-ext',
+        description: 'body-latin, body-latin-ext',
+        ...labelFamilies,
       },
     }
 
@@ -34,20 +49,60 @@ describe('loadFonts', () => {
     const expected: LoadedFonts = {
       fonts: [
         { name: 'title-latin', weight: 400, data: expect.any(Buffer) },
+        { name: 'title-latin', weight: 700, data: expect.any(Buffer) },
         { name: 'title-latin-ext', weight: 400, data: expect.any(Buffer) },
+        { name: 'title-latin-ext', weight: 700, data: expect.any(Buffer) },
         { name: 'body-latin', weight: 400, data: expect.any(Buffer) },
         { name: 'body-latin-ext', weight: 400, data: expect.any(Buffer) },
-        { name: 'label-latin', weight: 400, data: expect.any(Buffer) },
-        { name: 'label-latin-ext', weight: 400, data: expect.any(Buffer) },
+        { name: 'label-latin', weight: 500, data: expect.any(Buffer) },
+        { name: 'label-latin-ext', weight: 500, data: expect.any(Buffer) },
       ],
       families: {
         title: 'title-latin, title-latin-ext',
-        body: 'body-latin, body-latin-ext',
-        label: 'label-latin, label-latin-ext',
+        description: 'body-latin, body-latin-ext',
+        ...labelFamilies,
       },
     }
 
-    expect(await loadFonts(value, { title: [400], body: [400], label: [400] })).toEqual(expected)
+    expect(await loadFonts(value, weights)).toEqual(expected)
+  })
+
+  it('should load an element family under the element name', async () => {
+    const value = { eyebrow: 'inter' }
+    const expected: LoadedFonts = {
+      fonts: [
+        { name: 'title-latin', weight: 400, data: expect.any(Buffer) },
+        { name: 'title-latin', weight: 700, data: expect.any(Buffer) },
+        { name: 'title-latin-ext', weight: 400, data: expect.any(Buffer) },
+        { name: 'title-latin-ext', weight: 700, data: expect.any(Buffer) },
+        { name: 'body-latin', weight: 400, data: expect.any(Buffer) },
+        { name: 'body-latin-ext', weight: 400, data: expect.any(Buffer) },
+        { name: 'label-latin', weight: 500, data: expect.any(Buffer) },
+        { name: 'label-latin-ext', weight: 500, data: expect.any(Buffer) },
+        { name: 'eyebrow-latin', weight: 500, data: expect.any(Buffer) },
+        { name: 'eyebrow-latin-ext', weight: 500, data: expect.any(Buffer) },
+      ],
+      families: {
+        title: 'title-latin, title-latin-ext',
+        description: 'body-latin, body-latin-ext',
+        ...labelFamilies,
+        eyebrow: 'eyebrow-latin, eyebrow-latin-ext',
+      },
+    }
+
+    expect(await loadFonts(value, weights)).toEqual(expected)
+  })
+
+  it('should load the weights of every element sharing a role', async () => {
+    const value = { ...weights, eyebrow: [700], footer: [400] }
+    const expected = [400, 500, 700] as const
+
+    const { fonts } = await loadFonts(undefined, value)
+    const labelWeights = fonts
+      .filter((font) => font.name === 'label-latin')
+      .map((font) => font.weight)
+
+    expect(labelWeights).toEqual([...expected])
   })
 
   it('should use the font files given for a role under the role name', async () => {
@@ -68,12 +123,26 @@ describe('loadFonts', () => {
       ],
       families: {
         title: 'title',
-        body: 'body-latin, body-latin-ext',
-        label: 'label-latin, label-latin-ext',
+        description: 'body-latin, body-latin-ext',
+        ...labelFamilies,
       },
     }
 
     expect(await loadFonts(value, weights)).toEqual(expected)
+  })
+
+  it('should use the font files given for an element under the element name', async () => {
+    const value = { byline: [{ data: new Uint8Array([1, 2, 3]), weight: 400 }] }
+    const expected = {
+      name: 'byline',
+      weight: 400 as const,
+      data: new Uint8Array([1, 2, 3]).buffer,
+    }
+
+    const { fonts, families } = await loadFonts(value, weights)
+
+    expect(fonts.at(-1)).toEqual(expected)
+    expect(families.byline).toBe('byline')
   })
 
   it('should copy only the viewed bytes of a font file', async () => {
@@ -81,7 +150,7 @@ describe('loadFonts', () => {
     const value = { label: [{ data: bytes.subarray(1, 4), weight: 500 }] }
     const expected = new Uint8Array([1, 2, 3]).buffer
 
-    const { fonts } = await loadFonts(value, { title: [400], body: [400], label: [500] })
+    const { fonts } = await loadFonts(value, weights)
 
     expect(fonts.at(-1)?.data).toEqual(expected)
   })

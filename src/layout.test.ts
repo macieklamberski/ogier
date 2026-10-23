@@ -48,7 +48,15 @@ describe('render', () => {
     card: { header: { text: 'feedsmith' }, title: 'Parsing namespaces' },
     theme: dark,
     sizes: defaultSizes,
-    fonts: { title: 'title-latin', body: 'body-latin', label: 'label-latin' },
+    fonts: {
+      title: 'title-latin',
+      description: 'body-latin',
+      header: 'label-latin',
+      aside: 'label-latin',
+      eyebrow: 'label-latin',
+      byline: 'label-latin',
+      footer: 'label-latin',
+    },
     background: { pattern: 'dots' },
   }
 
@@ -138,6 +146,58 @@ describe('render', () => {
     expect(findByText(root, 'Test Tosterone')).toMatchObject(expectedByline)
     expect(findByText(root, 'Every tag the parser reads.')).toMatchObject(expectedDescription)
     expect(listTexts(root)).toEqual(expectedTexts)
+  })
+
+  it('should set each text family and weight from its own font and size keys', () => {
+    const value: RenderContext = {
+      ...baseContext,
+      card: {
+        header: { text: 'feedsmith', aside: 'v1.1.0' },
+        eyebrow: 'Guides › Parsing',
+        title: 'Parsing namespaces',
+        byline: 'Test Tosterone',
+        description: 'Every tag the parser reads.',
+        footer: { text: 'example/repo', aside: 'Page 3' },
+      },
+      sizes: {
+        ...defaultSizes,
+        headerWeight: 100,
+        asideWeight: 200,
+        eyebrowWeight: 300,
+        bylineWeight: 600,
+        descriptionWeight: 800,
+        footerWeight: 900,
+      },
+      fonts: {
+        title: 'title-latin',
+        description: 'description-latin',
+        header: 'header-latin',
+        aside: 'aside-latin',
+        eyebrow: 'eyebrow-latin',
+        byline: 'byline-latin',
+        footer: 'footer-latin',
+      },
+    }
+    const root = render(value)
+    const expected = {
+      feedsmith: { fontFamily: 'header-latin', fontWeight: 100 },
+      'v1.1.0': { fontFamily: 'aside-latin', fontWeight: 200 },
+      'Guides › Parsing': { fontFamily: 'eyebrow-latin', fontWeight: 300 },
+      'Test Tosterone': { fontFamily: 'byline-latin', fontWeight: 600 },
+      'Every tag the parser reads.': { fontFamily: 'description-latin', fontWeight: 800 },
+      'example/repo': { fontFamily: 'footer-latin', fontWeight: 900 },
+      'Page 3': { fontFamily: 'aside-latin', fontWeight: 200 },
+    }
+
+    const styles = Object.fromEntries(
+      Object.keys(expected).map((text) => {
+        const style = findByText(root, text)?.props.style as Record<string, unknown>
+
+        return [text, { fontFamily: style.fontFamily, fontWeight: style.fontWeight }]
+      }),
+    )
+
+    expect(styles).toEqual(expected)
   })
 
   it('should color each text from its own theme key', () => {
@@ -700,21 +760,36 @@ describe('resolveSizes', () => {
 
 describe('getFontWeights', () => {
   it('should load the default weights for the default sizes', () => {
-    const expected = { title: [400, 500, 700], body: [400], label: [500] }
+    const expected = {
+      title: [400, 500, 700],
+      description: [400],
+      header: [500],
+      aside: [500],
+      eyebrow: [500],
+      byline: [500],
+      footer: [500],
+    }
 
     expect(getFontWeights(defaultSizes)).toEqual(expected)
   })
 
   it('should load the title weights set in the sizes', () => {
     const value = { ...defaultSizes, titleWeight: 600, titleWeightLong: 300 }
-    const expected = { title: [300, 400, 500, 600, 700], body: [400], label: [500] }
 
-    expect(getFontWeights(value)).toEqual(expected)
+    expect(getFontWeights(value).title).toEqual([300, 400, 500, 600, 700])
   })
 
-  it('should load the label and body weights set in the sizes', () => {
-    const value = { ...defaultSizes, labelWeight: 600, bodyWeight: 300 }
-    const expected = { title: [400, 500, 700], body: [300], label: [600] }
+  it('should load the element weights set in the sizes', () => {
+    const value = { ...defaultSizes, eyebrowWeight: 700, descriptionWeight: 300 }
+    const expected = {
+      title: [400, 500, 700],
+      description: [300],
+      header: [500],
+      aside: [500],
+      eyebrow: [700],
+      byline: [500],
+      footer: [500],
+    }
 
     expect(getFontWeights(value)).toEqual(expected)
   })
