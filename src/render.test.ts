@@ -62,6 +62,23 @@ describe('renderSvg', () => {
     expect(await renderSvg(value)).toContain(expected)
   })
 
+  it('should render the card icon and the extra element in the headline', async () => {
+    const value: Card = {
+      ...card,
+      icon: {
+        svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8"><rect width="8" height="8" /></svg>',
+      },
+      extra: { type: 'div', props: { style: { width: 40, height: 40, background: '#123456' } } },
+    }
+    const expectedIcon = '<image x="64" y="'
+    const expectedExtra = 'fill="#123456"'
+
+    const svg = await renderSvg(value)
+
+    expect(svg).toContain(expectedIcon)
+    expect(svg).toContain(expectedExtra)
+  })
+
   it('should throw when the card has neither a title nor a description', async () => {
     const value = { header: { text: 'feedsmith' } }
     const throwing = () => renderSvg(value)

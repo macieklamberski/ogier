@@ -1,3 +1,5 @@
+import type satori from 'satori'
+
 export type ImageRef = { file: string | URL } | { svg: string | Uint8Array }
 
 export type IconRef = ImageRef & { color?: string }
@@ -15,6 +17,7 @@ export type Align = {
 
 export type Card = {
   header?: Slot
+  icon?: IconRef
   eyebrow?: string
   title?: string
   byline?: string
@@ -22,6 +25,7 @@ export type Card = {
   footer?: Slot
   image?: ImageRef & { position?: 'left' | 'right' }
   align?: Align
+  extra?: Parameters<typeof satori>[0]
 }
 
 export type Theme = {
@@ -52,6 +56,8 @@ export type Sizes = {
   asideBaseline: number
   asideTracking: string
   lineMaxWidth: number
+  iconSize: number
+  iconRadius: number
   slotLineHeight: number
   eyebrowText: number
   eyebrowTracking: string

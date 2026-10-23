@@ -53,6 +53,7 @@ The card is what the image says:
 ```typescript
 type Card = {
   header?: { text?: string; icon?: IconRef; aside?: string }
+  icon?: IconRef
   eyebrow?: string
   title?: string
   byline?: string
@@ -60,15 +61,18 @@ type Card = {
   footer?: { text?: string; icon?: IconRef; aside?: string }
   image?: ImageRef & { position?: 'left' | 'right' }
   align?: { horizontal?: 'left' | 'center' | 'right'; vertical?: 'top' | 'center' | 'bottom' }
+  extra?: ReactNode
 }
 ```
 
 - `title` and `description`: at least one of them. A description alone takes the title's place, which is what a home page wants.
 - `header` and `footer`: a line with a text, an icon, or both. `aside` sits at the far end of the line, for a date or a version. An icon alone makes a wordmark line.
+- `icon`: an icon above the eyebrow and the title, for a logo or a favicon. It is `iconSize` tall, 88 by default, with `iconRadius` corners, 0 by default.
 - `eyebrow`: the short line above the title, for a section name or a category.
 - `byline`: the line under the title, for an author or a source.
 - `image`: a picture over one half of the card, the right half unless `position` is `'left'`. The text takes the other half.
 - `align`: `horizontal` moves the eyebrow, title, byline and description left, center or right. `vertical` puts them at the top under the header, in the middle, or at the bottom above the footer.
+- `extra`: any element satori can draw, such as JSX or a `{ type, props }` object, placed under the description, or under the title when there is none. It takes the alignment and width of the text above it, for a row of logos or a short list.
 
 An icon or an image is `{ file }` with a path, a file URL or a package path such as `'@tabler/icons/outline/brand-github.svg'`, or `{ svg }` with the markup. Package paths resolve from your node_modules, so any icon package that ships SVG files works once installed. An image can also be a PNG or JPG. WebP shows up only in `renderSvg`: the PNG renderer cannot draw it, so `renderPng` throws. `currentColor` in an icon takes the color of the text beside it.
 

@@ -13,6 +13,7 @@ export type RenderContext = {
   sizes: Sizes
   fonts: Record<FontRole, string>
   headerIcon?: Icon
+  icon?: Icon
   footerIcon?: Icon
   image?: Icon
   background?: Background
