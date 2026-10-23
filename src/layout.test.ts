@@ -804,8 +804,17 @@ describe('getFontWeights', () => {
 
   it('should load the title weights set in the sizes', () => {
     const value = { ...defaultSizes, titleWeight: 600, titleWeightLong: 300 }
+    const expected = {
+      title: [300, 400, 500, 600, 700],
+      description: [400],
+      header: [500],
+      aside: [500],
+      eyebrow: [500],
+      byline: [500],
+      footer: [500],
+    }
 
-    expect(getFontWeights(value).title).toEqual([300, 400, 500, 600, 700])
+    expect(getFontWeights(value)).toEqual(expected)
   })
 
   it('should load the element weights set in the sizes', () => {

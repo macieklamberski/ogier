@@ -6,16 +6,16 @@ import { pathToFileURL } from 'node:url'
 import { t } from 'trousse'
 import locales from '../locales.json' with { type: 'json' }
 import type { Icon } from '../types/index.js'
-import { loadIcon } from './icons.js'
+import { loadImage } from './icons.js'
 
-describe('loadIcon', () => {
+describe('loadImage', () => {
   it('should load an svg file from a package path', async () => {
     const value = { file: '@tabler/icons/outline/brand-github.svg' }
     const expected: Icon = {
       svg: expect.stringContaining('stroke="currentColor"'),
     }
 
-    expect(await loadIcon(value)).toEqual(expected)
+    expect(await loadImage(value)).toEqual(expected)
   })
 
   it('should replace currentColor in markup with the given color', async () => {
@@ -24,7 +24,7 @@ describe('loadIcon', () => {
       svg: '<svg><path fill="#ff8c4d" /></svg>',
     }
 
-    expect(await loadIcon(value)).toEqual(expected)
+    expect(await loadImage(value, value.color)).toEqual(expected)
   })
 
   it('should keep inline markup as svg text', async () => {
@@ -33,7 +33,7 @@ describe('loadIcon', () => {
       svg: '<svg xmlns="http://www.w3.org/2000/svg"><circle r="12" /></svg>',
     }
 
-    expect(await loadIcon(value)).toEqual(expected)
+    expect(await loadImage(value)).toEqual(expected)
   })
 
   it('should decode markup given as bytes', async () => {
@@ -42,7 +42,7 @@ describe('loadIcon', () => {
       svg: '<svg><circle r="12" /></svg>',
     }
 
-    expect(await loadIcon(value)).toEqual(expected)
+    expect(await loadImage(value)).toEqual(expected)
   })
 
   it('should embed a bitmap file with the media type of its extension', async () => {
@@ -54,7 +54,7 @@ describe('loadIcon', () => {
 
     await writeFile(value.file, Buffer.from([137, 80, 78, 71]))
 
-    expect(await loadIcon(value)).toEqual(expected)
+    expect(await loadImage(value)).toEqual(expected)
   })
 
   it('should read the extension from the path of a file url with a query', async () => {
@@ -67,7 +67,7 @@ describe('loadIcon', () => {
 
     await writeFile(file, Buffer.from([137, 80, 78, 71]))
 
-    expect(await loadIcon(value)).toEqual(expected)
+    expect(await loadImage(value)).toEqual(expected)
   })
 
   it('should embed image bytes with the given media type', async () => {
@@ -76,7 +76,7 @@ describe('loadIcon', () => {
       src: 'data:image/jpeg;base64,/9j/4A==',
     }
 
-    expect(await loadIcon(value)).toEqual(expected)
+    expect(await loadImage(value)).toEqual(expected)
   })
 
   it('should ignore the color for image bytes', async () => {
@@ -89,7 +89,7 @@ describe('loadIcon', () => {
       src: 'data:image/png;base64,iVBORw==',
     }
 
-    expect(await loadIcon(value)).toEqual(expected)
+    expect(await loadImage(value, value.color)).toEqual(expected)
   })
 
   it('should replace currentColor written in lowercase', async () => {
@@ -98,7 +98,7 @@ describe('loadIcon', () => {
       svg: '<svg><path fill="#ff8c4d" /></svg>',
     }
 
-    expect(await loadIcon(value)).toEqual(expected)
+    expect(await loadImage(value, value.color)).toEqual(expected)
   })
 
   it('should read a path with no leading ./ from the working directory', async () => {
@@ -114,7 +114,7 @@ describe('loadIcon', () => {
     process.chdir(dir)
 
     try {
-      expect(await loadIcon(value)).toEqual(expected)
+      expect(await loadImage(value)).toEqual(expected)
     } finally {
       process.chdir(cwd)
     }
@@ -123,7 +123,7 @@ describe('loadIcon', () => {
   it('should pass on a read error other than a missing file', async () => {
     const dir = await mkdtemp(join(tmpdir(), 'ogier-'))
     const value = { file: join(dir, 'icons.svg') }
-    const throwing = () => loadIcon(value)
+    const throwing = () => loadImage(value)
 
     await mkdir(value.file)
 
@@ -132,7 +132,7 @@ describe('loadIcon', () => {
 
   it('should throw for a package path that does not resolve', async () => {
     const value = { file: 'no-such-package/icons/rss.svg' }
-    const throwing = () => loadIcon(value)
+    const throwing = () => loadImage(value)
 
     await expect(throwing()).rejects.toThrow(
       t(locales.errors.iconNotFound, { file: 'no-such-package/icons/rss.svg' }),
@@ -142,7 +142,7 @@ describe('loadIcon', () => {
   it('should throw for a file in an unsupported format', async () => {
     const dir = await mkdtemp(join(tmpdir(), 'ogier-'))
     const value = { file: join(dir, 'mark.gif') }
-    const throwing = () => loadIcon(value)
+    const throwing = () => loadImage(value)
 
     await writeFile(value.file, Buffer.from('GIF89a'))
 

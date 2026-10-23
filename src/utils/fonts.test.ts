@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'bun:test'
+import type { Font } from 'satori'
 import { t } from 'trousse'
 import locales from '../locales.json' with { type: 'json' }
 import type { LoadedFonts } from './fonts.js'
@@ -96,14 +97,14 @@ describe('loadFonts', () => {
 
   it('should load the weights of every element sharing a role', async () => {
     const value = { ...weights, eyebrow: [700], footer: [400] }
-    const expected = [400, 500, 700] as const
+    const expected: Array<Font['weight']> = [400, 500, 700]
 
     const { fonts } = await loadFonts(undefined, value, loadFontsourceFamily)
     const labelWeights = fonts
       .filter((font) => font.name === 'label-latin')
       .map((font) => font.weight)
 
-    expect(labelWeights).toEqual([...expected])
+    expect(labelWeights).toEqual(expected)
   })
 
   it('should use the font files given for a role under the role name', async () => {
@@ -134,9 +135,9 @@ describe('loadFonts', () => {
 
   it('should use the font files given for an element under the element name', async () => {
     const value = { byline: [{ data: new Uint8Array([1, 2, 3]), weight: 400 }] }
-    const expected = {
+    const expected: Font = {
       name: 'byline',
-      weight: 400 as const,
+      weight: 400,
       data: new Uint8Array([1, 2, 3]).buffer,
     }
 
@@ -186,7 +187,7 @@ describe('loadFonts', () => {
     const value = { body: [] }
     const throwing = () => loadFonts(value, weights, loadFontsourceFamily)
 
-    await expect(throwing()).rejects.toThrow(t(locales.errors.fontFilesEmpty, { role: 'body' }))
+    await expect(throwing()).rejects.toThrow(t(locales.errors.fontFilesEmpty, { name: 'body' }))
   })
 
   it('should throw with the install command when the family is not installed', async () => {

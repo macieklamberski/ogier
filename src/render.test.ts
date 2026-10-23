@@ -187,11 +187,10 @@ describe('createRenderer', () => {
   it('should load the fonts again after a failed load', async () => {
     const fonts: Fonts = { title: [] }
     const renderer = createRenderer({ fonts })
+    const throwing = () => renderer.renderSvg(card)
     const expected = '<svg width="1200" height="630"'
 
-    await expect(renderer.renderSvg(card)).rejects.toThrow(
-      t(locales.errors.fontFilesEmpty, { role: 'title' }),
-    )
+    await expect(throwing()).rejects.toThrow(t(locales.errors.fontFilesEmpty, { name: 'title' }))
 
     fonts.title = 'inter'
 

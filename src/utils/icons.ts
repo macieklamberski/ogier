@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises'
 import { extname, isAbsolute } from 'node:path'
 import { isString, t } from 'trousse'
 import locales from '../locales.json' with { type: 'json' }
-import type { Icon, IconRef, ImageRef } from '../types/index.js'
+import type { Icon, ImageRef } from '../types/index.js'
 import * as images from './images.js'
 import { resolvePackageFile } from './packages.js'
 
@@ -65,8 +65,4 @@ export const loadImageFile: images.LoadFile = async (file, color) => {
 
 export const loadImage = (ref: ImageRef, color?: string): Promise<Icon> => {
   return images.loadImage(ref, loadImageFile, color)
-}
-
-export const loadIcon = (ref: IconRef): Promise<Icon> => {
-  return images.loadIcon(ref, loadImageFile)
 }
