@@ -434,12 +434,15 @@ const renderImage = (context: RenderContext): Node | undefined => {
   return { type: 'img', props: { src: getImageSrc(image), style } }
 }
 
-// The footer sits at the bottom edge of the body, or under the headline when the headline is
-// pushed to the bottom, so the space-between body keeps the headline in the middle otherwise.
+// The body is positioned so it paints after the image, the background image and the rail, which
+// are absolute and would otherwise cover the text. The footer sits at the bottom edge of the body,
+// or under the headline when the headline is pushed to the bottom, so the space-between body keeps
+// the headline in the middle otherwise.
 const renderBody = (context: RenderContext): Node => {
   const { card, sizes } = context
   const { top = 0, right = 0, bottom = 0, left = 0 } = sizes.cardPadding
   const bodyStyle = {
+    position: 'relative',
     flex: 1,
     display: 'flex',
     flexDirection: 'column',

@@ -546,6 +546,19 @@ describe('render', () => {
     expect(group).not.toHaveProperty('props.style.marginLeft')
   })
 
+  it('should draw the text over the image, the background image and the rail', () => {
+    const value: RenderContext = {
+      ...baseContext,
+      card: { ...baseContext.card, image: { svg: '', position: 'left' } },
+      image: { src: 'data:image/jpeg;base64,AAAA' },
+    }
+    const expected = {
+      props: { style: { position: 'relative', justifyContent: 'space-between' } },
+    }
+
+    expect(findByStyle(render(value), 'justifyContent', 'space-between')).toMatchObject(expected)
+  })
+
   it('should align the headline right and keep the lines in their order', () => {
     const value: RenderContext = {
       ...baseContext,
