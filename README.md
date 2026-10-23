@@ -41,6 +41,11 @@ Each card below is rendered from a preset in [examples](examples). Click a card 
 | [![Wordmark card in JetBrains Mono](examples/output/wordmark.png)](examples/presets/wordmark.ts) | [![Research post in Epunda Slab with yellow text over a full-bleed aerial photo of a river](examples/output/cover.png)](examples/presets/cover.ts) |
 | [![Changelog card in Space Mono and Space Grotesk on blue with diagonal waves](examples/output/launch.png)](examples/presets/launch.ts) | [![Personal card with an icon and a name and role in Commit Mono](examples/output/personal.png)](examples/presets/personal.ts) |
 | [![Landing page in Bricolage Grotesque with centered text](examples/output/centered.png)](examples/presets/centered.ts) | [![Research post in Geist and Geist Mono on black with a paint swirl on the right](examples/output/research.png)](examples/presets/research.ts) |
+| [![Repository card in Geist on white with a stats row and an accent bar](examples/output/repo.png)](examples/presets/repo.ts) | [![Package card in JetBrains Mono on black with a stats grid and a download sparkline](examples/output/package.png)](examples/presets/package.ts) |
+| [![Release card in Bricolage Grotesque with a huge version number on a grid](examples/output/release.png)](examples/presets/release.ts) | [![Quote in Instrument Serif on cream with a quote icon and a crosses pattern](examples/output/quote.png)](examples/presets/quote.ts) |
+| [![Podcast episode in Fraunces on purple with overlapping host avatars](examples/output/podcast.png)](examples/presets/podcast.ts) | [![Conference talk in Space Grotesk on light blue with a date and venue row and the checks pattern](examples/output/talk.png)](examples/presets/talk.ts) |
+| [![Job post in Bricolage Grotesque on lime with tag pills](examples/output/hiring.png)](examples/presets/hiring.ts) | [![Incident on a status page in Geist on dark with a 90-day uptime bar](examples/output/status.png)](examples/presets/status.ts) |
+| [![Blog index in Literata with a table of posts](examples/output/archive.png)](examples/presets/archive.ts) | [![Marketing claim in Bricolage Grotesque on orange with flat stripes](examples/output/statement.png)](examples/presets/statement.ts) |
 
 ## API
 
