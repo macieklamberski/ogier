@@ -120,6 +120,16 @@ describe('loadIcon', () => {
     }
   })
 
+  it('should pass on a read error other than a missing file', async () => {
+    const dir = await mkdtemp(join(tmpdir(), 'ogier-'))
+    const value = { file: join(dir, 'icons.svg') }
+    const throwing = () => loadIcon(value)
+
+    await mkdir(value.file)
+
+    await expect(throwing()).rejects.toThrow('EISDIR')
+  })
+
   it('should throw for a package path that does not resolve', async () => {
     const value = { file: 'no-such-package/icons/rss.svg' }
     const throwing = () => loadIcon(value)
