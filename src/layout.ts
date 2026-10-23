@@ -5,6 +5,8 @@ import { colorSvg, toDataUri } from './utils/images.js'
 
 type LineRole = 'header' | 'footer'
 
+const headlineGap = 16
+
 const titleWeights = [400, 500, 700]
 
 // Satori draws a weight that was not loaded in the nearest one it has, so a title weight set in
@@ -231,7 +233,36 @@ const getTitleSize = (sizes: Sizes, text: string) => {
   return sizes.titleText
 }
 
-const getTitleClamp = (context: RenderContext): number | undefined => {
+// The height of a header or footer line: its text line or its icon, whichever is taller.
+const getSlotHeight = (context: RenderContext, role: LineRole) => {
+  const { card, sizes } = context
+  const slot = card[role]
+
+  if (!slot) {
+    return 0
+  }
+
+  const text = slot.text ? sizes[`${role}Text`] * sizes.slotLineHeight : 0
+  const icon = context[`${role}Icon`] ? sizes[`${role}Icon`] : 0
+
+  return Math.max(text, icon)
+}
+
+// A title with no eyebrow or description takes the lines that fit between the header and the
+// footer, so a long one ends in an ellipsis and does not push the footer off the card.
+const getFreeLines = (context: RenderContext, fontSize: number) => {
+  const { card, sizes } = context
+  const { top = 0, bottom = 0 } = sizes.cardPadding
+  const header = getSlotHeight(context, 'header')
+  const footer = getSlotHeight(context, 'footer')
+  const icon = context.icon ? sizes.iconSize + headlineGap : 0
+  const byline = card.byline ? sizes.bylineText * sizes.slotLineHeight + headlineGap : 0
+  const free = sizes.cardHeight - top - bottom - sizes.barHeight - header - footer - icon - byline
+
+  return Math.max(1, Math.floor(free / (fontSize * sizes.titleLineHeight)))
+}
+
+const getTitleClamp = (context: RenderContext, fontSize: number): number => {
   const { card, sizes } = context
 
   if (card.description && card.title) {
@@ -241,24 +272,26 @@ const getTitleClamp = (context: RenderContext): number | undefined => {
   if (card.eyebrow) {
     return sizes.titleMaxLines
   }
+
+  return getFreeLines(context, fontSize)
 }
 
 const renderTitle = (context: RenderContext, text: string): Node => {
   const { fonts, sizes, theme } = context
-  const clamp = getTitleClamp(context)
+  const fontSize = getTitleSize(sizes, text)
   const isLong = text.length > sizes.titleLongestLength
   const style = {
     color: theme.title ?? theme.text,
     fontFamily: fonts.title,
-    fontSize: getTitleSize(sizes, text),
+    fontSize,
     fontWeight: isLong ? sizes.titleWeightLong : sizes.titleWeight,
     lineHeight: sizes.titleLineHeight,
     letterSpacing: isLong ? sizes.titleTrackingLong : sizes.titleTracking,
     display: 'block',
+    lineClamp: getTitleClamp(context, fontSize),
   }
 
-  // Satori throws on lineClamp: undefined, so the key is added only when set.
-  return h('div', clamp ? { ...style, lineClamp: clamp } : style, text)
+  return h('div', style, text)
 }
 
 const renderByline = (context: RenderContext, byline: string): Node => {
@@ -328,7 +361,7 @@ const renderHeadline = (context: RenderContext): Node => {
   const columnStyle = {
     display: 'flex',
     flexDirection: 'column',
-    gap: 16,
+    gap: headlineGap,
     width: '100%',
     maxWidth: context.sizes.contentWidth,
     alignItems: flexAlign[horizontal],
@@ -396,12 +429,15 @@ const renderImage = (context: RenderContext): Node | undefined => {
   return { type: 'img', props: { src: getImageSrc(image), style } }
 }
 
-// The footer sits at the bottom edge of the body, or under the headline when the headline is
-// pushed to the bottom, so the space-between body keeps the headline in the middle otherwise.
+// The body is positioned so it paints after the image, the background image and the rail, which
+// are absolute and would otherwise cover the text. The footer sits at the bottom edge of the body,
+// or under the headline when the headline is pushed to the bottom, so the space-between body keeps
+// the headline in the middle otherwise.
 const renderBody = (context: RenderContext): Node => {
   const { card, sizes } = context
   const { top = 0, right = 0, bottom = 0, left = 0 } = sizes.cardPadding
   const bodyStyle = {
+    position: 'relative',
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
@@ -411,7 +447,7 @@ const renderBody = (context: RenderContext): Node => {
     paddingBottom: bottom,
     paddingLeft: left,
   }
-  const groupStyle = { display: 'flex', flexDirection: 'column', gap: 16 }
+  const groupStyle = { display: 'flex', flexDirection: 'column', gap: headlineGap }
   const header = card.header ? renderLine(context, 'header', card.header) : undefined
   const footer = card.footer ? renderLine(context, 'footer', card.footer) : undefined
   const headline = renderHeadline(context)

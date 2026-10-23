@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { mkdtemp, writeFile } from 'node:fs/promises'
+import { mkdir, mkdtemp, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
@@ -90,6 +90,44 @@ describe('loadImage', () => {
     }
 
     expect(await loadImage(value, value.color)).toEqual(expected)
+  })
+
+  it('should replace currentColor written in lowercase', async () => {
+    const value = { svg: '<svg><path fill="currentcolor" /></svg>', color: '#ff8c4d' }
+    const expected: Icon = {
+      svg: '<svg><path fill="#ff8c4d" /></svg>',
+    }
+
+    expect(await loadImage(value, value.color)).toEqual(expected)
+  })
+
+  it('should read a path with no leading ./ from the working directory', async () => {
+    const dir = await mkdtemp(join(tmpdir(), 'ogier-'))
+    const cwd = process.cwd()
+    const value = { file: 'public/logo.svg' }
+    const expected: Icon = {
+      svg: '<svg><rect /></svg>',
+    }
+
+    await mkdir(join(dir, 'public'))
+    await writeFile(join(dir, value.file), expected.svg)
+    process.chdir(dir)
+
+    try {
+      expect(await loadImage(value)).toEqual(expected)
+    } finally {
+      process.chdir(cwd)
+    }
+  })
+
+  it('should pass on a read error other than a missing file', async () => {
+    const dir = await mkdtemp(join(tmpdir(), 'ogier-'))
+    const value = { file: join(dir, 'icons.svg') }
+    const throwing = () => loadImage(value)
+
+    await mkdir(value.file)
+
+    await expect(throwing()).rejects.toThrow('EISDIR')
   })
 
   it('should throw for a package path that does not resolve', async () => {

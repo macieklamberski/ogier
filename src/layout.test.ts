@@ -432,6 +432,18 @@ describe('render', () => {
     expect(findByText(root, 'Every tag the parser reads.')).toMatchObject(expectedDescription)
   })
 
+  it('should clamp a title alone to the lines that fit between the header and the footer', () => {
+    const value: RenderContext = {
+      ...baseContext,
+      card: { ...baseContext.card, footer: { text: 'example/repo' } },
+    }
+    const expected = {
+      props: { style: { lineClamp: 5 } },
+    }
+
+    expect(findByText(render(value), 'Parsing namespaces')).toMatchObject(expected)
+  })
+
   it('should step the title down past the long length', () => {
     const title = 'A title that runs past the forty character step'
     const value: RenderContext = {
@@ -532,6 +544,19 @@ describe('render', () => {
     expect(findByStyle(root, 'justifyContent', 'flex-start')).toMatchObject(expectedHeadlineRow)
     expect(group).toMatchObject(expectedGroup)
     expect(group).not.toHaveProperty('props.style.marginLeft')
+  })
+
+  it('should draw the text over the image, the background image and the rail', () => {
+    const value: RenderContext = {
+      ...baseContext,
+      card: { ...baseContext.card, image: { svg: '', position: 'left' } },
+      image: { src: 'data:image/jpeg;base64,AAAA' },
+    }
+    const expected = {
+      props: { style: { position: 'relative', justifyContent: 'space-between' } },
+    }
+
+    expect(findByStyle(render(value), 'justifyContent', 'space-between')).toMatchObject(expected)
   })
 
   it('should align the headline right and keep the lines in their order', () => {

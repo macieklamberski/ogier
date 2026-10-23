@@ -4,7 +4,7 @@ import type { Icon, ImageRef } from '../types/index.js'
 // Loads an image given as a file, which needs a file system.
 export type LoadFile = (file: string | URL, color?: string) => Promise<Icon>
 
-const currentColorRegex = /currentColor/g
+const currentColorRegex = /currentColor/gi
 
 // btoa takes a binary string, built in chunks of 32 KB so a large image does not overflow the
 // call stack when spread into String.fromCharCode.
