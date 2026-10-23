@@ -1,6 +1,6 @@
 import { readFile } from 'node:fs/promises'
 import type { Font } from 'satori'
-import { t } from 'trousse'
+import { t, trimObject } from 'trousse'
 import locales from '../locales.json' with { type: 'json' }
 import type { FontFile, FontRole, Fonts } from '../types/index.js'
 import { resolvePackageFile } from './packages.js'
@@ -74,7 +74,7 @@ export const loadFonts = async (
   fonts: Fonts | undefined,
   weights: Record<FontRole, Array<number>>,
 ): Promise<LoadedFonts> => {
-  const families = { ...defaultFonts, ...fonts }
+  const families = { ...defaultFonts, ...trimObject({ ...fonts }) }
   const loaded: LoadedFonts = { fonts: [], families: { title: '', body: '', label: '' } }
 
   for (const role of Object.keys(weights) as Array<FontRole>) {

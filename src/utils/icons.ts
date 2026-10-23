@@ -33,6 +33,10 @@ const resolveFile = (file: string | URL): string | URL => {
   return resolved
 }
 
+export const getExtension = (file: string | URL) => {
+  return extname(isString(file) ? file : file.pathname).toLowerCase()
+}
+
 export const toDataUri = (data: string | Uint8Array, mimeType: string) => {
   return `data:${mimeType};base64,${Buffer.from(data).toString('base64')}`
 }
@@ -43,14 +47,23 @@ export const colorSvg = (svg: string, color: string | undefined) => {
 
 export const loadImage = async (ref: ImageRef, color?: string): Promise<Icon> => {
   if ('svg' in ref) {
-    return { svg: colorSvg(ref.svg.toString(), color) }
+    const svg = isString(ref.svg) ? ref.svg : new TextDecoder().decode(ref.svg)
+
+    return { svg: colorSvg(svg, color) }
   }
 
   if ('data' in ref) {
     return { src: toDataUri(ref.data, ref.type) }
   }
 
-  const mimeType = mimeTypes[extname(ref.file.toString()).toLowerCase()] ?? 'image/svg+xml'
+  const extension = getExtension(ref.file)
+  // A file with no extension is read as SVG.
+  const mimeType = extension ? mimeTypes[extension] : 'image/svg+xml'
+
+  if (!mimeType) {
+    throw new Error(t(locales.errors.imageNotSupported, { file: ref.file.toString() }))
+  }
+
   const data = await readFile(resolveFile(ref.file))
 
   if (mimeType === 'image/svg+xml') {

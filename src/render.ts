@@ -5,21 +5,17 @@ import locales from './locales.json' with { type: 'json' }
 import { dark } from './themes/dark.js'
 import type { Card, ImageRef, Node, RenderContext, Slot, Style } from './types/index.js'
 import { type LoadedFonts, loadFonts } from './utils/fonts.js'
-import { loadIcon, loadImage } from './utils/icons.js'
+import { getExtension, loadIcon, loadImage } from './utils/icons.js'
 
 // U+2011 is the non-breaking hyphen, which the fontsource latin subsets lack.
 const nonBreakingHyphenRegex = /‑/g
-
-const webpRegex = /\.webp$/i
 
 // resvg has no WebP decoder and drops the image from the PNG without an error, so a WebP image
 // is rejected before the render.
 const findWebpFile = (refs: Array<ImageRef | undefined>) => {
   for (const ref of refs) {
-    const file = ref && 'file' in ref ? ref.file.toString() : undefined
-
-    if (file && webpRegex.test(file)) {
-      return file
+    if (ref && 'file' in ref && getExtension(ref.file) === '.webp') {
+      return ref.file.toString()
     }
   }
 }
@@ -74,8 +70,20 @@ export const createRenderer = (style: Style = {}) => {
   const backgroundImage = background && 'image' in background ? background.image : undefined
   let loadedFonts: Promise<LoadedFonts> | undefined
 
+  // A failed load is dropped from the cache, so one read error does not fail every later render.
+  const loadFontsOnce = async () => {
+    try {
+      return await loadFonts(style.fonts, getFontWeights(sizes))
+    } catch (error) {
+      loadedFonts = undefined
+      throw error
+    }
+  }
+
   const renderElement = async (card: Card): Promise<RenderedElement> => {
-    loadedFonts ??= loadFonts(style.fonts, getFontWeights(sizes))
+    if (!loadedFonts) {
+      loadedFonts = loadFontsOnce()
+    }
 
     const { fonts, families } = await loadedFonts
     const context: RenderContext = {
@@ -106,7 +114,13 @@ export const createRenderer = (style: Style = {}) => {
   }
 
   const renderPng = async (card: Card): Promise<Buffer> => {
-    const webpFile = findWebpFile([card.image, backgroundImage])
+    const webpFile = findWebpFile([
+      card.image,
+      card.icon,
+      card.header?.icon,
+      card.footer?.icon,
+      backgroundImage,
+    ])
 
     if (webpFile) {
       throw new Error(t(locales.errors.webpInPng, { file: webpFile }))

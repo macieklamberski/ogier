@@ -3,7 +3,7 @@ import { readFile } from 'node:fs/promises'
 import { t } from 'trousse'
 import locales from './locales.json' with { type: 'json' }
 import { createRenderer, renderElement, renderPng, renderSvg } from './render.js'
-import type { Card } from './types/index.js'
+import type { Card, Fonts } from './types/index.js'
 
 const card: Card = {
   header: { text: 'feedsmith' },
@@ -165,6 +165,20 @@ describe('createRenderer', () => {
     }
   })
 
+  it('should load the fonts again after a failed load', async () => {
+    const fonts: Fonts = { title: [] }
+    const renderer = createRenderer({ fonts })
+    const expected = '<svg width="1200" height="630"'
+
+    await expect(renderer.renderSvg(card)).rejects.toThrow(
+      t(locales.errors.fontFilesEmpty, { role: 'title' }),
+    )
+
+    fonts.title = 'inter'
+
+    expect(await renderer.renderSvg(card)).toStartWith(expected)
+  })
+
   it('should return the element tree from renderElement', async () => {
     const renderer = createRenderer()
     const result = await renderer.renderElement(card)
@@ -199,6 +213,30 @@ describe('renderPng', () => {
     const value: Card = { ...card, image: { file: './cover.webp' } }
     const throwing = () => renderPng(value)
     const expected = t(locales.errors.webpInPng, { file: './cover.webp' })
+
+    await expect(throwing()).rejects.toThrow(expected)
+  })
+
+  it('should throw when the card icon is WebP', async () => {
+    const value: Card = { ...card, icon: { file: './logo.webp' } }
+    const throwing = () => renderPng(value)
+    const expected = t(locales.errors.webpInPng, { file: './logo.webp' })
+
+    await expect(throwing()).rejects.toThrow(expected)
+  })
+
+  it('should throw when the header icon is WebP', async () => {
+    const value: Card = { ...card, header: { text: 'feedsmith', icon: { file: './logo.webp' } } }
+    const throwing = () => renderPng(value)
+    const expected = t(locales.errors.webpInPng, { file: './logo.webp' })
+
+    await expect(throwing()).rejects.toThrow(expected)
+  })
+
+  it('should throw when the footer icon is WebP', async () => {
+    const value: Card = { ...card, footer: { text: 'example/repo', icon: { file: './logo.webp' } } }
+    const throwing = () => renderPng(value)
+    const expected = t(locales.errors.webpInPng, { file: './logo.webp' })
 
     await expect(throwing()).rejects.toThrow(expected)
   })
