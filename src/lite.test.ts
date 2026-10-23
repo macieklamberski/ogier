@@ -37,6 +37,21 @@ describe('renderElement', () => {
     expect(await renderElement(card, style)).toEqual(expected)
   })
 
+  it('should render an icon given as an element', async () => {
+    const element = { type: 'svg', props: { viewBox: '0 0 8 8' } }
+    const value: Card = { ...card, header: { text: 'feedsmith', icon: { element } } }
+    const style: Style = {
+      fonts: {
+        title: await readWeights('inter', [700]),
+        body: await readWeights('inter', [400]),
+        label: await readWeights('inter', [500]),
+      },
+    }
+    const result = await renderElement(value, style)
+
+    expect(JSON.stringify(result.element)).toContain('"viewBox":"0 0 8 8"')
+  })
+
   it('should throw when a role has no font files', async () => {
     const throwing = () => renderElement(card)
 

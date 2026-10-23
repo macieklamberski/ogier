@@ -81,6 +81,8 @@ type Card = {
 
 An icon or an image is `{ file }` with a path, a file URL or a package path such as `'@tabler/icons/outline/brand-github.svg'`, `{ svg }` with the markup, or `{ data, type }` with the bytes of a PNG or JPEG you already fetched and its media type, `'image/png'` or `'image/jpeg'`. Package paths resolve from your node_modules, so any icon package that ships SVG files works once installed. An image can also be a PNG or JPG. WebP shows up only in `renderSvg`: the PNG renderer cannot draw it, so `renderPng` throws. `currentColor` in an icon takes the color of the text beside it.
 
+An icon can also be `{ element }` with any element satori can draw, such as a logo component from your app: `{ element: <Logo /> }`. It sits in a box as tall as the icon, and its `currentColor` takes the same color as markup does. An SVG element fills that height and takes its width from its `viewBox`.
+
 The style is how the card looks. Every field is optional:
 
 ```typescript
@@ -159,7 +161,7 @@ const { element, fonts, width, height } = await renderElement(card, {
 return new ImageResponse(element, { width, height, fonts })
 ```
 
-It reads nothing from disk, so every role takes font files, and icons and images come as `svg` or `data`. A fontsource family or a `file` ref throws an error that points back to `ogier`. `renderSvg` and `renderPng` are only in `ogier`.
+It reads nothing from disk, so every role takes font files, and icons and images come as `svg` or `data`, or icons as `element`. A fontsource family or a `file` ref throws an error that points back to `ogier`. `renderSvg` and `renderPng` are only in `ogier`.
 
 ### `composeMetadata(input)` and `composeMetaTags(metadata)`
 

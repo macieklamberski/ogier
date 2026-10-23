@@ -7,7 +7,7 @@ import {
   type RenderedElement,
 } from './element.js'
 import locales from './locales.json' with { type: 'json' }
-import type { Card, ImageRef, Style } from './types/index.js'
+import type { Card, IconRef, ImageRef, Style } from './types/index.js'
 import { loadFontsourceFamily } from './utils/fontsource.js'
 import { getExtension, loadImageFile } from './utils/icons.js'
 
@@ -17,7 +17,7 @@ const loaders: Loaders = { loadFamily: loadFontsourceFamily, loadFile: loadImage
 
 // resvg has no WebP decoder and drops the image from the PNG without an error, so a WebP image
 // is rejected before the render.
-const findWebpFile = (refs: Array<ImageRef | undefined>) => {
+const findWebpFile = (refs: Array<ImageRef | IconRef | undefined>) => {
   for (const ref of refs) {
     if (ref && 'file' in ref && getExtension(ref.file) === '.webp') {
       return ref.file.toString()

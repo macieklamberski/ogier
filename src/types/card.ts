@@ -5,7 +5,7 @@ export type ImageRef =
   | { svg: string | Uint8Array }
   | { data: Uint8Array; type: 'image/png' | 'image/jpeg' }
 
-export type IconRef = ImageRef & { color?: string }
+export type IconRef = (ImageRef | { element: Extra }) & { color?: string }
 
 export type Extra = Parameters<typeof satori>[0]
 
