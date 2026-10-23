@@ -107,6 +107,25 @@ describe('loadFonts', () => {
     expect(labelWeights).toEqual(expected)
   })
 
+  it('should load the nearest weight a family ships for one it does not', async () => {
+    const value = {
+      ...weights,
+      header: [900],
+      aside: [900],
+      eyebrow: [900],
+      byline: [900],
+      footer: [900],
+    }
+    const expected: Array<Font['weight']> = [800]
+
+    const { fonts } = await loadFonts(undefined, value, loadFontsourceFamily)
+    const labelWeights = fonts
+      .filter((font) => font.name === 'label-latin')
+      .map((font) => font.weight)
+
+    expect(labelWeights).toEqual(expected)
+  })
+
   it('should use the font files given for a role under the role name', async () => {
     const value = {
       title: [
@@ -195,7 +214,7 @@ describe('loadFonts', () => {
     const throwing = () => loadFonts(value, weights, loadFontsourceFamily)
 
     await expect(throwing()).rejects.toThrow(
-      t(locales.errors.fontNotInstalled, { family: 'roboto', weights: '400, 700' }),
+      t(locales.errors.fontNotInstalled, { family: 'roboto' }),
     )
   })
 })
