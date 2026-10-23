@@ -71,7 +71,9 @@ export const vitepress = (options: VitepressOptions) => {
   const pages: Array<Page> = []
   const renderer = createRenderer(style)
 
-  const transformHead = (context: TransformContext<DefaultTheme.Config>): Array<HeadConfig> => {
+  const transformHead = (
+    context: Pick<TransformContext<DefaultTheme.Config>, 'pageData' | 'siteData' | 'description'>,
+  ): Array<HeadConfig> => {
     const { pageData, siteData, description } = context
     const path = pageData.relativePath.replace(mdRegex, '')
     const isHome = path === 'index'
@@ -109,7 +111,7 @@ export const vitepress = (options: VitepressOptions) => {
     return tags
   }
 
-  const buildEnd = async ({ outDir }: SiteConfig) => {
+  const buildEnd = async ({ outDir }: Pick<SiteConfig, 'outDir'>) => {
     const dir = join(outDir, imageDir)
 
     await mkdir(dir, { recursive: true })

@@ -2,36 +2,47 @@ import { describe, expect, it } from 'bun:test'
 import { mkdtemp, readdir, readFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import type {
-  DefaultTheme,
-  HeadConfig,
-  PageData,
-  SiteConfig,
-  SiteData,
-  TransformContext,
-} from 'vitepress'
+import type { DefaultTheme, HeadConfig, PageData, SiteData, TransformContext } from 'vitepress'
 import { vitepress } from './vitepress.js'
 
-const siteData = {
+const siteData: SiteData<DefaultTheme.Config> = {
   base: '/',
+  lang: 'en-US',
+  dir: 'ltr',
   title: 'Feedsmith',
   description: 'Fast feed parser.',
+  head: [],
+  appearance: true,
   themeConfig: {
     sidebar: [{ text: 'Guides', items: [{ text: 'Parsing', link: '/guides/parsing' }] }],
   },
-} as SiteData<DefaultTheme.Config>
+  locales: {},
+  router: {
+    prefetchLinks: true,
+  },
+}
 
 const svg =
   '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><rect width="120" height="120" fill="#ff6602" /></svg>'
 
-const getContext = (relativePath: string, title: string) => {
-  const pageData = { relativePath, title } as PageData
+const getContext = (
+  relativePath: string,
+  title: string,
+): Pick<TransformContext<DefaultTheme.Config>, 'pageData' | 'siteData' | 'description'> => {
+  const pageData: PageData = {
+    relativePath,
+    filePath: relativePath,
+    title,
+    description: '',
+    headers: [],
+    frontmatter: {},
+  }
 
   return {
     pageData,
     siteData,
     description: 'Page description.',
-  } as TransformContext<DefaultTheme.Config>
+  }
 }
 
 describe('vitepress', () => {
@@ -97,7 +108,7 @@ describe('vitepress', () => {
     const og = vitepress({ ...options, site: { ...options.site, favicon: { svg, size: 48 } } })
 
     og.transformHead(getContext('index.md', 'Home'))
-    await og.buildEnd({ outDir } as SiteConfig)
+    await og.buildEnd({ outDir })
 
     const png = await readFile(join(outDir, 'favicon.png'))
 
@@ -114,7 +125,7 @@ describe('vitepress', () => {
 
     og.transformHead(getContext('index.md', 'Home'))
     og.transformHead(getContext('guides/parsing.md', 'Guides: Parsing'))
-    await og.buildEnd({ outDir } as SiteConfig)
+    await og.buildEnd({ outDir })
 
     expect((await readdir(join(outDir, 'og'))).sort()).toEqual(expected)
   })

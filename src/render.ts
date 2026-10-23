@@ -1,14 +1,29 @@
 import { Resvg } from '@resvg/resvg-js'
 import satori from 'satori'
-import { fontWeights, render, resolveSizes } from './layout.js'
+import { t } from 'trousse'
+import { getFontWeights, render, resolveSizes } from './layout.js'
 import locales from './locales.json' with { type: 'json' }
 import { dark } from './themes/dark.js'
-import type { Card, RenderContext, Slot, Style } from './types/index.js'
+import type { Card, ImageRef, RenderContext, Slot, Style } from './types/index.js'
 import { type LoadedFonts, loadFonts } from './utils/fonts.js'
 import { loadIcon, loadImage } from './utils/icons.js'
 
 // U+2011 is the non-breaking hyphen, which the fontsource latin subsets lack.
 const nonBreakingHyphenRegex = /‑/g
+
+const webpRegex = /\.webp$/i
+
+// resvg has no WebP decoder and drops the image from the PNG without an error, so a WebP image
+// is rejected before the render.
+const findWebpFile = (refs: Array<ImageRef | undefined>) => {
+  for (const ref of refs) {
+    const file = ref && 'file' in ref ? ref.file.toString() : undefined
+
+    if (file && webpRegex.test(file)) {
+      return file
+    }
+  }
+}
 
 const normalizeText = (text: string | undefined) => {
   return text?.replace(nonBreakingHyphenRegex, '-')
@@ -48,10 +63,11 @@ const normalizeCard = (card: Card): Card => {
 export const createRenderer = (style: Style = {}) => {
   const sizes = resolveSizes(style.sizes)
   const { background } = style
+  const backgroundImage = background && 'image' in background ? background.image : undefined
   let loadedFonts: Promise<LoadedFonts> | undefined
 
   const renderSvg = async (card: Card): Promise<string> => {
-    loadedFonts ??= loadFonts(style.fonts, fontWeights)
+    loadedFonts ??= loadFonts(style.fonts, getFontWeights(sizes))
 
     const { fonts, families } = await loadedFonts
     const context: RenderContext = {
@@ -63,8 +79,7 @@ export const createRenderer = (style: Style = {}) => {
       footerIcon: card.footer?.icon ? await loadIcon(card.footer.icon) : undefined,
       image: card.image ? await loadImage(card.image) : undefined,
       background,
-      backgroundImage:
-        background && 'image' in background ? await loadImage(background.image) : undefined,
+      backgroundImage: backgroundImage ? await loadImage(backgroundImage) : undefined,
     }
 
     return satori(render(context), {
@@ -75,6 +90,12 @@ export const createRenderer = (style: Style = {}) => {
   }
 
   const renderPng = async (card: Card): Promise<Buffer> => {
+    const webpFile = findWebpFile([card.image, backgroundImage])
+
+    if (webpFile) {
+      throw new Error(t(locales.errors.webpInPng, { file: webpFile }))
+    }
+
     return new Resvg(await renderSvg(card)).render().asPng()
   }
 

@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'bun:test'
+import { t } from 'trousse'
 import locales from './locales.json' with { type: 'json' }
 import { createRenderer, renderPng, renderSvg } from './render.js'
 import type { Card } from './types/index.js'
@@ -61,11 +62,11 @@ describe('renderSvg', () => {
     expect(await renderSvg(value)).toContain(expected)
   })
 
-  it('should throw when the card has neither a title nor a description', () => {
+  it('should throw when the card has neither a title nor a description', async () => {
     const value = { header: { text: 'feedsmith' } }
     const throwing = () => renderSvg(value)
 
-    expect(throwing()).rejects.toThrow(locales.errors.cardNeedsText)
+    await expect(throwing()).rejects.toThrow(locales.errors.cardNeedsText)
   })
 })
 
@@ -100,5 +101,21 @@ describe('renderPng', () => {
     const expected = ['89504e470d0a1a0a', 1200, 630]
 
     expect(header).toEqual(expected)
+  })
+
+  it('should throw when the card image is WebP', async () => {
+    const value: Card = { ...card, image: { file: './cover.webp' } }
+    const throwing = () => renderPng(value)
+    const expected = t(locales.errors.webpInPng, { file: './cover.webp' })
+
+    await expect(throwing()).rejects.toThrow(expected)
+  })
+
+  it('should throw when the background image is WebP', async () => {
+    const style = { background: { image: { file: './background.WEBP' } } }
+    const throwing = () => renderPng(card, style)
+    const expected = t(locales.errors.webpInPng, { file: './background.WEBP' })
+
+    await expect(throwing()).rejects.toThrow(expected)
   })
 })

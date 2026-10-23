@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test'
-import { defaultSizes, render, resolveSizes } from './layout.js'
+import { defaultSizes, getFontWeights, render, resolveSizes } from './layout.js'
 import { dark } from './themes/dark.js'
 import type { Node, RenderContext } from './types/index.js'
 
@@ -626,5 +626,20 @@ describe('resolveSizes', () => {
     const expected = { ...defaultSizes, railStep: 16 }
 
     expect(resolveSizes({ railDotStep: 32, railStep: 16 })).toEqual(expected)
+  })
+})
+
+describe('getFontWeights', () => {
+  it('should load the default weights for the default sizes', () => {
+    const expected = { title: [400, 500, 700], body: [400], label: [500] }
+
+    expect(getFontWeights(defaultSizes)).toEqual(expected)
+  })
+
+  it('should load the title weights set in the sizes', () => {
+    const value = { ...defaultSizes, titleWeight: 600, titleWeightLong: 300 }
+    const expected = { title: [300, 400, 500, 600, 700], body: [400], label: [500] }
+
+    expect(getFontWeights(value)).toEqual(expected)
   })
 })

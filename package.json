@@ -24,47 +24,30 @@
     "vitepress"
   ],
   "type": "module",
-  "main": "./dist/index.cjs",
-  "types": "./dist/index.d.cts",
   "exports": {
     ".": {
-      "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      },
-      "require": {
-        "types": "./dist/index.d.cts",
-        "default": "./dist/index.cjs"
-      }
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
     },
     "./themes": {
-      "import": {
-        "types": "./dist/themes/index.d.ts",
-        "default": "./dist/themes/index.js"
-      },
-      "require": {
-        "types": "./dist/themes/index.d.cts",
-        "default": "./dist/themes/index.cjs"
-      }
+      "types": "./dist/themes/index.d.mts",
+      "default": "./dist/themes/index.mjs"
     },
     "./adapters": {
-      "import": {
-        "types": "./dist/adapters/index.d.ts",
-        "default": "./dist/adapters/index.js"
-      },
-      "require": {
-        "types": "./dist/adapters/index.d.cts",
-        "default": "./dist/adapters/index.cjs"
-      }
+      "types": "./dist/adapters/index.d.mts",
+      "default": "./dist/adapters/index.mjs"
     },
     "./package.json": "./package.json"
   },
   "files": [
     "dist"
   ],
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "prepare": "lefthook install",
-    "build": "tsdown src/index.ts src/themes/index.ts src/adapters/index.ts --format cjs,esm --dts --clean --unbundle --no-fixed-extension --shims",
+    "build": "tsdown src/index.ts src/themes/index.ts src/adapters/index.ts --format esm --dts --clean",
     "test": "bun test",
     "examples": "cd examples && bun install && bun index.ts"
   },
@@ -72,10 +55,10 @@
     "@fontsource/inter": "^5.3.0",
     "@fontsource/jetbrains-mono": "^5.3.0",
     "@resvg/resvg-js": "^2.6.2",
-    "satori": "^0.33.4"
+    "satori": "^0.55.1"
   },
   "peerDependencies": {
-    "vitepress": ">=1"
+    "vitepress": "^2.0.0-0"
   },
   "peerDependenciesMeta": {
     "vitepress": {
@@ -83,11 +66,11 @@
     }
   },
   "devDependencies": {
-    "@tabler/icons": "^3.46.0",
-    "@types/bun": "^1.4.2",
-    "kvalita": "^1.21.0",
-    "trousse": "^2.1.0",
-    "tsdown": "^0.23.0",
+    "@tabler/icons": "^3.49.0",
+    "@types/bun": "^1.4.3",
+    "kvalita": "^1.24.3",
+    "trousse": "^2.10.0",
+    "tsdown": "^0.23.1",
     "vitepress": "^2.0.0-alpha.17"
   }
 }

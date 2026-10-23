@@ -24,7 +24,9 @@ describe('renderFavicon', () => {
   })
 
   it('should reject markup that is not svg', async () => {
-    await expect(renderFavicon({ svg: 'not svg' })).rejects.toThrow()
+    const throwing = () => renderFavicon({ svg: 'not svg' })
+
+    await expect(throwing()).rejects.toThrow()
   })
 
   it('should reject a raster file', async () => {
@@ -32,6 +34,8 @@ describe('renderFavicon', () => {
 
     await writeFile(file, Buffer.from([137, 80, 78, 71]))
 
-    await expect(renderFavicon({ file })).rejects.toThrow(locales.errors.faviconNeedsSvg)
+    const throwing = () => renderFavicon({ file })
+
+    await expect(throwing()).rejects.toThrow(locales.errors.faviconNeedsSvg)
   })
 })
