@@ -1,8 +1,9 @@
-import { trimObject } from 'trousse'
+import { isObject, trimObject } from 'trousse'
 import { renderPattern } from './patterns.js'
 import type {
   Align,
   ElementIcon,
+  Extra,
   FontElement,
   Icon,
   Node,
@@ -112,10 +113,25 @@ const getImageSrc = (image: Icon) => {
   return 'src' in image ? image.src : toDataUri(image.svg, 'image/svg+xml')
 }
 
+// The satori in Next's ImageResponse stretches an SVG without a height across the whole line, so
+// an element that sets no height of its own gets the icon's. A component that passes its props
+// on to its SVG takes it too.
+const withHeight = (element: Extra, height: number): unknown => {
+  if (!isObject(element) || !('props' in element) || !isObject(element.props)) {
+    return element
+  }
+
+  if ('height' in element.props && element.props.height !== undefined) {
+    return element
+  }
+
+  return { ...element, props: { ...element.props, height } }
+}
+
 // Satori embeds an SVG as an image, so the slot color is written into the markup first. The
 // width comes from the markup, so a wordmark keeps its shape. An element goes in a box of the
-// icon's height whose color its currentColor takes, and an SVG element fills that height and
-// takes its width from its viewBox.
+// icon's height whose color its currentColor takes, and an SVG element takes its width from its
+// viewBox.
 const renderIcon = (
   icon: Icon | ElementIcon,
   height: number,
@@ -134,7 +150,7 @@ const renderIcon = (
       ...(borderRadius === undefined ? {} : { borderRadius }),
     }
 
-    return h('div', style, icon.element)
+    return h('div', style, withHeight(icon.element, height))
   }
 
   const src = 'src' in icon ? icon.src : toDataUri(colorSvg(icon.svg, color), 'image/svg+xml')

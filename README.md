@@ -81,7 +81,7 @@ type Card = {
 
 An icon or an image is `{ file }` with a path, a file URL or a package path such as `'@tabler/icons/outline/brand-github.svg'`, `{ svg }` with the markup, or `{ data, type }` with the bytes of a PNG or JPEG you already fetched and its media type, `'image/png'` or `'image/jpeg'`. Package paths resolve from your node_modules, so any icon package that ships SVG files works once installed. An image can also be a PNG or JPG. WebP shows up only in `renderSvg`: the PNG renderer cannot draw it, so `renderPng` throws. `currentColor` in an icon takes the color of the text beside it.
 
-An icon can also be `{ element }` with any element satori can draw, such as a logo component from your app: `{ element: <Logo /> }`. It sits in a box as tall as the icon, and its `currentColor` takes the same color as markup does. An SVG element fills that height and takes its width from its `viewBox`.
+An icon can also be `{ element }` with any element satori can draw, such as a logo component from your app: `{ element: <Logo /> }`. It sits in a box as tall as the icon, and its `currentColor` takes the same color as markup does. An element that sets no `height` gets the icon's as a prop, which a component passes on to its SVG, and an SVG takes its width from its `viewBox`.
 
 The style is how the card looks. Every field is optional:
 

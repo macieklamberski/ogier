@@ -175,6 +175,24 @@ describe('renderSvg', () => {
     expect(findUndefinedStyles(result.element)).toEqual([])
   })
 
+  it('should pass the icon height to an element that sets none', async () => {
+    const element = { type: 'svg', props: { viewBox: '0 0 8 8' } }
+    const value: Card = { ...card, header: { text: 'feedsmith', icon: { element } } }
+    const result = await renderElement(value)
+    const expected = '"viewBox":"0 0 8 8","height":56'
+
+    expect(JSON.stringify(result.element)).toContain(expected)
+  })
+
+  it('should keep the height an element sets itself', async () => {
+    const element = { type: 'svg', props: { viewBox: '0 0 8 8', height: 20 } }
+    const value: Card = { ...card, header: { text: 'feedsmith', icon: { element } } }
+    const result = await renderElement(value)
+    const expected = '"viewBox":"0 0 8 8","height":20'
+
+    expect(JSON.stringify(result.element)).toContain(expected)
+  })
+
   it('should render the card icon from an element at the icon size', async () => {
     const element = { type: 'svg', props: { viewBox: '0 0 8 8' } }
     const value: Card = { ...card, icon: { element } }
