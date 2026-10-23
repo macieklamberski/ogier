@@ -55,9 +55,11 @@ export type Sizes = {
   contentWidth: number
   headerIcon: number
   headerText: number
+  headerWeight: number
   headerGap: number
   headerTracking: string
   asideText: number
+  asideWeight: number
   asideBaseline: number
   asideTracking: string
   lineMaxWidth: number
@@ -65,6 +67,7 @@ export type Sizes = {
   iconRadius: number
   slotLineHeight: number
   eyebrowText: number
+  eyebrowWeight: number
   eyebrowTracking: string
   titleText: number
   titleTextLong: number
@@ -79,13 +82,16 @@ export type Sizes = {
   titleMaxLines: number
   titleMaxLinesWithDescription: number
   bylineText: number
+  bylineWeight: number
   bylineTracking: string
   descriptionText: number
+  descriptionWeight: number
   descriptionLineHeight: number
   descriptionMaxLines: number
   descriptionTracking: string
   footerIcon: number
   footerText: number
+  footerWeight: number
   footerGap: number
   footerTracking: string
   barHeight: number
@@ -99,13 +105,22 @@ export type Sizes = {
 
 export type FontRole = 'title' | 'body' | 'label'
 
+export type FontElement =
+  | 'title'
+  | 'description'
+  | 'header'
+  | 'aside'
+  | 'eyebrow'
+  | 'byline'
+  | 'footer'
+
 export type FontFile = {
   data: Uint8Array | ArrayBuffer
   weight: number
   style?: 'normal' | 'italic'
 }
 
-export type Fonts = Partial<Record<FontRole, string | Array<FontFile>>>
+export type Fonts = Partial<Record<FontRole | FontElement, string | Array<FontFile>>>
 
 export type Pattern = 'dots' | 'stripes' | 'grid' | 'crosses' | 'waves' | 'checks'
 

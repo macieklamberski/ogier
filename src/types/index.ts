@@ -3,6 +3,7 @@ export type {
   Background,
   Card,
   Extra,
+  FontElement,
   FontFile,
   FontRole,
   Fonts,
