@@ -543,6 +543,75 @@ describe('render', () => {
     expect(findByStyle(render(value), 'maxWidth', 640)).toMatchObject(expected)
   })
 
+  it('should draw the card icon as the first item of the column above the eyebrow', () => {
+    const value: RenderContext = {
+      ...baseContext,
+      card: { ...baseContext.card, icon: { svg: '<svg />' }, eyebrow: 'Guides › Parsing' },
+      icon: { svg: '<svg><path stroke="currentColor" /></svg>' },
+    }
+    const column = findByStyle(render(value), 'maxWidth', 800) as Node
+    const columnChildren = (column.props.children as Array<Node | undefined>).filter(Boolean)
+    const expected = [
+      {
+        type: 'img',
+        props: {
+          src: `data:image/svg+xml;base64,${Buffer.from('<svg><path stroke="#f0f0f0" /></svg>').toString('base64')}`,
+          height: 88,
+          style: { borderRadius: 0 },
+        },
+      },
+      { props: { children: 'Guides › Parsing' } },
+      { props: { children: 'Parsing namespaces' } },
+    ]
+
+    expect(columnChildren).toMatchObject(expected)
+  })
+
+  it('should size and round the card icon by its own size keys', () => {
+    const value: RenderContext = {
+      ...baseContext,
+      card: { ...baseContext.card, icon: { file: 'favicon.png' } },
+      icon: { src: 'data:image/png;base64,AAAA' },
+      sizes: { ...defaultSizes, iconSize: 64, iconRadius: 8 },
+    }
+    const expected = {
+      type: 'img',
+      props: { src: 'data:image/png;base64,AAAA', height: 64, style: { borderRadius: 8 } },
+    }
+
+    expect(findByStyle(render(value), 'borderRadius', 8)).toEqual(expected)
+  })
+
+  it('should draw the extra element as the last item of the column under the description', () => {
+    const extra = { type: 'div', props: { children: 'Ranked tools' } }
+    const value: RenderContext = {
+      ...baseContext,
+      card: { ...baseContext.card, description: 'Every tag the parser reads.', extra },
+    }
+    const column = findByStyle(render(value), 'maxWidth', 800) as Node
+    const columnChildren = (column.props.children as Array<Node | undefined>).filter(Boolean)
+    const expected = [
+      { props: { children: 'Parsing namespaces' } },
+      { props: { children: 'Every tag the parser reads.' } },
+      extra,
+    ]
+
+    expect(columnChildren).toMatchObject(expected)
+  })
+
+  it('should draw the extra element under the title without a description', () => {
+    const extra = { type: 'div', props: { children: 'Ranked tools' } }
+    const value: RenderContext = {
+      ...baseContext,
+      card: { ...baseContext.card, extra },
+    }
+    const column = findByStyle(render(value), 'maxWidth', 800) as Node
+    const columnChildren = (column.props.children as Array<Node | undefined>).filter(Boolean)
+    const expected = [{ props: { children: 'Parsing namespaces' } }, extra]
+
+    expect(columnChildren).toMatchObject(expected)
+  })
+
   it('should track each text by its own size key', () => {
     const value: RenderContext = {
       ...baseContext,

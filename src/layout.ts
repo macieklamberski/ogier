@@ -31,6 +31,8 @@ export const defaultSizes: Sizes = {
   asideBaseline: 0.73,
   asideTracking: '0em',
   lineMaxWidth: 536,
+  iconSize: 88,
+  iconRadius: 0,
   slotLineHeight: 1.2,
   eyebrowText: 26,
   eyebrowTracking: '0.12em',
@@ -188,6 +190,13 @@ const renderLine = (context: RenderContext, role: LineRole, slot: Slot): Node =>
   ])
 }
 
+const renderCardIcon = (context: RenderContext, icon: Icon): Node => {
+  const { sizes, theme } = context
+  const node = renderIcon(icon, sizes.iconSize, theme.text)
+
+  return { ...node, props: { ...node.props, style: { borderRadius: sizes.iconRadius } } }
+}
+
 const renderEyebrow = (context: RenderContext, eyebrow: string): Node => {
   const style = {
     fontFamily: context.fonts.label,
@@ -274,6 +283,7 @@ const renderDescription = (context: RenderContext, text: string): Node => {
 const renderHeadline = (context: RenderContext): Node => {
   const { card } = context
   const children: Array<Node | undefined> = [
+    context.icon ? renderCardIcon(context, context.icon) : undefined,
     card.eyebrow ? renderEyebrow(context, card.eyebrow) : undefined,
   ]
 
@@ -291,6 +301,10 @@ const renderHeadline = (context: RenderContext): Node => {
 
   if (card.description && !card.title) {
     children.push(renderTitle(context, card.description))
+  }
+
+  if (card.extra) {
+    children.push(card.extra)
   }
 
   const horizontal = card.align?.horizontal ?? 'left'

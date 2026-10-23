@@ -5,6 +5,7 @@ export { createRenderer, renderElement, renderPng, renderSvg } from './render.js
 export type {
   Background,
   Card,
+  Extra,
   FontRole,
   Fonts,
   IconRef,
