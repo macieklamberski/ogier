@@ -1,6 +1,6 @@
 import { mkdir, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import { isFunction } from 'trousse'
+import { isFunction, t } from 'trousse'
 import type {
   DefaultTheme,
   HeadConfig,
@@ -9,6 +9,7 @@ import type {
   SiteData,
   TransformContext,
 } from 'vitepress'
+import locales from '../locales.json' with { type: 'json' }
 import { composeMetadata, composeMetaTags, getImageUrl } from '../metadata.js'
 import { createRenderer } from '../render.js'
 import type { Card, ImageRef, Style } from '../types/index.js'
@@ -28,7 +29,7 @@ export type VitepressOptions = {
 }
 
 type Page = {
-  path: string
+  file: string
   card: Card
 }
 
@@ -69,6 +70,7 @@ export const vitepress = (options: VitepressOptions) => {
   const { hostname, imageDir = 'og', imageUrl, favicon } = site
   const faviconFile = 'favicon.png'
   const pages: Array<Page> = []
+  const sources: Record<string, string> = {}
   const renderer = createRenderer(style)
 
   const transformHead = (
@@ -78,8 +80,22 @@ export const vitepress = (options: VitepressOptions) => {
     const path = pageData.relativePath.replace(mdRegex, '')
     const isHome = path === 'index'
     const title = pageData.title || siteData.title
-    const defaults: Card = isHome
+    const file = `${path.replace(slashRegex, '-')}.png`
+    const source = sources[file]
+
+    if (source && source !== pageData.relativePath) {
+      throw new Error(
+        t(locales.errors.pagesShareImage, { first: source, second: pageData.relativePath, file }),
+      )
+    }
+
+    sources[file] = pageData.relativePath
+
+    const homeCard: Card = siteData.description
       ? { description: siteData.description }
+      : { title: siteData.title }
+    const defaults: Card = isHome
+      ? homeCard
       : {
           eyebrow: getEyebrow(siteData.themeConfig.sidebar, path),
           title: title.replace(titlePrefixRegex, ''),
@@ -88,7 +104,7 @@ export const vitepress = (options: VitepressOptions) => {
     const card: Card = { ...defaults, ...overrides }
     const image = imageUrl ? imageUrl(path) : getImageUrl(hostname, path, imageDir)
 
-    pages.push({ path, card })
+    pages.push({ file, card })
 
     const metadata = composeMetadata({
       url: `${hostname}/${path.replace(indexRegex, '')}`,
@@ -123,7 +139,7 @@ export const vitepress = (options: VitepressOptions) => {
     for (const page of pages) {
       const png = await renderer.renderPng(page.card)
 
-      await writeFile(join(dir, `${page.path.replace(slashRegex, '-')}.png`), png)
+      await writeFile(join(dir, page.file), png)
     }
   }
 
