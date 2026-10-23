@@ -2,6 +2,7 @@ export type {
   Align,
   Background,
   Card,
+  Extra,
   FontFile,
   FontRole,
   Fonts,

@@ -54,6 +54,7 @@ const normalizeCard = (card: Card): Card => {
 
   return {
     header: normalizeSlot(card.header),
+    icon: card.icon,
     eyebrow: normalizeText(card.eyebrow),
     title: normalizeText(card.title),
     byline: normalizeText(card.byline),
@@ -61,6 +62,7 @@ const normalizeCard = (card: Card): Card => {
     footer: normalizeSlot(card.footer),
     image: card.image,
     align: card.align,
+    extra: card.extra,
   }
 }
 
@@ -82,6 +84,7 @@ export const createRenderer = (style: Style = {}) => {
       sizes,
       fonts: families,
       headerIcon: card.header?.icon ? await loadIcon(card.header.icon) : undefined,
+      icon: card.icon ? await loadIcon(card.icon) : undefined,
       footerIcon: card.footer?.icon ? await loadIcon(card.footer.icon) : undefined,
       image: card.image ? await loadImage(card.image) : undefined,
       background,
