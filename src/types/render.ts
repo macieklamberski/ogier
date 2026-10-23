@@ -1,4 +1,4 @@
-import type { Background, Card, FontRole, Sizes, Theme } from './card.js'
+import type { Background, Card, FontElement, Sizes, Theme } from './card.js'
 
 export type Node = {
   type: string
@@ -11,7 +11,7 @@ export type RenderContext = {
   card: Card
   theme: Theme
   sizes: Sizes
-  fonts: Record<FontRole, string>
+  fonts: Record<FontElement, string>
   headerIcon?: Icon
   icon?: Icon
   footerIcon?: Icon

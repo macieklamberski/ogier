@@ -28,18 +28,20 @@ type Next = {
   (style: Style, resolve: NextResolve): NextImage
 }
 
-const getOptions = (value: NextOptions | Style, resolve: NextResolve | undefined): NextOptions => {
-  if (resolve) {
-    return { style: value as Style, card: resolve }
+type NextArguments = [options: NextOptions] | [style: Style, resolve: NextResolve]
+
+const getOptions = (args: NextArguments): NextOptions => {
+  if (args.length === 2) {
+    return { style: args[0], card: args[1] }
   }
 
-  return value as NextOptions
+  return args[0]
 }
 
 // The image file exports the returned `default`, `size` and `contentType`, and Next writes the
 // Open Graph tags from them. The params arrive as a promise in Next 15 and later.
-export const next: Next = (value: NextOptions | Style, resolve?: NextResolve) => {
-  const { style = {}, card, headers } = getOptions(value, resolve)
+export const next: Next = (...args: NextArguments) => {
+  const { style = {}, card, headers } = getOptions(args)
   const renderer = createRenderer(style)
   const sizes = resolveSizes(style.sizes)
 

@@ -1,11 +1,11 @@
 export { composeMetadata, composeMetaTags, getImageUrl } from './metadata.js'
-export type { Pattern } from './patterns.js'
 export type { RenderedElement } from './render.js'
 export { createRenderer, renderElement, renderPng, renderSvg } from './render.js'
 export type {
   Background,
   Card,
   Extra,
+  FontElement,
   FontFile,
   FontRole,
   Fonts,
@@ -15,6 +15,7 @@ export type {
   MetadataImage,
   MetadataInput,
   MetaTag,
+  Pattern,
   Sizes,
   Slot,
   Style,

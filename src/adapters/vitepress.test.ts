@@ -2,7 +2,9 @@ import { describe, expect, it } from 'bun:test'
 import { mkdtemp, readdir, readFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import { t } from 'trousse'
 import type { DefaultTheme, HeadConfig, PageData, SiteData, TransformContext } from 'vitepress'
+import locales from '../locales.json' with { type: 'json' }
 import { vitepress } from './vitepress.js'
 
 const siteData: SiteData<DefaultTheme.Config> = {
@@ -128,5 +130,31 @@ describe('vitepress', () => {
     await og.buildEnd({ outDir })
 
     expect((await readdir(join(outDir, 'og'))).sort()).toEqual(expected)
+  })
+
+  it('should write the home card from the site title without a site description', async () => {
+    const outDir = await mkdtemp(join(tmpdir(), 'ogier-'))
+    const value = getContext('index.md', 'Home')
+    const og = vitepress(options)
+    const expected = ['index.png']
+
+    og.transformHead({ ...value, siteData: { ...siteData, description: '' } })
+    await og.buildEnd({ outDir })
+
+    expect(await readdir(join(outDir, 'og'))).toEqual(expected)
+  })
+
+  it('should throw when two pages map to the same image file', () => {
+    const og = vitepress(options)
+    const throwing = () => og.transformHead(getContext('guides-parsing.md', 'Parsing'))
+    const expected = t(locales.errors.pagesShareImage, {
+      first: 'guides/parsing.md',
+      second: 'guides-parsing.md',
+      file: 'guides-parsing.png',
+    })
+
+    og.transformHead(getContext('guides/parsing.md', 'Guides: Parsing'))
+
+    expect(throwing).toThrow(expected)
   })
 })

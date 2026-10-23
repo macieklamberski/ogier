@@ -6,6 +6,7 @@
     "fontNotInstalled": "Font \"{{family}}\" has no files for weights {{weights}}. Install it: npm install @fontsource/{{family}}.",
     "iconNotFound": "Icon \"{{file}}\" was not found. A package path needs its package installed.",
     "imageNotSupported": "Image \"{{file}}\" is in a format ogier cannot draw. Use an SVG, PNG, JPEG or WebP file.",
+    "pagesShareImage": "Pages \"{{first}}\" and \"{{second}}\" both write the card image \"{{file}}\". Rename one of them.",
     "webpInPng": "Image \"{{file}}\" is WebP, which the PNG renderer cannot draw. Convert it to PNG or JPEG, or use renderSvg."
   }
 }

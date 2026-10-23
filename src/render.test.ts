@@ -113,21 +113,40 @@ describe('renderSvg', () => {
     expect(await renderSvg(card, style)).toBe(expected)
   })
 
-  it('should render the card icon and the extra element in the headline', async () => {
+  it('should draw labels in weight 500 when label font files carry several weights', async () => {
+    const readWeight = async (weight: number) => {
+      const file = await readFile(
+        `node_modules/@fontsource/jetbrains-mono/files/jetbrains-mono-latin-${weight}-normal.woff`,
+      )
+
+      return { data: new Uint8Array(file), weight }
+    }
+    const style = { fonts: { label: await Promise.all([400, 500, 700].map(readWeight)) } }
+    const expected = await renderSvg(card)
+
+    expect(await renderSvg(card, style)).toBe(expected)
+  })
+
+  it('should render the card icon in the headline', async () => {
     const value: Card = {
       ...card,
       icon: {
         svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8"><rect width="8" height="8" /></svg>',
       },
+    }
+    const expected = '<image x="64" y="'
+
+    expect(await renderSvg(value)).toContain(expected)
+  })
+
+  it('should render the extra element in the headline', async () => {
+    const value: Card = {
+      ...card,
       extra: { type: 'div', props: { style: { width: 40, height: 40, background: '#123456' } } },
     }
-    const expectedIcon = '<image x="64" y="'
-    const expectedExtra = 'fill="#123456"'
+    const expected = 'fill="#123456"'
 
-    const svg = await renderSvg(value)
-
-    expect(svg).toContain(expectedIcon)
-    expect(svg).toContain(expectedExtra)
+    expect(await renderSvg(value)).toContain(expected)
   })
 
   it('should render a card image from png bytes', async () => {
