@@ -43,10 +43,6 @@ const style: Style = {
     titleText: 84,
     titleTracking: '-0.045em',
     barHeight: 20,
-    headerWeight: 400,
-    asideWeight: 400,
-    eyebrowWeight: 400,
-    bylineWeight: 400,
   },
   background: {
     pattern: 'checks',
