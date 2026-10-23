@@ -64,9 +64,6 @@ const style: Style = {
     titleWeight: 800,
     titleTracking: '-0.03em',
     eyebrowWeight: 600,
-    headerWeight: 400,
-    asideWeight: 400,
-    footerWeight: 400,
   },
 }
 
