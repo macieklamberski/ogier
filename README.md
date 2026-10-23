@@ -70,7 +70,7 @@ type Card = {
 - `image`: a picture over one half of the card, the right half unless `position` is `'left'`. The text takes the other half.
 - `align`: `horizontal` moves the eyebrow, title, byline and description left, center or right. `vertical` puts them at the top under the header, in the middle, or at the bottom above the footer.
 
-An icon or an image is `{ file }` with a path, a file URL or a package path such as `'@tabler/icons/outline/brand-github.svg'`, or `{ svg }` with the markup. Package paths resolve from your node_modules, so any icon package that ships SVG files works once installed. An image can also be a PNG or JPG. WebP shows up only in `renderSvg`: the PNG renderer cannot draw it, so `renderPng` throws. `currentColor` in an icon takes the color of the text beside it.
+An icon or an image is `{ file }` with a path, a file URL or a package path such as `'@tabler/icons/outline/brand-github.svg'`, `{ svg }` with the markup, or `{ data, type }` with the bytes of a PNG or JPEG you already fetched and its media type, `'image/png'` or `'image/jpeg'`. Package paths resolve from your node_modules, so any icon package that ships SVG files works once installed. An image can also be a PNG or JPG. WebP shows up only in `renderSvg`: the PNG renderer cannot draw it, so `renderPng` throws. `currentColor` in an icon takes the color of the text beside it.
 
 The style is how the card looks. Every field is optional:
 

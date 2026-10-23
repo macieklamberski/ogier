@@ -46,6 +46,10 @@ export const loadImage = async (ref: ImageRef, color?: string): Promise<Icon> =>
     return { svg: colorSvg(ref.svg.toString(), color) }
   }
 
+  if ('data' in ref) {
+    return { src: toDataUri(ref.data, ref.type) }
+  }
+
   const mimeType = mimeTypes[extname(ref.file.toString()).toLowerCase()] ?? 'image/svg+xml'
   const data = await readFile(resolveFile(ref.file))
 
