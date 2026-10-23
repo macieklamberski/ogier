@@ -70,7 +70,7 @@ type Card = {
 - `image`: a picture over one half of the card, the right half unless `position` is `'left'`. The text takes the other half.
 - `align`: `horizontal` moves the eyebrow, title, byline and description left, center or right. `vertical` puts them at the top under the header, in the middle, or at the bottom above the footer.
 
-An icon or an image is `{ file }` with a path, a file URL or a package path such as `'@tabler/icons/outline/brand-github.svg'`, or `{ svg }` with the markup. Package paths resolve from your node_modules, so any icon package that ships SVG files works once installed. An image can also be a PNG or JPG. WebP shows up only in `renderSvg`: the PNG renderer cannot draw it, so `renderPng` throws. `currentColor` in an icon takes the color of the text beside it.
+An icon or an image is `{ file }` with a path, a file URL or a package path such as `'@tabler/icons/outline/brand-github.svg'`, `{ svg }` with the markup, or `{ data, type }` with the bytes of a PNG or JPEG you already fetched and its media type, `'image/png'` or `'image/jpeg'`. Package paths resolve from your node_modules, so any icon package that ships SVG files works once installed. An image can also be a PNG or JPG. WebP shows up only in `renderSvg`: the PNG renderer cannot draw it, so `renderPng` throws. `currentColor` in an icon takes the color of the text beside it.
 
 The style is how the card looks. Every field is optional:
 
@@ -113,6 +113,23 @@ for (const page of pages) {
   await writeFile(`og/${page.slug}.png`, await renderer.renderPng(page.card))
 }
 ```
+
+The renderer has `renderElement`, `renderSvg` and `renderPng`, and they all share the fonts.
+
+### `renderElement(card, style?)`
+
+The card as a satori element tree, with the fonts and the size it needs, for drawing it with another satori renderer. Next's `ImageResponse` takes all of it as it is:
+
+```typescript
+import { ImageResponse } from 'next/og'
+import { renderElement } from 'ogier'
+
+const { element, fonts, width, height } = await renderElement(card, style)
+
+return new ImageResponse(element, { width, height, fonts })
+```
+
+ogier loads resvg, its PNG renderer, only when it draws a PNG, so a runtime without native modules, such as Cloudflare Workers, can import ogier for `renderElement`.
 
 ### `composeMetadata(input)` and `composeMetaTags(metadata)`
 
@@ -175,10 +192,13 @@ Each page gets the tags from `transformHead` and a PNG under `og/` from `buildEn
 import { next } from 'ogier/adapters'
 import { getPost } from '../../../lib/posts'
 
-const image = next({ background: { pattern: 'dots' } }, async ({ slug }) => {
-  const post = await getPost(String(slug))
+const image = next({
+  style: { background: { pattern: 'dots' } },
+  card: async ({ slug }) => {
+    const post = await getPost(String(slug))
 
-  return { header: { text: 'feedstand', aside: post.date }, title: post.title }
+    return { header: { text: 'feedstand', aside: post.date }, title: post.title }
+  },
 })
 
 export default image.default
@@ -186,5 +206,13 @@ export const { size, contentType } = image
 ```
 
 The file's default export takes the route params, resolves the card and responds with the PNG. `size` and `contentType` feed the `og:image` width, height and type. A `twitter-image.tsx` beside it re-exports the same three names. Every card in the file renders through one renderer, so the fonts are read once.
+
+`headers` sets response headers, such as a cache policy for the CDN. The `Content-Type` stays `image/png` whatever the headers say.
+
+```typescript
+const image = next({ style, card, headers: { 'Cache-Control': 'public, max-age=86400' } })
+```
+
+The older `next(style, card)` form still works and is deprecated.
 
 With `output: 'standalone'`, Next does not copy the `@fontsource` files into the build. Pass the fonts as files, or add `./node_modules/@fontsource/**/*.woff` to `outputFileTracingIncludes`.

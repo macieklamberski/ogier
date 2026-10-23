@@ -1,4 +1,3 @@
-import { Resvg } from '@resvg/resvg-js'
 import locales from '../locales.json' with { type: 'json' }
 import type { ImageRef } from '../types/index.js'
 import { loadImage } from './icons.js'
@@ -12,6 +11,8 @@ export const renderFavicon = async (ref: ImageRef, size = faviconSize): Promise<
   if (!('svg' in image)) {
     throw new Error(locales.errors.faviconNeedsSvg)
   }
+
+  const { Resvg } = await import('@resvg/resvg-js')
 
   return new Resvg(image.svg, { fitTo: { mode: 'width', value: size } }).render().asPng()
 }
