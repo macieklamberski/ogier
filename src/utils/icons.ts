@@ -19,18 +19,26 @@ const isPackagePath = (file: string | URL): file is string => {
   return isString(file) && !isAbsolute(file) && !relativeRegex.test(file)
 }
 
+// A path with no ./ is tried as a package path first and from the working directory second, so
+// both '@tabler/icons/outline/rss.svg' and 'docs/public/logo.svg' read.
 const resolveFile = (file: string | URL): string | URL => {
   if (!isPackagePath(file)) {
     return file
   }
 
-  const resolved = resolvePackageFile(file)
+  return resolvePackageFile(file) ?? file
+}
 
-  if (!resolved) {
-    throw new Error(t(locales.errors.iconNotFound, { file }))
+const readImageFile = async (file: string | URL) => {
+  try {
+    return await readFile(resolveFile(file))
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+      throw new Error(t(locales.errors.iconNotFound, { file: file.toString() }), { cause: error })
+    }
+
+    throw error
   }
-
-  return resolved
 }
 
 export const getExtension = (file: string | URL) => {
@@ -46,7 +54,7 @@ export const loadImageFile: images.LoadFile = async (file, color) => {
     throw new Error(t(locales.errors.imageNotSupported, { file: file.toString() }))
   }
 
-  const data = await readFile(resolveFile(file))
+  const data = await readImageFile(file)
 
   if (mimeType === 'image/svg+xml') {
     return { svg: images.colorSvg(data.toString(), color) }

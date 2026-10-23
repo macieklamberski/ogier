@@ -65,10 +65,12 @@ export const loadFonts = async (
 
   for (const element of Object.keys(elementRoles) as Array<FontElement>) {
     const role = elementRoles[element]
-    const own = fonts?.[element]
+    // An empty name counts as not given, so the element falls back to its role and the role to
+    // the default.
+    const own = fonts?.[element] || undefined
     const key = own ? element : role
     const group = groups.get(key) ?? {
-      source: own ?? fonts?.[role] ?? defaultFonts[role],
+      source: own ?? (fonts?.[role] || defaultFonts[role]),
       elements: [],
     }
 
