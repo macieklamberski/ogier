@@ -133,7 +133,28 @@ const { element, fonts, width, height } = await renderElement(card, style)
 return new ImageResponse(element, { width, height, fonts })
 ```
 
-`renderElement` needs the Node.js runtime, because ogier reads fonts and images with Node built-ins. It does not run on the Next edge runtime or Cloudflare Workers.
+`renderElement` from `ogier` needs the Node.js runtime, because it reads fonts and images with Node built-ins. A bundler that follows its imports also reaches resvg's native binary, which Turbopack refuses to bundle. Import from `ogier/lite` for those.
+
+### `ogier/lite`
+
+The same `renderElement` and `createRenderer`, plus the metadata helpers and the types, with nothing that needs Node.js or a native module. It runs on Cloudflare Workers and the Next edge runtime, and bundles with Turbopack without any config.
+
+```typescript
+import { ImageResponse } from 'next/og'
+import { renderElement } from 'ogier/lite'
+
+const { element, fonts, width, height } = await renderElement(card, {
+  fonts: {
+    title: [{ data: interBold, weight: 700 }],
+    body: [{ data: interRegular, weight: 400 }],
+    label: [{ data: monoMedium, weight: 500 }],
+  },
+})
+
+return new ImageResponse(element, { width, height, fonts })
+```
+
+It reads nothing from disk, so every role takes font files, and icons and images come as `svg` or `data`. A fontsource family or a `file` ref throws an error that points back to `ogier`. `renderSvg` and `renderPng` are only in `ogier`.
 
 ### `composeMetadata(input)` and `composeMetaTags(metadata)`
 
