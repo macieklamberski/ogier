@@ -114,6 +114,23 @@ for (const page of pages) {
 }
 ```
 
+The renderer has `renderElement`, `renderSvg` and `renderPng`, and they all share the fonts.
+
+### `renderElement(card, style?)`
+
+The card as a satori element tree, with the fonts and the size it needs, for drawing it with another satori renderer. Next's `ImageResponse` takes all of it as it is:
+
+```typescript
+import { ImageResponse } from 'next/og'
+import { renderElement } from 'ogier'
+
+const { element, fonts, width, height } = await renderElement(card, style)
+
+return new ImageResponse(element, { width, height, fonts })
+```
+
+ogier loads resvg, its PNG renderer, only when it draws a PNG, so a runtime without native modules, such as Cloudflare Workers, can import ogier for `renderElement`.
+
 ### `composeMetadata(input)` and `composeMetaTags(metadata)`
 
 The tags that point at the image. `composeMetadata` builds the Open Graph values for one page, and `composeMetaTags` turns them into `['meta', attributes]` pairs with the Twitter tags filled in from the same values.
