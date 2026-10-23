@@ -6,6 +6,7 @@ export type {
   Background,
   Card,
   Extra,
+  FontFile,
   FontRole,
   Fonts,
   IconRef,

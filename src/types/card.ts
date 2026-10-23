@@ -99,7 +99,13 @@ export type Sizes = {
 
 export type FontRole = 'title' | 'body' | 'label'
 
-export type Fonts = Partial<Record<FontRole, string>>
+export type FontFile = {
+  data: Uint8Array | ArrayBuffer
+  weight: number
+  style?: 'normal' | 'italic'
+}
+
+export type Fonts = Partial<Record<FontRole, string | Array<FontFile>>>
 
 export type Background =
   | {

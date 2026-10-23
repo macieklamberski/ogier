@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises'
 import type { Font } from 'satori'
 import { t } from 'trousse'
 import locales from '../locales.json' with { type: 'json' }
-import type { FontRole, Fonts } from '../types/index.js'
+import type { FontFile, FontRole, Fonts } from '../types/index.js'
 import { resolvePackageFile } from './packages.js'
 
 export type LoadedFonts = {
@@ -52,6 +52,24 @@ const loadFamily = async (role: FontRole, family: string, weights: Array<number>
   return { fonts, family: names.join(', ') }
 }
 
+const loadFiles = (role: FontRole, files: Array<FontFile>) => {
+  if (files.length === 0) {
+    throw new Error(t(locales.errors.fontFilesEmpty, { role }))
+  }
+
+  const fonts: Array<Font> = files.map((file) => {
+    return {
+      name: role,
+      weight: file.weight as Font['weight'],
+      style: file.style,
+      // Satori takes an ArrayBuffer, and a Uint8Array can view part of a larger one.
+      data: new Uint8Array(file.data).buffer,
+    }
+  })
+
+  return { fonts, family: role }
+}
+
 export const loadFonts = async (
   fonts: Fonts | undefined,
   weights: Record<FontRole, Array<number>>,
@@ -60,7 +78,10 @@ export const loadFonts = async (
   const loaded: LoadedFonts = { fonts: [], families: { title: '', body: '', label: '' } }
 
   for (const role of Object.keys(weights) as Array<FontRole>) {
-    const result = await loadFamily(role, families[role], weights[role])
+    const family = families[role]
+    const result = Array.isArray(family)
+      ? loadFiles(role, family)
+      : await loadFamily(role, family, weights[role])
 
     loaded.fonts.push(...result.fonts)
     loaded.families[role] = result.family

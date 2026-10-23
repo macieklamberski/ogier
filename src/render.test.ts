@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'bun:test'
+import { readFile } from 'node:fs/promises'
 import { t } from 'trousse'
 import locales from './locales.json' with { type: 'json' }
 import { createRenderer, renderElement, renderPng, renderSvg } from './render.js'
@@ -96,6 +97,20 @@ describe('renderSvg', () => {
     const expected = '<image x="-15" y="0" width="630" height="630"'
 
     expect(await renderSvg(value)).toContain(expected)
+  })
+
+  it('should render the title in font files passed as bytes', async () => {
+    const readWeight = async (weight: number) => {
+      const file = await readFile(
+        `node_modules/@fontsource/inter/files/inter-latin-${weight}-normal.woff`,
+      )
+
+      return { data: new Uint8Array(file), weight }
+    }
+    const style = { fonts: { title: await Promise.all([400, 500, 700].map(readWeight)) } }
+    const expected = await renderSvg(card)
+
+    expect(await renderSvg(card, style)).toBe(expected)
   })
 
   it('should render the card icon and the extra element in the headline', async () => {

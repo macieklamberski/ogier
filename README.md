@@ -82,14 +82,14 @@ The style is how the card looks. Every field is optional:
 type Style = {
   theme?: Theme
   sizes?: Partial<Sizes>
-  fonts?: { title?: string; body?: string; label?: string }
+  fonts?: { title?: string | Array<FontFile>; body?: string | Array<FontFile>; label?: string | Array<FontFile> }
   background?: { pattern: Pattern; angle?: number; fade?: boolean } | { image: ImageRef }
 }
 ```
 
 - `theme`: the colors. `dark` and `light` come from `ogier/themes`. Spread one and change a value, or give a text its own color with `title`, `description`, `aside` and the other text names.
 - `sizes`: the numbers. Card size and padding, the type scale, the accent bar along the bottom edge. Every key has a default, so set only what you change. The [examples](examples) show the ones that matter in practice, and the `Sizes` type lists them all.
-- `fonts`: a fontsource family per role. `title` for the title, `body` for the description, `label` for the rest. Inter and JetBrains Mono ship with ogier. Any other family needs its `@fontsource/<slug>` package installed in your project.
+- `fonts`: a fontsource family per role. `title` for the title, `body` for the description, `label` for the rest. Inter and JetBrains Mono ship with ogier. Any other family needs its `@fontsource/<slug>` package installed in your project. A role can take font files instead, as `{ data, weight, style? }` with the bytes you loaded yourself. Ogier uses them as they are, and a weight you leave out is drawn in the nearest one given.
 - `background`: `{ pattern }` for a rail on the right that fades in from the middle of the card. The pattern is `dots`, `stripes`, `grid`, `crosses`, `waves` or `checks`, drawn in the theme's `pattern` color, with an optional `angle` in degrees and `fade: false` for a flat rail. Or `{ image }` for a picture behind the whole card.
 
 ```typescript
@@ -218,3 +218,5 @@ const image = next({ style, card, headers: { 'Cache-Control': 'public, max-age=8
 ```
 
 The older `next(style, card)` form still works and is deprecated.
+
+With `output: 'standalone'`, Next does not copy the `@fontsource` files into the build. Pass the fonts as files, or add `./node_modules/@fontsource/**/*.woff` to `outputFileTracingIncludes`.
