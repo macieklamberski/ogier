@@ -60,7 +60,11 @@ const normalizeCard = (card: Card): Card => {
 }
 
 export const getBackgroundImage = (style: Style): ImageRef | undefined => {
-  return style.background && 'image' in style.background ? style.background.image : undefined
+  if (!style.background || !('image' in style.background)) {
+    return
+  }
+
+  return style.background.image
 }
 
 // The fonts are loaded on the first render and shared by every render after it, so a site

@@ -41,11 +41,11 @@ describe('renderElement', () => {
     expect(value).toEqual(expected)
   })
 
-  it('should throw when the card has neither a title nor a description', async () => {
+  it('should throw when the card has neither a title nor a description', () => {
     const value = { header: { text: 'feedsmith' } }
     const throwing = () => renderElement(value)
 
-    await expect(throwing()).rejects.toThrow(locales.errors.cardNeedsText)
+    expect(throwing()).rejects.toThrow(locales.errors.cardNeedsText)
   })
 })
 
@@ -227,11 +227,11 @@ describe('renderSvg', () => {
     expect(await renderSvg(value)).toContain(expected)
   })
 
-  it('should throw when the card has neither a title nor a description', async () => {
+  it('should throw when the card has neither a title nor a description', () => {
     const value = { header: { text: 'feedsmith' } }
     const throwing = () => renderSvg(value)
 
-    await expect(throwing()).rejects.toThrow(locales.errors.cardNeedsText)
+    expect(throwing()).rejects.toThrow(locales.errors.cardNeedsText)
   })
 })
 
@@ -303,43 +303,48 @@ describe('renderPng', () => {
     expect(header).toEqual(expected)
   })
 
-  it('should throw when the card image is WebP', async () => {
+  it('should throw when the card image is WebP', () => {
     const value: Card = { ...card, image: { file: './cover.webp' } }
     const throwing = () => renderPng(value)
-    const expected = t(locales.errors.webpInPng, { file: './cover.webp' })
+    const expected =
+      'Image "./cover.webp" is WebP, which the PNG renderer cannot draw. Convert it to PNG or JPEG, or use renderSvg.'
 
-    await expect(throwing()).rejects.toThrow(expected)
+    expect(throwing()).rejects.toThrow(expected)
   })
 
-  it('should throw when the card icon is WebP', async () => {
+  it('should throw when the card icon is WebP', () => {
     const value: Card = { ...card, icon: { file: './logo.webp' } }
     const throwing = () => renderPng(value)
-    const expected = t(locales.errors.webpInPng, { file: './logo.webp' })
+    const expected =
+      'Image "./logo.webp" is WebP, which the PNG renderer cannot draw. Convert it to PNG or JPEG, or use renderSvg.'
 
-    await expect(throwing()).rejects.toThrow(expected)
+    expect(throwing()).rejects.toThrow(expected)
   })
 
-  it('should throw when the header icon is WebP', async () => {
+  it('should throw when the header icon is WebP', () => {
     const value: Card = { ...card, header: { text: 'feedsmith', icon: { file: './logo.webp' } } }
     const throwing = () => renderPng(value)
-    const expected = t(locales.errors.webpInPng, { file: './logo.webp' })
+    const expected =
+      'Image "./logo.webp" is WebP, which the PNG renderer cannot draw. Convert it to PNG or JPEG, or use renderSvg.'
 
-    await expect(throwing()).rejects.toThrow(expected)
+    expect(throwing()).rejects.toThrow(expected)
   })
 
-  it('should throw when the footer icon is WebP', async () => {
+  it('should throw when the footer icon is WebP', () => {
     const value: Card = { ...card, footer: { text: 'example/repo', icon: { file: './logo.webp' } } }
     const throwing = () => renderPng(value)
-    const expected = t(locales.errors.webpInPng, { file: './logo.webp' })
+    const expected =
+      'Image "./logo.webp" is WebP, which the PNG renderer cannot draw. Convert it to PNG or JPEG, or use renderSvg.'
 
-    await expect(throwing()).rejects.toThrow(expected)
+    expect(throwing()).rejects.toThrow(expected)
   })
 
-  it('should throw when the background image is WebP', async () => {
+  it('should throw when the background image is WebP', () => {
     const style = { background: { image: { file: './background.WEBP' } } }
     const throwing = () => renderPng(card, style)
-    const expected = t(locales.errors.webpInPng, { file: './background.WEBP' })
+    const expected =
+      'Image "./background.WEBP" is WebP, which the PNG renderer cannot draw. Convert it to PNG or JPEG, or use renderSvg.'
 
-    await expect(throwing()).rejects.toThrow(expected)
+    expect(throwing()).rejects.toThrow(expected)
   })
 })

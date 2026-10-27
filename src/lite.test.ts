@@ -52,12 +52,10 @@ describe('renderElement', () => {
     expect(JSON.stringify(result.element)).toContain('"viewBox":"0 0 8 8"')
   })
 
-  it('should throw when a role has no font files', async () => {
+  it('should throw when a role has no font files', () => {
     const throwing = () => renderElement(card)
 
-    await expect(throwing()).rejects.toThrow(
-      t(locales.errors.liteFontNeedsFiles, { family: 'inter' }),
-    )
+    expect(throwing()).rejects.toThrow(t(locales.errors.liteFontNeedsFiles, { family: 'inter' }))
   })
 
   it('should throw when an image is given as a file', async () => {
@@ -71,7 +69,7 @@ describe('renderElement', () => {
     }
     const throwing = () => renderElement(value, style)
 
-    await expect(throwing()).rejects.toThrow(
+    expect(throwing()).rejects.toThrow(
       t(locales.errors.liteImageNeedsData, { file: '@tabler/icons/outline/rss.svg' }),
     )
   })

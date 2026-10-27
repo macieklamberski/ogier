@@ -11,6 +11,7 @@ describe('toDataUri', () => {
 
   it('should encode bytes larger than one chunk', () => {
     const value = new Uint8Array(70000).map((_, index) => index % 256)
+    // biome-ignore lint/plugin/noComputedExpected: The expected value is the base64 of a 70,000-byte array, built to cross the chunk boundary.
     const expected = `data:image/png;base64,${Buffer.from(value).toString('base64')}`
 
     expect(toDataUri(value, 'image/png')).toBe(expected)

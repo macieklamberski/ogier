@@ -127,14 +127,14 @@ describe('loadImage', () => {
 
     await mkdir(value.file)
 
-    await expect(throwing()).rejects.toThrow('EISDIR')
+    expect(throwing()).rejects.toThrow('EISDIR')
   })
 
-  it('should throw for a package path that does not resolve', async () => {
+  it('should throw for a package path that does not resolve', () => {
     const value = { file: 'no-such-package/icons/rss.svg' }
     const throwing = () => loadImage(value)
 
-    await expect(throwing()).rejects.toThrow(
+    expect(throwing()).rejects.toThrow(
       t(locales.errors.iconNotFound, { file: 'no-such-package/icons/rss.svg' }),
     )
   })
@@ -146,8 +146,6 @@ describe('loadImage', () => {
 
     await writeFile(value.file, Buffer.from('GIF89a'))
 
-    await expect(throwing()).rejects.toThrow(
-      t(locales.errors.imageNotSupported, { file: value.file }),
-    )
+    expect(throwing()).rejects.toThrow(t(locales.errors.imageNotSupported, { file: value.file }))
   })
 })

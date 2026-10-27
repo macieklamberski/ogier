@@ -2,9 +2,7 @@ import { describe, expect, it } from 'bun:test'
 import { mkdtemp, readdir, readFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { t } from 'trousse'
 import type { DefaultTheme, HeadConfig, PageData, SiteData, TransformContext } from 'vitepress'
-import locales from '../locales.json' with { type: 'json' }
 import { vitepress } from './vitepress.js'
 
 const siteData: SiteData<DefaultTheme.Config> = {
@@ -197,11 +195,8 @@ describe('vitepress', () => {
   it('should throw when two pages map to the same image file', () => {
     const og = vitepress(options)
     const throwing = () => og.transformHead(getContext('guides-parsing.md', 'Parsing'))
-    const expected = t(locales.errors.pagesShareImage, {
-      first: 'guides/parsing.md',
-      second: 'guides-parsing.md',
-      file: 'guides-parsing.png',
-    })
+    const expected =
+      'Pages "guides/parsing.md" and "guides-parsing.md" both write the card image "guides-parsing.png". Rename one of them.'
 
     og.transformHead(getContext('guides/parsing.md', 'Guides: Parsing'))
 
