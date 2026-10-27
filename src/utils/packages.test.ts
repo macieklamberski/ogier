@@ -14,6 +14,7 @@ describe('resolvePackageFile', () => {
   it('should resolve a package installed in the working directory', async () => {
     const dir = await realpath(await mkdtemp(join(tmpdir(), 'ogier-')))
     const packageDir = join(dir, 'node_modules', '@example', 'marks')
+    // biome-ignore lint/plugin/noComputedExpected: The expected path sits inside a random mkdtemp directory.
     const expected = join(packageDir, 'rss.svg')
 
     await mkdir(packageDir, { recursive: true })
