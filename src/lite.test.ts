@@ -38,7 +38,10 @@ describe('renderElement', () => {
   })
 
   it('should render an icon given as an element', async () => {
-    const element = { type: 'svg', props: { viewBox: '0 0 8 8' } }
+    const element = {
+      type: 'svg',
+      props: { viewBox: '0 0 8 8' },
+    }
     const value: Card = { ...card, header: { text: 'feedsmith', icon: { element } } }
     const style: Style = {
       fonts: {
@@ -78,7 +81,10 @@ describe('renderElement', () => {
 describe('createRenderer', () => {
   it('should return the card size from the style before any render', () => {
     const renderer = createRenderer({ sizes: { cardWidth: 600, cardHeight: 315 } })
-    const expected = { width: 600, height: 315 }
+    const expected = {
+      width: 600,
+      height: 315,
+    }
 
     expect(renderer.size).toEqual(expected)
   })

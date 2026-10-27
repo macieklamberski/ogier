@@ -19,7 +19,10 @@ describe('loadImage', () => {
   })
 
   it('should replace currentColor in markup with the given color', async () => {
-    const value = { svg: '<svg><path fill="currentColor" /></svg>', color: '#ff8c4d' }
+    const value = {
+      svg: '<svg><path fill="currentColor" /></svg>',
+      color: '#ff8c4d',
+    }
     const expected: Icon = {
       svg: '<svg><path fill="#ff8c4d" /></svg>',
     }
@@ -71,7 +74,10 @@ describe('loadImage', () => {
   })
 
   it('should embed image bytes with the given media type', async () => {
-    const value = { data: Buffer.from([255, 216, 255, 224]), type: 'image/jpeg' as const }
+    const value = {
+      data: Buffer.from([255, 216, 255, 224]),
+      type: 'image/jpeg' as const,
+    }
     const expected: Icon = {
       src: 'data:image/jpeg;base64,/9j/4A==',
     }
@@ -93,7 +99,10 @@ describe('loadImage', () => {
   })
 
   it('should replace currentColor written in lowercase', async () => {
-    const value = { svg: '<svg><path fill="currentcolor" /></svg>', color: '#ff8c4d' }
+    const value = {
+      svg: '<svg><path fill="currentcolor" /></svg>',
+      color: '#ff8c4d',
+    }
     const expected: Icon = {
       svg: '<svg><path fill="#ff8c4d" /></svg>',
     }

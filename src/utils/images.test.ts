@@ -22,15 +22,27 @@ describe('loadIcon', () => {
   const loadFile = () => Promise.reject(new Error('A file should not be read'))
 
   it('should return an element with its color as it is', async () => {
-    const element = { type: 'svg', props: { viewBox: '0 0 8 8' } }
-    const value = { element, color: '#123456' }
-    const expected = { element, color: '#123456' }
+    const element = {
+      type: 'svg',
+      props: { viewBox: '0 0 8 8' },
+    }
+    const value = {
+      element,
+      color: '#123456',
+    }
+    const expected = {
+      element,
+      color: '#123456',
+    }
 
     expect(await loadIcon(value, loadFile)).toEqual(expected)
   })
 
   it('should load an image ref in its color', async () => {
-    const value = { svg: '<svg><path fill="currentColor" /></svg>', color: '#123456' }
+    const value = {
+      svg: '<svg><path fill="currentColor" /></svg>',
+      color: '#123456',
+    }
     const expected = { svg: '<svg><path fill="#123456" /></svg>' }
 
     expect(await loadIcon(value, loadFile)).toEqual(expected)
