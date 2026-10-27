@@ -1,5 +1,4 @@
 import type { MaybePromise } from 'trousse'
-import { resolveSizes } from '../layout.js'
 import { createRenderer } from '../render.js'
 import type { Card, Style } from '../types/index.js'
 
@@ -44,7 +43,6 @@ const getOptions = (args: NextArguments): NextOptions => {
 export const next: Next = (...args: NextArguments) => {
   const { style = {}, card, headers } = getOptions(args)
   const renderer = createRenderer(style)
-  const sizes = resolveSizes(style.sizes)
 
   const image = async ({ params }: NextImageProps): Promise<Response> => {
     const png = await renderer.renderPng(await card(await params))
@@ -58,7 +56,7 @@ export const next: Next = (...args: NextArguments) => {
 
   return {
     default: image,
-    size: { width: sizes.cardWidth, height: sizes.cardHeight },
+    size: renderer.size,
     contentType: 'image/png',
   }
 }

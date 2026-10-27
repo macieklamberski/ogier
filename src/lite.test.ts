@@ -2,7 +2,7 @@ import { describe, expect, it } from 'bun:test'
 import { readFile } from 'node:fs/promises'
 import { t } from 'trousse'
 import { renderElement as renderFullElement } from './index.js'
-import { renderElement } from './lite.js'
+import { createRenderer, renderElement } from './lite.js'
 import locales from './locales.json' with { type: 'json' }
 import type { Card, FontFile, Style } from './types/index.js'
 
@@ -59,5 +59,14 @@ describe('renderElement', () => {
     await expect(throwing()).rejects.toThrow(
       t(locales.errors.liteImageNeedsData, { file: '@tabler/icons/outline/rss.svg' }),
     )
+  })
+})
+
+describe('createRenderer', () => {
+  it('should return the card size from the style before any render', () => {
+    const renderer = createRenderer({ sizes: { cardWidth: 600, cardHeight: 315 } })
+    const expected = { width: 600, height: 315 }
+
+    expect(renderer.size).toEqual(expected)
   })
 })
