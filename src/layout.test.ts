@@ -667,6 +667,114 @@ describe('render', () => {
     expect(findByStyle(render(value), 'borderRadius', 8)).toEqual(expected)
   })
 
+  it('should draw a header element icon in a box of the header icon size and color', () => {
+    const element = { type: 'svg', props: { viewBox: '0 0 8 8' } }
+    const value: RenderContext = {
+      ...baseContext,
+      card: { ...baseContext.card, header: { text: 'feedsmith', icon: { element } } },
+      headerIcon: { element },
+    }
+    const expected = {
+      type: 'div',
+      props: {
+        style: { display: 'flex', height: 56, flexShrink: 0, overflow: 'hidden', color: '#f0f0f0' },
+        children: { type: 'svg', props: { viewBox: '0 0 8 8', height: 56 } },
+      },
+    }
+
+    expect(findByStyle(render(value), 'overflow', 'hidden')).toEqual(expected)
+  })
+
+  it('should draw a footer element icon at the footer icon size in the footer color', () => {
+    const element = { type: 'svg', props: { viewBox: '0 0 8 8' } }
+    const value: RenderContext = {
+      ...baseContext,
+      card: { ...baseContext.card, footer: { text: 'example/repo', icon: { element } } },
+      footerIcon: { element },
+    }
+    const expected = {
+      props: {
+        style: { height: 32, color: '#a3a3a3' },
+        children: { type: 'svg', props: { viewBox: '0 0 8 8', height: 32 } },
+      },
+    }
+
+    expect(findByStyle(render(value), 'overflow', 'hidden')).toMatchObject(expected)
+  })
+
+  it('should draw an element icon in its own color over the slot color', () => {
+    const element = { type: 'svg', props: { viewBox: '0 0 8 8' } }
+    const value: RenderContext = {
+      ...baseContext,
+      card: { ...baseContext.card, header: { text: 'feedsmith', icon: { element } } },
+      headerIcon: { element, color: '#123456' },
+    }
+    const expected = { props: { style: { color: '#123456' } } }
+
+    expect(findByStyle(render(value), 'overflow', 'hidden')).toMatchObject(expected)
+  })
+
+  it('should size and round a card element icon by its own size keys', () => {
+    const element = { type: 'svg', props: { viewBox: '0 0 8 8' } }
+    const value: RenderContext = {
+      ...baseContext,
+      card: { ...baseContext.card, icon: { element } },
+      icon: { element },
+      sizes: { ...defaultSizes, iconSize: 64, iconRadius: 8 },
+    }
+    const expected = {
+      type: 'div',
+      props: {
+        style: {
+          display: 'flex',
+          height: 64,
+          flexShrink: 0,
+          overflow: 'hidden',
+          color: '#f0f0f0',
+          borderRadius: 8,
+        },
+        children: { type: 'svg', props: { viewBox: '0 0 8 8', height: 64 } },
+      },
+    }
+
+    expect(findByStyle(render(value), 'borderRadius', 8)).toEqual(expected)
+  })
+
+  it('should give the icon height to an element whose height is undefined', () => {
+    const element = { type: 'svg', props: { viewBox: '0 0 8 8', height: undefined } }
+    const value: RenderContext = {
+      ...baseContext,
+      card: { ...baseContext.card, header: { text: 'feedsmith', icon: { element } } },
+      headerIcon: { element },
+    }
+    const expected = { props: { children: { props: { height: 56 } } } }
+
+    expect(findByStyle(render(value), 'overflow', 'hidden')).toMatchObject(expected)
+  })
+
+  it('should keep the height an element icon sets itself', () => {
+    const element = { type: 'svg', props: { viewBox: '0 0 8 8', height: 20 } }
+    const value: RenderContext = {
+      ...baseContext,
+      card: { ...baseContext.card, header: { text: 'feedsmith', icon: { element } } },
+      headerIcon: { element },
+    }
+    const expected = { props: { children: element } }
+
+    expect(findByStyle(render(value), 'overflow', 'hidden')).toMatchObject(expected)
+  })
+
+  it('should pass an element icon without props through as it is', () => {
+    const value: RenderContext = {
+      ...baseContext,
+      card: { ...baseContext.card, header: { text: 'feedsmith', icon: { element: 'F' } } },
+      headerIcon: { element: 'F' },
+    }
+    const expected = { props: { children: 'F' } }
+
+    expect(findByStyle(render(value), 'overflow', 'hidden')).toMatchObject(expected)
+  })
+
   it('should draw the extra element as the last item of the column under the description', () => {
     const extra = { type: 'div', props: { children: 'Ranked tools' } }
     const value: RenderContext = {
