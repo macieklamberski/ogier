@@ -306,7 +306,8 @@ describe('renderPng', () => {
   it('should throw when the card image is WebP', () => {
     const value: Card = { ...card, image: { file: './cover.webp' } }
     const throwing = () => renderPng(value)
-    const expected = t(locales.errors.webpInPng, { file: './cover.webp' })
+    const expected =
+      'Image "./cover.webp" is WebP, which the PNG renderer cannot draw. Convert it to PNG or JPEG, or use renderSvg.'
 
     expect(throwing()).rejects.toThrow(expected)
   })
@@ -314,7 +315,8 @@ describe('renderPng', () => {
   it('should throw when the card icon is WebP', () => {
     const value: Card = { ...card, icon: { file: './logo.webp' } }
     const throwing = () => renderPng(value)
-    const expected = t(locales.errors.webpInPng, { file: './logo.webp' })
+    const expected =
+      'Image "./logo.webp" is WebP, which the PNG renderer cannot draw. Convert it to PNG or JPEG, or use renderSvg.'
 
     expect(throwing()).rejects.toThrow(expected)
   })
@@ -322,7 +324,8 @@ describe('renderPng', () => {
   it('should throw when the header icon is WebP', () => {
     const value: Card = { ...card, header: { text: 'feedsmith', icon: { file: './logo.webp' } } }
     const throwing = () => renderPng(value)
-    const expected = t(locales.errors.webpInPng, { file: './logo.webp' })
+    const expected =
+      'Image "./logo.webp" is WebP, which the PNG renderer cannot draw. Convert it to PNG or JPEG, or use renderSvg.'
 
     expect(throwing()).rejects.toThrow(expected)
   })
@@ -330,7 +333,8 @@ describe('renderPng', () => {
   it('should throw when the footer icon is WebP', () => {
     const value: Card = { ...card, footer: { text: 'example/repo', icon: { file: './logo.webp' } } }
     const throwing = () => renderPng(value)
-    const expected = t(locales.errors.webpInPng, { file: './logo.webp' })
+    const expected =
+      'Image "./logo.webp" is WebP, which the PNG renderer cannot draw. Convert it to PNG or JPEG, or use renderSvg.'
 
     expect(throwing()).rejects.toThrow(expected)
   })
@@ -338,7 +342,8 @@ describe('renderPng', () => {
   it('should throw when the background image is WebP', () => {
     const style = { background: { image: { file: './background.WEBP' } } }
     const throwing = () => renderPng(card, style)
-    const expected = t(locales.errors.webpInPng, { file: './background.WEBP' })
+    const expected =
+      'Image "./background.WEBP" is WebP, which the PNG renderer cannot draw. Convert it to PNG or JPEG, or use renderSvg.'
 
     expect(throwing()).rejects.toThrow(expected)
   })
