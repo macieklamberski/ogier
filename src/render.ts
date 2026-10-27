@@ -2,6 +2,7 @@ import satori from 'satori'
 import { t } from 'trousse'
 import {
   createElementRenderer,
+  type ElementRenderer,
   getBackgroundImage,
   type Loaders,
   type RenderedElement,
@@ -12,6 +13,11 @@ import { loadFontsourceFamily } from './utils/fontsource.js'
 import { getExtension, loadImageFile } from './utils/icons.js'
 
 export type { RenderedElement } from './element.js'
+
+export type Renderer = ElementRenderer & {
+  renderSvg: (card: Card) => Promise<string>
+  renderPng: (card: Card) => Promise<Buffer>
+}
 
 const loaders: Loaders = { loadFamily: loadFontsourceFamily, loadFile: loadImageFile }
 
@@ -25,7 +31,7 @@ const findWebpFile = (refs: Array<ImageRef | undefined>) => {
   }
 }
 
-export const createRenderer = (style: Style = {}) => {
+export const createRenderer = (style: Style = {}): Renderer => {
   const { renderElement } = createElementRenderer(style, loaders)
   const backgroundImage = getBackgroundImage(style)
 

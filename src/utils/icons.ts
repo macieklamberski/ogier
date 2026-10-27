@@ -41,7 +41,7 @@ const readImageFile = async (file: string | URL) => {
   }
 }
 
-export const getExtension = (file: string | URL) => {
+export const getExtension = (file: string | URL): string => {
   return extname(isString(file) ? file : file.pathname).toLowerCase()
 }
 

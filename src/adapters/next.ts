@@ -1,3 +1,4 @@
+import type { MaybePromise } from 'trousse'
 import { resolveSizes } from '../layout.js'
 import { createRenderer } from '../render.js'
 import type { Card, Style } from '../types/index.js'
@@ -8,7 +9,7 @@ export type NextImageProps = {
   params: Promise<NextParams>
 }
 
-export type NextResolve = (params: NextParams) => Card | Promise<Card>
+export type NextResolve = (params: NextParams) => MaybePromise<Card>
 
 export type NextOptions = {
   style?: Style

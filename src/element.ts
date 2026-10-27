@@ -2,7 +2,7 @@ import type { Font } from 'satori'
 import { getFontWeights, render, resolveSizes } from './layout.js'
 import locales from './locales.json' with { type: 'json' }
 import { dark } from './themes/dark.js'
-import type { Card, Node, RenderContext, Slot, Style } from './types/index.js'
+import type { Card, ImageRef, Node, RenderContext, Slot, Style } from './types/index.js'
 import { type LoadedFonts, type LoadFamily, loadFonts } from './utils/fonts.js'
 import { type LoadFile, loadImage } from './utils/images.js'
 
@@ -17,6 +17,10 @@ export type RenderedElement = {
 export type Loaders = {
   loadFamily: LoadFamily
   loadFile: LoadFile
+}
+
+export type ElementRenderer = {
+  renderElement: (card: Card) => Promise<RenderedElement>
 }
 
 // U+2011 is the non-breaking hyphen, which the fontsource latin subsets lack.
@@ -54,13 +58,13 @@ const normalizeCard = (card: Card): Card => {
   }
 }
 
-export const getBackgroundImage = (style: Style) => {
+export const getBackgroundImage = (style: Style): ImageRef | undefined => {
   return style.background && 'image' in style.background ? style.background.image : undefined
 }
 
 // The fonts are loaded on the first render and shared by every render after it, so a site
 // renders its pages through one renderer. Icons and images are loaded per render.
-export const createElementRenderer = (style: Style, loaders: Loaders) => {
+export const createElementRenderer = (style: Style, loaders: Loaders): ElementRenderer => {
   const sizes = resolveSizes(style.sizes)
   const { background } = style
   const backgroundImage = getBackgroundImage(style)

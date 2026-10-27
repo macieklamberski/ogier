@@ -28,6 +28,16 @@ export type VitepressOptions = {
   style?: Style
 }
 
+type VitepressHeadContext = Pick<
+  TransformContext<DefaultTheme.Config>,
+  'pageData' | 'siteData' | 'description'
+>
+
+type VitepressHooks = {
+  transformHead: (context: VitepressHeadContext) => Array<HeadConfig>
+  buildEnd: (config: Pick<SiteConfig, 'outDir'>) => Promise<void>
+}
+
 type Page = {
   file: string
   card: Card
@@ -75,7 +85,7 @@ const getPageUrl = (path: string, siteData: VitepressSiteData) => {
   return siteData.cleanUrls ? path : `${path}.html`
 }
 
-export const vitepress = (options: VitepressOptions) => {
+export const vitepress = (options: VitepressOptions): VitepressHooks => {
   const { site, card: cardOption, style = {} } = options
   const { hostname, imageDir = 'og', imageUrl, favicon } = site
   const faviconFile = 'favicon.png'
@@ -83,9 +93,7 @@ export const vitepress = (options: VitepressOptions) => {
   const sources: Record<string, string> = {}
   const renderer = createRenderer(style)
 
-  const transformHead = (
-    context: Pick<TransformContext<DefaultTheme.Config>, 'pageData' | 'siteData' | 'description'>,
-  ): Array<HeadConfig> => {
+  const transformHead = (context: VitepressHeadContext): Array<HeadConfig> => {
     const { pageData, siteData, description } = context
     const path = pageData.relativePath.replace(mdRegex, '')
     const isHome = path === 'index'
