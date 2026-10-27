@@ -45,7 +45,10 @@ describe('next', () => {
 
   it('should take the style as the first of two arguments', () => {
     const image = next({ sizes: { cardWidth: 600, cardHeight: 315 } }, getCard)
-    const expected = { width: 600, height: 315 }
+    const expected = {
+      width: 600,
+      height: 315,
+    }
 
     expect(image.size).toEqual(expected)
   })

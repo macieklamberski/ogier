@@ -676,7 +676,10 @@ describe('render', () => {
   })
 
   it('should draw a header element icon in a box of the header icon size and color', () => {
-    const element = { type: 'svg', props: { viewBox: '0 0 8 8' } }
+    const element = {
+      type: 'svg',
+      props: { viewBox: '0 0 8 8' },
+    }
     const value: RenderContext = {
       ...baseContext,
       card: { ...baseContext.card, header: { text: 'feedsmith', icon: { element } } },
@@ -694,7 +697,10 @@ describe('render', () => {
   })
 
   it('should draw a footer element icon at the footer icon size in the footer color', () => {
-    const element = { type: 'svg', props: { viewBox: '0 0 8 8' } }
+    const element = {
+      type: 'svg',
+      props: { viewBox: '0 0 8 8' },
+    }
     const value: RenderContext = {
       ...baseContext,
       card: { ...baseContext.card, footer: { text: 'example/repo', icon: { element } } },
@@ -711,7 +717,10 @@ describe('render', () => {
   })
 
   it('should draw an element icon in its own color over the slot color', () => {
-    const element = { type: 'svg', props: { viewBox: '0 0 8 8' } }
+    const element = {
+      type: 'svg',
+      props: { viewBox: '0 0 8 8' },
+    }
     const value: RenderContext = {
       ...baseContext,
       card: { ...baseContext.card, header: { text: 'feedsmith', icon: { element } } },
@@ -723,7 +732,10 @@ describe('render', () => {
   })
 
   it('should size and round a card element icon by its own size keys', () => {
-    const element = { type: 'svg', props: { viewBox: '0 0 8 8' } }
+    const element = {
+      type: 'svg',
+      props: { viewBox: '0 0 8 8' },
+    }
     const value: RenderContext = {
       ...baseContext,
       card: { ...baseContext.card, icon: { element } },
@@ -749,7 +761,10 @@ describe('render', () => {
   })
 
   it('should give the icon height to an element whose height is undefined', () => {
-    const element = { type: 'svg', props: { viewBox: '0 0 8 8', height: undefined } }
+    const element = {
+      type: 'svg',
+      props: { viewBox: '0 0 8 8', height: undefined },
+    }
     const value: RenderContext = {
       ...baseContext,
       card: { ...baseContext.card, header: { text: 'feedsmith', icon: { element } } },
@@ -783,7 +798,10 @@ describe('render', () => {
   })
 
   it('should keep the height an element icon sets itself', () => {
-    const element = { type: 'svg', props: { viewBox: '0 0 8 8', height: 20 } }
+    const element = {
+      type: 'svg',
+      props: { viewBox: '0 0 8 8', height: 20 },
+    }
     const value: RenderContext = {
       ...baseContext,
       card: { ...baseContext.card, header: { text: 'feedsmith', icon: { element } } },
@@ -806,7 +824,10 @@ describe('render', () => {
   })
 
   it('should draw the extra element as the last item of the column under the description', () => {
-    const extra = { type: 'div', props: { children: 'Ranked tools' } }
+    const extra = {
+      type: 'div',
+      props: { children: 'Ranked tools' },
+    }
     const value: RenderContext = {
       ...baseContext,
       card: { ...baseContext.card, description: 'Every tag the parser reads.', extra },
@@ -823,7 +844,10 @@ describe('render', () => {
   })
 
   it('should draw the extra element under the title without a description', () => {
-    const extra = { type: 'div', props: { children: 'Ranked tools' } }
+    const extra = {
+      type: 'div',
+      props: { children: 'Ranked tools' },
+    }
     const value: RenderContext = {
       ...baseContext,
       card: { ...baseContext.card, extra },
@@ -909,13 +933,19 @@ describe('resolveSizes', () => {
   })
 
   it('should read the deprecated railDotStep as railStep', () => {
-    const expected = { ...defaultSizes, railStep: 32 }
+    const expected = {
+      ...defaultSizes,
+      railStep: 32,
+    }
 
     expect(resolveSizes({ railDotStep: 32 })).toEqual(expected)
   })
 
   it('should prefer railStep over the deprecated railDotStep', () => {
-    const expected = { ...defaultSizes, railStep: 16 }
+    const expected = {
+      ...defaultSizes,
+      railStep: 16,
+    }
 
     expect(resolveSizes({ railDotStep: 32, railStep: 16 })).toEqual(expected)
   })
@@ -941,7 +971,11 @@ describe('getFontWeights', () => {
   })
 
   it('should load the title weights set in the sizes', () => {
-    const value = { ...defaultSizes, titleWeight: 600, titleWeightLong: 300 }
+    const value = {
+      ...defaultSizes,
+      titleWeight: 600,
+      titleWeightLong: 300,
+    }
     const expected = {
       title: [300, 400, 500, 600, 700],
       description: [400],
@@ -956,7 +990,11 @@ describe('getFontWeights', () => {
   })
 
   it('should load the element weights set in the sizes', () => {
-    const value = { ...defaultSizes, eyebrowWeight: 700, descriptionWeight: 300 }
+    const value = {
+      ...defaultSizes,
+      eyebrowWeight: 700,
+      descriptionWeight: 300,
+    }
     const expected = {
       title: [400, 500, 700],
       description: [300],

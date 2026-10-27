@@ -47,7 +47,10 @@ describe('loadFonts', () => {
   })
 
   it('should load a fontsource family given by slug', async () => {
-    const value = { body: 'jetbrains-mono', label: 'inter' }
+    const value = {
+      body: 'jetbrains-mono',
+      label: 'inter',
+    }
     const expected: LoadedFonts = {
       fonts: [
         { name: 'title-latin', weight: 400, data: expect.any(Buffer) },
@@ -96,7 +99,11 @@ describe('loadFonts', () => {
   })
 
   it('should load the weights of every element sharing a role', async () => {
-    const value = { ...weights, eyebrow: [700], footer: [400] }
+    const value = {
+      ...weights,
+      eyebrow: [700],
+      footer: [400],
+    }
     const expected: Array<Font['weight']> = [400, 500, 700]
 
     const { fonts } = await loadFonts(undefined, value, loadFontsourceFamily)

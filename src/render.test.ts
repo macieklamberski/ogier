@@ -168,7 +168,10 @@ describe('renderSvg', () => {
 
       return [...own, ...children.flatMap(findUndefinedStyles)]
     }
-    const element = { type: 'svg', props: { viewBox: '0 0 8 8' } }
+    const element = {
+      type: 'svg',
+      props: { viewBox: '0 0 8 8' },
+    }
     const value: Card = { ...card, header: { text: 'feedsmith', icon: { element } } }
     const result = await renderElement(value)
 
@@ -176,7 +179,10 @@ describe('renderSvg', () => {
   })
 
   it('should pass the icon height to an element that sets none', async () => {
-    const element = { type: 'svg', props: { viewBox: '0 0 8 8' } }
+    const element = {
+      type: 'svg',
+      props: { viewBox: '0 0 8 8' },
+    }
     const value: Card = { ...card, header: { text: 'feedsmith', icon: { element } } }
     const result = await renderElement(value)
     const expected = '"viewBox":"0 0 8 8","height":56'
@@ -185,7 +191,10 @@ describe('renderSvg', () => {
   })
 
   it('should keep the height an element sets itself', async () => {
-    const element = { type: 'svg', props: { viewBox: '0 0 8 8', height: 20 } }
+    const element = {
+      type: 'svg',
+      props: { viewBox: '0 0 8 8', height: 20 },
+    }
     const value: Card = { ...card, header: { text: 'feedsmith', icon: { element } } }
     const result = await renderElement(value)
     const expected = '"viewBox":"0 0 8 8","height":20'
@@ -194,7 +203,10 @@ describe('renderSvg', () => {
   })
 
   it('should render the card icon from an element at the icon size', async () => {
-    const element = { type: 'svg', props: { viewBox: '0 0 8 8' } }
+    const element = {
+      type: 'svg',
+      props: { viewBox: '0 0 8 8' },
+    }
     const value: Card = { ...card, icon: { element } }
     const expected = 'width="88" height="88"'
 
@@ -262,21 +274,30 @@ describe('createRenderer', () => {
   it('should return the element tree from renderElement', async () => {
     const renderer = createRenderer()
     const result = await renderer.renderElement(card)
-    const expected = { width: 1200, height: 630 }
+    const expected = {
+      width: 1200,
+      height: 630,
+    }
 
     expect({ width: result.width, height: result.height }).toEqual(expected)
   })
 
   it('should return the default card size before any render', () => {
     const renderer = createRenderer()
-    const expected = { width: 1200, height: 630 }
+    const expected = {
+      width: 1200,
+      height: 630,
+    }
 
     expect(renderer.size).toEqual(expected)
   })
 
   it('should return the card size from the style before any render', () => {
     const renderer = createRenderer({ sizes: { cardWidth: 600, cardHeight: 315 } })
-    const expected = { width: 600, height: 315 }
+    const expected = {
+      width: 600,
+      height: 315,
+    }
 
     expect(renderer.size).toEqual(expected)
   })

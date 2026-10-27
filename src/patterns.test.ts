@@ -28,7 +28,12 @@ describe('renderPattern', () => {
   })
 
   it('should size the rail from the sizes table and fade it in', () => {
-    const sizes = { ...defaultSizes, cardHeight: 400, railWidth: 300, railStep: 10 }
+    const sizes = {
+      ...defaultSizes,
+      cardHeight: 400,
+      railWidth: 300,
+      railStep: 10,
+    }
     const result = renderPattern({ pattern: 'dots' }, sizes, dark)
     const expected = [
       'viewBox="0 0 300 400" width="300" height="400"',
