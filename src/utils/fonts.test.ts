@@ -202,19 +202,17 @@ describe('loadFonts', () => {
     expect(families).toEqual(expected)
   })
 
-  it('should throw when a role is given an empty list of font files', async () => {
+  it('should throw when a role is given an empty list of font files', () => {
     const value = { body: [] }
     const throwing = () => loadFonts(value, weights, loadFontsourceFamily)
 
-    await expect(throwing()).rejects.toThrow(t(locales.errors.fontFilesEmpty, { name: 'body' }))
+    expect(throwing()).rejects.toThrow(t(locales.errors.fontFilesEmpty, { name: 'body' }))
   })
 
-  it('should throw with the install command when the family is not installed', async () => {
+  it('should throw with the install command when the family is not installed', () => {
     const value = { title: 'roboto' }
     const throwing = () => loadFonts(value, weights, loadFontsourceFamily)
 
-    await expect(throwing()).rejects.toThrow(
-      t(locales.errors.fontNotInstalled, { family: 'roboto' }),
-    )
+    expect(throwing()).rejects.toThrow(t(locales.errors.fontNotInstalled, { family: 'roboto' }))
   })
 })
