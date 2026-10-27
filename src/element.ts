@@ -4,7 +4,7 @@ import locales from './locales.json' with { type: 'json' }
 import { dark } from './themes/dark.js'
 import type { Card, ImageRef, Node, RenderContext, Slot, Style } from './types/index.js'
 import { type LoadedFonts, type LoadFamily, loadFonts } from './utils/fonts.js'
-import { type LoadFile, loadImage } from './utils/images.js'
+import { type LoadFile, loadIcon, loadImage } from './utils/images.js'
 
 export type RenderedElement = {
   element: Node & { key: null } // The key types it as the React element ImageResponse takes
@@ -95,13 +95,9 @@ export const createElementRenderer = (style: Style, loaders: Loaders): ElementRe
       theme: style.theme ?? dark,
       sizes,
       fonts: families,
-      headerIcon: card.header?.icon
-        ? await loadImage(card.header.icon, loadFile, card.header.icon.color)
-        : undefined,
-      icon: card.icon ? await loadImage(card.icon, loadFile, card.icon.color) : undefined,
-      footerIcon: card.footer?.icon
-        ? await loadImage(card.footer.icon, loadFile, card.footer.icon.color)
-        : undefined,
+      headerIcon: card.header?.icon ? await loadIcon(card.header.icon, loadFile) : undefined,
+      icon: card.icon ? await loadIcon(card.icon, loadFile) : undefined,
+      footerIcon: card.footer?.icon ? await loadIcon(card.footer.icon, loadFile) : undefined,
       image: card.image ? await loadImage(card.image, loadFile) : undefined,
       background,
       backgroundImage: backgroundImage ? await loadImage(backgroundImage, loadFile) : undefined,
