@@ -114,5 +114,5 @@ export const createElementRenderer = (style: Style, loaders: Loaders): ElementRe
     }
   }
 
-  return { renderElement, size }
+  return { renderElement, size: { ...size } }
 }
