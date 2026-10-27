@@ -3,7 +3,6 @@ import { renderPattern } from './patterns.js'
 import type {
   Align,
   ElementIcon,
-  Extra,
   FontElement,
   Icon,
   Node,
@@ -113,12 +112,16 @@ const getImageSrc = (image: Icon) => {
   return 'src' in image ? image.src : toDataUri(image.svg, 'image/svg+xml')
 }
 
-// The satori in Next's ImageResponse stretches an SVG without a height across the whole line, so
-// an element that sets no height of its own gets the icon's. A component that passes its props
-// on to its SVG takes it too.
-const withHeight = (element: Extra, height: number): unknown => {
+// The satori in Next's ImageResponse draws an SVG without a height at the wrong size, so an
+// element that sets no height of its own gets the icon's. Satori draws a function component by
+// calling it with its props, so it is called here first and its SVG gets the height either way.
+const withHeight = (element: unknown, height: number): unknown => {
   if (!isObject(element) || !('props' in element) || !isObject(element.props)) {
     return element
+  }
+
+  if ('type' in element && typeof element.type === 'function') {
+    return withHeight(element.type(element.props), height)
   }
 
   if ('height' in element.props && element.props.height !== undefined) {
