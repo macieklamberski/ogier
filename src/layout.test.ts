@@ -512,14 +512,18 @@ describe('render', () => {
       props: { style: { justifyContent: 'flex-start', marginRight: 600 } },
     }
     const expectedGroup = {
-      props: { style: { maxWidth: 472 } },
+      display: 'flex',
+      alignItems: 'flex-start',
+      gap: 20,
+      maxWidth: 472,
+      flexShrink: 1,
+      color: '#f0f0f0',
     }
     const group = findByStyle(root, 'maxWidth', 472)
 
     expect(findByStyle(root, 'objectFit', 'cover')).toEqual(expectedImage)
     expect(findByStyle(root, 'marginRight', 600)).toMatchObject(expectedHeadlineRow)
-    expect(group).toMatchObject(expectedGroup)
-    expect(group).not.toHaveProperty('props.style.marginRight')
+    expect(group?.props.style).toEqual(expectedGroup)
   })
 
   it('should draw the image on the left half and keep the lines at the card edges', () => {
@@ -536,14 +540,18 @@ describe('render', () => {
       props: { style: { marginLeft: 600 } },
     }
     const expectedGroup = {
-      props: { style: { maxWidth: 472, flexShrink: 1 } },
+      display: 'flex',
+      alignItems: 'flex-start',
+      gap: 20,
+      maxWidth: 472,
+      flexShrink: 1,
+      color: '#f0f0f0',
     }
     const group = findByStyle(root, 'maxWidth', 472)
 
     expect(findByStyle(root, 'left', 0)).toMatchObject(expectedImage)
     expect(findByStyle(root, 'justifyContent', 'flex-start')).toMatchObject(expectedHeadlineRow)
-    expect(group).toMatchObject(expectedGroup)
-    expect(group).not.toHaveProperty('props.style.marginLeft')
+    expect(group?.props.style).toEqual(expectedGroup)
   })
 
   it('should draw the text over the image, the background image and the rail', () => {

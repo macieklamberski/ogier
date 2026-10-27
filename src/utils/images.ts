@@ -10,7 +10,7 @@ const currentColorRegex = /currentColor/gi
 // call stack when spread into String.fromCharCode.
 const chunkSize = 0x8000
 
-export const toDataUri = (data: string | Uint8Array, mimeType: string) => {
+export const toDataUri = (data: string | Uint8Array, mimeType: string): string => {
   const bytes = isString(data) ? new TextEncoder().encode(data) : data
   let binary = ''
 
@@ -21,7 +21,7 @@ export const toDataUri = (data: string | Uint8Array, mimeType: string) => {
   return `data:${mimeType};base64,${btoa(binary)}`
 }
 
-export const colorSvg = (svg: string, color: string | undefined) => {
+export const colorSvg = (svg: string, color: string | undefined): string => {
   return color ? svg.replace(currentColorRegex, color) : svg
 }
 

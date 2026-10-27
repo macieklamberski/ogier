@@ -1,5 +1,10 @@
 import { t } from 'trousse'
-import { createElementRenderer, type Loaders, type RenderedElement } from './element.js'
+import {
+  createElementRenderer,
+  type ElementRenderer,
+  type Loaders,
+  type RenderedElement,
+} from './element.js'
 import locales from './locales.json' with { type: 'json' }
 import type { Card, Style } from './types/index.js'
 
@@ -16,7 +21,7 @@ const loaders: Loaders = {
   },
 }
 
-export const createRenderer = (style: Style = {}) => {
+export const createRenderer = (style: Style = {}): ElementRenderer => {
   return createElementRenderer(style, loaders)
 }
 
