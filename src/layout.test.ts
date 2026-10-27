@@ -752,6 +752,28 @@ describe('render', () => {
     expect(findByStyle(render(value), 'overflow', 'hidden')).toMatchObject(expected)
   })
 
+  it('should give the icon height to the svg a component returns', () => {
+    const svg = {
+      type: 'svg',
+      props: { viewBox: '0 0 8 8' },
+    }
+    const element = {
+      type: () => svg,
+      props: {},
+    }
+    const value: RenderContext = {
+      ...baseContext,
+      card: { ...baseContext.card, header: { text: 'feedsmith', icon: { element } } },
+      headerIcon: { element },
+    }
+    const expected = {
+      type: 'svg',
+      props: { viewBox: '0 0 8 8', height: 56 },
+    }
+
+    expect(findByStyle(render(value), 'overflow', 'hidden')?.props.children).toEqual(expected)
+  })
+
   it('should keep the height an element icon sets itself', () => {
     const element = { type: 'svg', props: { viewBox: '0 0 8 8', height: 20 } }
     const value: RenderContext = {
