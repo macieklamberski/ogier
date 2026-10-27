@@ -87,43 +87,101 @@ describe('render', () => {
         src: `data:image/svg+xml;base64,${Buffer.from('<svg><path stroke="#a3a3a3" /></svg>').toString('base64')}`,
       },
     }
-    const expectedAside = {
+    const expectedHeaderAside = {
+      type: 'div',
       props: {
         style: {
           marginLeft: 'auto',
+          marginTop: 17.37,
           maxWidth: 536,
-          textAlign: 'right',
+          fontFamily: 'label-latin',
+          fontWeight: 500,
           fontSize: 26,
+          lineHeight: 1.2,
+          letterSpacing: '0em',
           color: '#a3a3a3',
+          textAlign: 'right',
         },
+        children: 'v1.1.0',
+      },
+    }
+    const expectedFooterAside = {
+      type: 'div',
+      props: {
+        style: {
+          marginLeft: 'auto',
+          marginBottom: 0.47,
+          maxWidth: 536,
+          fontFamily: 'label-latin',
+          fontWeight: 500,
+          fontSize: 26,
+          lineHeight: 1.2,
+          letterSpacing: '0em',
+          color: '#a3a3a3',
+          textAlign: 'right',
+        },
+        children: 'Page 3',
       },
     }
     const expectedEyebrow = {
-      props: { style: { fontFamily: 'label-latin', fontSize: 26, color: '#ff8c4d' } },
-    }
-    const expectedTitle = {
+      type: 'div',
       props: {
         style: {
+          fontFamily: 'label-latin',
+          fontWeight: 500,
+          fontSize: 26,
+          color: '#ff8c4d',
+          textTransform: 'uppercase',
+          letterSpacing: '0.12em',
+        },
+        children: 'Guides › Parsing',
+      },
+    }
+    const expectedTitle = {
+      type: 'div',
+      props: {
+        style: {
+          color: '#f0f0f0',
           fontFamily: 'title-latin',
           fontSize: 72,
           fontWeight: 700,
+          lineHeight: 1.15,
+          letterSpacing: '-0.025em',
+          display: 'block',
           lineClamp: 2,
-          color: '#f0f0f0',
         },
+        children: 'Parsing namespaces',
       },
     }
     const expectedByline = {
-      props: { style: { fontFamily: 'label-latin', fontSize: 28, lineClamp: 1, color: '#f0f0f0' } },
+      type: 'div',
+      props: {
+        style: {
+          color: '#f0f0f0',
+          fontFamily: 'label-latin',
+          fontWeight: 500,
+          fontSize: 28,
+          letterSpacing: '0em',
+          display: 'block',
+          lineClamp: 1,
+        },
+        children: 'Test Tosterone',
+      },
     }
     const expectedDescription = {
+      type: 'div',
       props: {
         style: {
           fontFamily: 'body-latin',
+          fontWeight: 400,
           fontSize: 30,
           lineHeight: 1.35,
+          letterSpacing: '0em',
           color: '#a3a3a3',
+          display: 'block',
           lineClamp: 2,
         },
+        children: 'Every tag the parser reads.',
       },
     }
     const expectedTexts = [
@@ -139,12 +197,12 @@ describe('render', () => {
 
     expect(nodes.find((node) => node.props.height === 56)).toEqual(expectedHeaderIcon)
     expect(nodes.find((node) => node.props.height === 32)).toEqual(expectedFooterIcon)
-    expect(findByText(root, 'v1.1.0')).toMatchObject(expectedAside)
-    expect(findByText(root, 'Page 3')).toMatchObject(expectedAside)
-    expect(findByText(root, 'Guides › Parsing')).toMatchObject(expectedEyebrow)
-    expect(findByText(root, 'Parsing namespaces')).toMatchObject(expectedTitle)
-    expect(findByText(root, 'Test Tosterone')).toMatchObject(expectedByline)
-    expect(findByText(root, 'Every tag the parser reads.')).toMatchObject(expectedDescription)
+    expect(findByText(root, 'v1.1.0')).toEqual(expectedHeaderAside)
+    expect(findByText(root, 'Page 3')).toEqual(expectedFooterAside)
+    expect(findByText(root, 'Guides › Parsing')).toEqual(expectedEyebrow)
+    expect(findByText(root, 'Parsing namespaces')).toEqual(expectedTitle)
+    expect(findByText(root, 'Test Tosterone')).toEqual(expectedByline)
+    expect(findByText(root, 'Every tag the parser reads.')).toEqual(expectedDescription)
     expect(listTexts(root)).toEqual(expectedTexts)
   })
 
@@ -230,56 +288,167 @@ describe('render', () => {
       return style?.maxWidth === 1072
     })
     const expectedGroups = [
-      { props: { style: { color: '#000001' } } },
-      { props: { style: { color: '#000006' } } },
+      {
+        display: 'flex',
+        alignItems: 'flex-start',
+        gap: 20,
+        maxWidth: 1072,
+        flexShrink: 1,
+        color: '#000001',
+      },
+      {
+        display: 'flex',
+        alignItems: 'flex-end',
+        gap: 14,
+        maxWidth: 1072,
+        flexShrink: 1,
+        color: '#000006',
+      },
     ]
     const expectedFooterIcon = {
+      type: 'img',
       props: {
         src: `data:image/svg+xml;base64,${Buffer.from('<svg><path stroke="#000006" /></svg>').toString('base64')}`,
+        height: 32,
+      },
+    }
+    const expectedEyebrow = {
+      type: 'div',
+      props: {
+        style: {
+          fontFamily: 'label-latin',
+          fontWeight: 500,
+          fontSize: 26,
+          color: '#000002',
+          textTransform: 'uppercase',
+          letterSpacing: '0.12em',
+        },
+        children: 'Guides › Parsing',
+      },
+    }
+    const expectedTitle = {
+      type: 'div',
+      props: {
+        style: {
+          color: '#000003',
+          fontFamily: 'title-latin',
+          fontSize: 72,
+          fontWeight: 700,
+          lineHeight: 1.15,
+          letterSpacing: '-0.025em',
+          display: 'block',
+          lineClamp: 2,
+        },
+        children: 'Parsing namespaces',
+      },
+    }
+    const expectedByline = {
+      type: 'div',
+      props: {
+        style: {
+          color: '#000004',
+          fontFamily: 'label-latin',
+          fontWeight: 500,
+          fontSize: 28,
+          letterSpacing: '0em',
+          display: 'block',
+          lineClamp: 1,
+        },
+        children: 'Test Tosterone',
+      },
+    }
+    const expectedDescription = {
+      type: 'div',
+      props: {
+        style: {
+          fontFamily: 'body-latin',
+          fontWeight: 400,
+          fontSize: 30,
+          lineHeight: 1.35,
+          letterSpacing: '0em',
+          color: '#000005',
+          display: 'block',
+          lineClamp: 2,
+        },
+        children: 'Every tag the parser reads.',
+      },
+    }
+    const expectedHeaderAside = {
+      type: 'div',
+      props: {
+        style: {
+          marginLeft: 'auto',
+          marginTop: 17.37,
+          maxWidth: 536,
+          fontFamily: 'label-latin',
+          fontWeight: 500,
+          fontSize: 26,
+          lineHeight: 1.2,
+          letterSpacing: '0em',
+          color: '#000007',
+          textAlign: 'right',
+        },
+        children: 'v1.1.0',
+      },
+    }
+    const expectedFooterAside = {
+      type: 'div',
+      props: {
+        style: {
+          marginLeft: 'auto',
+          marginBottom: 0.47,
+          maxWidth: 536,
+          fontFamily: 'label-latin',
+          fontWeight: 500,
+          fontSize: 26,
+          lineHeight: 1.2,
+          letterSpacing: '0em',
+          color: '#000007',
+          textAlign: 'right',
+        },
+        children: 'Page 3',
       },
     }
 
-    const expectedEyebrow = {
-      props: { style: { color: '#000002' } },
-    }
-    const expectedTitle = {
-      props: { style: { color: '#000003' } },
-    }
-    const expectedByline = {
-      props: { style: { color: '#000004' } },
-    }
-    const expectedDescription = {
-      props: { style: { color: '#000005' } },
-    }
-    const expectedAside = {
-      props: { style: { color: '#000007' } },
-    }
-
-    expect(groups).toMatchObject(expectedGroups)
-    expect(collectNodes(root).find((node) => node.props.height === 32)).toMatchObject(
-      expectedFooterIcon,
-    )
-    expect(findByText(root, 'Guides › Parsing')).toMatchObject(expectedEyebrow)
-    expect(findByText(root, 'Parsing namespaces')).toMatchObject(expectedTitle)
-    expect(findByText(root, 'Test Tosterone')).toMatchObject(expectedByline)
-    expect(findByText(root, 'Every tag the parser reads.')).toMatchObject(expectedDescription)
-    expect(findByText(root, 'v1.1.0')).toMatchObject(expectedAside)
-    expect(findByText(root, 'Page 3')).toMatchObject(expectedAside)
+    expect(groups.map((group) => group.props.style)).toEqual(expectedGroups)
+    expect(collectNodes(root).find((node) => node.props.height === 32)).toEqual(expectedFooterIcon)
+    expect(findByText(root, 'Guides › Parsing')).toEqual(expectedEyebrow)
+    expect(findByText(root, 'Parsing namespaces')).toEqual(expectedTitle)
+    expect(findByText(root, 'Test Tosterone')).toEqual(expectedByline)
+    expect(findByText(root, 'Every tag the parser reads.')).toEqual(expectedDescription)
+    expect(findByText(root, 'v1.1.0')).toEqual(expectedHeaderAside)
+    expect(findByText(root, 'Page 3')).toEqual(expectedFooterAside)
   })
 
   it('should render the header, the title and the pattern rail with minimal properties', () => {
     const root = render(baseContext)
     const expected = {
-      props: { style: { fontSize: 72, fontWeight: 700, lineHeight: 1.15 } },
+      type: 'div',
+      props: {
+        style: {
+          color: '#f0f0f0',
+          fontFamily: 'title-latin',
+          fontSize: 72,
+          fontWeight: 700,
+          lineHeight: 1.15,
+          letterSpacing: '-0.025em',
+          display: 'block',
+          lineClamp: 5,
+        },
+        children: 'Parsing namespaces',
+      },
     }
     const expectedRail = {
       type: 'img',
-      props: { style: { position: 'absolute', right: 0, width: 600, height: 630 } },
+      props: {
+        src: expect.any(String),
+        style: { position: 'absolute', top: 0, right: 0, width: 600, height: 630 },
+      },
     }
 
     expect(findByText(root, 'feedsmith')).toBeDefined()
-    expect(findByText(root, 'Parsing namespaces')).toMatchObject(expected)
-    expect(findByStyle(root, 'right', 0)).toMatchObject(expectedRail)
+    expect(findByText(root, 'Parsing namespaces')).toEqual(expected)
+    expect(findByStyle(root, 'right', 0)).toEqual(expectedRail)
     expect(findByStyle(root, 'right', 0)?.props.src).toStartWith('data:image/svg+xml;base64,')
     expect(findByStyle(root, 'background', '#ff8c4d')).toBeUndefined()
   })
@@ -300,24 +469,46 @@ describe('render', () => {
 
       return style?.maxWidth === 1072
     })
-    const expectedHeader = {
-      props: { style: { alignItems: 'flex-start', gap: 20 } },
-    }
-    const expectedFooter = {
-      props: { style: { alignItems: 'flex-end', gap: 14 } },
-    }
+    const expectedHeader = { display: 'flex', alignItems: 'flex-start', gap: 20 }
+    const expectedFooter = { display: 'flex', alignItems: 'flex-end', gap: 14 }
     const expectedGroups = [
-      { props: { style: { alignItems: 'flex-start', color: '#f0f0f0' } } },
-      { props: { style: { alignItems: 'flex-end', color: '#a3a3a3' } } },
+      {
+        display: 'flex',
+        alignItems: 'flex-start',
+        gap: 20,
+        maxWidth: 1072,
+        flexShrink: 1,
+        color: '#f0f0f0',
+      },
+      {
+        display: 'flex',
+        alignItems: 'flex-end',
+        gap: 14,
+        maxWidth: 1072,
+        flexShrink: 1,
+        color: '#a3a3a3',
+      },
     ]
     const expectedText = {
-      props: { style: { maxWidth: 536, fontSize: 28, lineHeight: 1.2 } },
+      type: 'div',
+      props: {
+        style: {
+          maxWidth: 536,
+          flexShrink: 1,
+          fontFamily: 'label-latin',
+          fontWeight: 500,
+          fontSize: 28,
+          lineHeight: 1.2,
+          letterSpacing: '0em',
+        },
+        children: 'example/repo',
+      },
     }
 
-    expect(findByStyle(root, 'alignItems', 'flex-start')).toMatchObject(expectedHeader)
-    expect(findByStyle(root, 'alignItems', 'flex-end')).toMatchObject(expectedFooter)
-    expect(groups).toMatchObject(expectedGroups)
-    expect(findByText(root, 'example/repo')).toMatchObject(expectedText)
+    expect(findByStyle(root, 'alignItems', 'flex-start')?.props.style).toEqual(expectedHeader)
+    expect(findByStyle(root, 'alignItems', 'flex-end')?.props.style).toEqual(expectedFooter)
+    expect(groups.map((group) => group.props.style)).toEqual(expectedGroups)
+    expect(findByText(root, 'example/repo')).toEqual(expectedText)
     expect(findByStyle(root, 'fontSize', 44)).toBeUndefined()
   })
 
@@ -341,14 +532,44 @@ describe('render', () => {
     }
     const root = render(value)
     const expectedHeaderAside = {
-      props: { style: { marginTop: 20, lineHeight: 1.5, color: '#ffffff' } },
+      type: 'div',
+      props: {
+        style: {
+          marginLeft: 'auto',
+          marginTop: 20,
+          maxWidth: 536,
+          fontFamily: 'label-latin',
+          fontWeight: 500,
+          fontSize: 26,
+          lineHeight: 1.5,
+          letterSpacing: '0em',
+          color: '#ffffff',
+          textAlign: 'right',
+        },
+        children: 'v1.1.0',
+      },
     }
     const expectedFooterAside = {
-      props: { style: { marginBottom: 2, lineHeight: 1.5, color: '#ffffff' } },
+      type: 'div',
+      props: {
+        style: {
+          marginLeft: 'auto',
+          marginBottom: 2,
+          maxWidth: 536,
+          fontFamily: 'label-latin',
+          fontWeight: 500,
+          fontSize: 26,
+          lineHeight: 1.5,
+          letterSpacing: '0em',
+          color: '#ffffff',
+          textAlign: 'right',
+        },
+        children: 'Page 3',
+      },
     }
 
-    expect(findByText(root, 'v1.1.0')).toMatchObject(expectedHeaderAside)
-    expect(findByText(root, 'Page 3')).toMatchObject(expectedFooterAside)
+    expect(findByText(root, 'v1.1.0')).toEqual(expectedHeaderAside)
+    expect(findByText(root, 'Page 3')).toEqual(expectedFooterAside)
   })
 
   it('should push the headline to the bottom above the footer and draw the accent bar', () => {
@@ -365,12 +586,13 @@ describe('render', () => {
     const body = findByStyle(root, 'justifyContent', 'space-between') as Node
     const bodyChildren = (body.props.children as Array<Node | undefined>).filter(Boolean)
     const expectedBar = {
+      type: 'div',
       props: { style: { height: 10, background: '#ff8c4d' } },
     }
 
     expect(bodyChildren).toHaveLength(2)
     expect(listTexts(root)).toEqual(['feedsmith', 'Parsing namespaces', 'example/repo'])
-    expect(findByStyle(root, 'background', '#ff8c4d')).toMatchObject(expectedBar)
+    expect(findByStyle(root, 'background', '#ff8c4d')).toEqual(expectedBar)
   })
 
   it('should keep the headline between the edges without a header or a footer', () => {
@@ -380,13 +602,16 @@ describe('render', () => {
     }
     const root = render(value)
     const body = findByStyle(root, 'justifyContent', 'space-between') as Node
+    const children = (body.props.children as Array<Node>).map(({ type, props }) => {
+      return { type, style: props.style }
+    })
     const expected = [
-      { type: 'div', props: { style: {} } },
-      { props: { style: { justifyContent: 'flex-start' } } },
-      { type: 'div', props: { style: {} } },
+      { type: 'div', style: {} },
+      { type: 'div', style: { display: 'flex', justifyContent: 'flex-start' } },
+      { type: 'div', style: {} },
     ]
 
-    expect(body.props.children).toMatchObject(expected)
+    expect(children).toEqual(expected)
   })
 
   it('should push the headline to the bottom without a header', () => {
@@ -396,9 +621,15 @@ describe('render', () => {
     }
     const root = render(value)
     const body = findByStyle(root, 'justifyContent', 'space-between') as Node
-    const expected = [{ type: 'div', props: { style: {} } }, { props: { style: { gap: 16 } } }]
+    const children = (body.props.children as Array<Node>).map(({ type, props }) => {
+      return { type, style: props.style }
+    })
+    const expected = [
+      { type: 'div', style: {} },
+      { type: 'div', style: { display: 'flex', flexDirection: 'column', gap: 16 } },
+    ]
 
-    expect(body.props.children).toMatchObject(expected)
+    expect(children).toEqual(expected)
   })
 
   it('should pull the headline to the top under the header without a footer', () => {
@@ -408,10 +639,16 @@ describe('render', () => {
     }
     const root = render(value)
     const body = findByStyle(root, 'justifyContent', 'space-between') as Node
-    const expected = [{ props: { style: { gap: 16 } } }, { type: 'div', props: { style: {} } }]
+    const children = (body.props.children as Array<Node>).map(({ type, props }) => {
+      return { type, style: props.style }
+    })
+    const expected = [
+      { type: 'div', style: { display: 'flex', flexDirection: 'column', gap: 16 } },
+      { type: 'div', style: {} },
+    ]
     const group = (body.props.children as Array<Node>)[0]
 
-    expect(body.props.children).toMatchObject(expected)
+    expect(children).toEqual(expected)
     expect(listTexts(group)).toEqual(['feedsmith', 'Parsing namespaces'])
   })
 
@@ -422,14 +659,40 @@ describe('render', () => {
     }
     const root = render(value)
     const expectedTitle = {
-      props: { style: { lineClamp: 2 } },
+      type: 'div',
+      props: {
+        style: {
+          color: '#f0f0f0',
+          fontFamily: 'title-latin',
+          fontSize: 72,
+          fontWeight: 700,
+          lineHeight: 1.15,
+          letterSpacing: '-0.025em',
+          display: 'block',
+          lineClamp: 2,
+        },
+        children: 'Parsing namespaces',
+      },
     }
     const expectedDescription = {
-      props: { style: { lineClamp: 2, fontSize: 30, color: '#a3a3a3' } },
+      type: 'div',
+      props: {
+        style: {
+          fontFamily: 'body-latin',
+          fontWeight: 400,
+          fontSize: 30,
+          lineHeight: 1.35,
+          letterSpacing: '0em',
+          color: '#a3a3a3',
+          display: 'block',
+          lineClamp: 2,
+        },
+        children: 'Every tag the parser reads.',
+      },
     }
 
-    expect(findByText(root, 'Parsing namespaces')).toMatchObject(expectedTitle)
-    expect(findByText(root, 'Every tag the parser reads.')).toMatchObject(expectedDescription)
+    expect(findByText(root, 'Parsing namespaces')).toEqual(expectedTitle)
+    expect(findByText(root, 'Every tag the parser reads.')).toEqual(expectedDescription)
   })
 
   it('should clamp a title alone to the lines that fit between the header and the footer', () => {
@@ -438,10 +701,23 @@ describe('render', () => {
       card: { ...baseContext.card, footer: { text: 'example/repo' } },
     }
     const expected = {
-      props: { style: { lineClamp: 5 } },
+      type: 'div',
+      props: {
+        style: {
+          color: '#f0f0f0',
+          fontFamily: 'title-latin',
+          fontSize: 72,
+          fontWeight: 700,
+          lineHeight: 1.15,
+          letterSpacing: '-0.025em',
+          display: 'block',
+          lineClamp: 5,
+        },
+        children: 'Parsing namespaces',
+      },
     }
 
-    expect(findByText(render(value), 'Parsing namespaces')).toMatchObject(expected)
+    expect(findByText(render(value), 'Parsing namespaces')).toEqual(expected)
   })
 
   it('should step the title down past the long length', () => {
@@ -451,10 +727,23 @@ describe('render', () => {
       card: { title },
     }
     const expected = {
-      props: { style: { fontSize: 56, fontWeight: 700, letterSpacing: '-0.025em' } },
+      type: 'div',
+      props: {
+        style: {
+          color: '#f0f0f0',
+          fontFamily: 'title-latin',
+          fontSize: 56,
+          fontWeight: 700,
+          lineHeight: 1.15,
+          letterSpacing: '-0.025em',
+          display: 'block',
+          lineClamp: 8,
+        },
+        children: title,
+      },
     }
 
-    expect(findByText(render(value), title)).toMatchObject(expected)
+    expect(findByText(render(value), title)).toEqual(expected)
   })
 
   it('should render a description alone in the title slot at the long size', () => {
@@ -465,10 +754,23 @@ describe('render', () => {
       card: { header: { text: 'feedsmith' }, description },
     }
     const expected = {
-      props: { style: { fontSize: 44, fontWeight: 400, letterSpacing: '-0.0125em' } },
+      type: 'div',
+      props: {
+        style: {
+          color: '#f0f0f0',
+          fontFamily: 'title-latin',
+          fontSize: 44,
+          fontWeight: 400,
+          lineHeight: 1.15,
+          letterSpacing: '-0.0125em',
+          display: 'block',
+          lineClamp: 9,
+        },
+        children: description,
+      },
     }
 
-    expect(findByText(render(value), description)).toMatchObject(expected)
+    expect(findByText(render(value), description)).toEqual(expected)
   })
 
   it('should render a background image instead of the pattern rail', () => {
@@ -480,10 +782,20 @@ describe('render', () => {
     const nodes = collectNodes(render(value))
     const expected = {
       type: 'img',
-      props: { src: 'data:image/png;base64,AAAA', style: { objectFit: 'cover' } },
+      props: {
+        src: 'data:image/png;base64,AAAA',
+        style: {
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: 1200,
+          height: 630,
+          objectFit: 'cover',
+        },
+      },
     }
 
-    expect(nodes.find((node) => node.type === 'img')).toMatchObject(expected)
+    expect(nodes.find((node) => node.type === 'img')).toEqual(expected)
     expect(findByStyle(render(value), 'right', 0)).toBeUndefined()
   })
 
@@ -508,9 +820,7 @@ describe('render', () => {
         },
       },
     }
-    const expectedHeadlineRow = {
-      props: { style: { justifyContent: 'flex-start', marginRight: 600 } },
-    }
+    const expectedHeadlineRow = { display: 'flex', justifyContent: 'flex-start', marginRight: 600 }
     const expectedGroup = {
       display: 'flex',
       alignItems: 'flex-start',
@@ -522,7 +832,7 @@ describe('render', () => {
     const group = findByStyle(root, 'maxWidth', 472)
 
     expect(findByStyle(root, 'objectFit', 'cover')).toEqual(expectedImage)
-    expect(findByStyle(root, 'marginRight', 600)).toMatchObject(expectedHeadlineRow)
+    expect(findByStyle(root, 'marginRight', 600)?.props.style).toEqual(expectedHeadlineRow)
     expect(group?.props.style).toEqual(expectedGroup)
   })
 
@@ -534,11 +844,20 @@ describe('render', () => {
     }
     const root = render(value)
     const expectedImage = {
-      props: { style: { left: 0, width: 600 } },
+      type: 'img',
+      props: {
+        src: 'data:image/jpeg;base64,AAAA',
+        style: {
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: 600,
+          height: 630,
+          objectFit: 'cover',
+        },
+      },
     }
-    const expectedHeadlineRow = {
-      props: { style: { marginLeft: 600 } },
-    }
+    const expectedHeadlineRow = { display: 'flex', justifyContent: 'flex-start', marginLeft: 600 }
     const expectedGroup = {
       display: 'flex',
       alignItems: 'flex-start',
@@ -549,8 +868,10 @@ describe('render', () => {
     }
     const group = findByStyle(root, 'maxWidth', 472)
 
-    expect(findByStyle(root, 'left', 0)).toMatchObject(expectedImage)
-    expect(findByStyle(root, 'justifyContent', 'flex-start')).toMatchObject(expectedHeadlineRow)
+    expect(findByStyle(root, 'left', 0)).toEqual(expectedImage)
+    expect(findByStyle(root, 'justifyContent', 'flex-start')?.props.style).toEqual(
+      expectedHeadlineRow,
+    )
     expect(group?.props.style).toEqual(expectedGroup)
   })
 
@@ -561,10 +882,20 @@ describe('render', () => {
       image: { src: 'data:image/jpeg;base64,AAAA' },
     }
     const expected = {
-      props: { style: { position: 'relative', justifyContent: 'space-between' } },
+      position: 'relative',
+      flex: 1,
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      paddingTop: 56,
+      paddingRight: 64,
+      paddingBottom: 56,
+      paddingLeft: 64,
     }
 
-    expect(findByStyle(render(value), 'justifyContent', 'space-between')).toMatchObject(expected)
+    expect(findByStyle(render(value), 'justifyContent', 'space-between')?.props.style).toEqual(
+      expected,
+    )
   })
 
   it('should align the headline right and keep the lines in their order', () => {
@@ -578,16 +909,37 @@ describe('render', () => {
     }
     const root = render(value)
     const expectedHeadline = {
-      props: { style: { alignItems: 'flex-end', textAlign: 'right' } },
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 16,
+      width: '100%',
+      maxWidth: 800,
+      alignItems: 'flex-end',
+      textAlign: 'right',
     }
     const expectedAside = {
-      props: { style: { marginLeft: 'auto', textAlign: 'right' } },
+      type: 'div',
+      props: {
+        style: {
+          marginLeft: 'auto',
+          marginTop: 17.37,
+          maxWidth: 536,
+          fontFamily: 'label-latin',
+          fontWeight: 500,
+          fontSize: 26,
+          lineHeight: 1.2,
+          letterSpacing: '0em',
+          color: '#a3a3a3',
+          textAlign: 'right',
+        },
+        children: 'v1.1.0',
+      },
     }
 
     expect(findByStyle(root, 'justifyContent', 'flex-end')).toBeDefined()
-    expect(findByStyle(root, 'gap', 16)).toMatchObject(expectedHeadline)
+    expect(findByStyle(root, 'gap', 16)?.props.style).toEqual(expectedHeadline)
     expect(findByStyle(root, 'flexDirection', 'row-reverse')).toBeUndefined()
-    expect(findByText(root, 'v1.1.0')).toMatchObject(expectedAside)
+    expect(findByText(root, 'v1.1.0')).toEqual(expectedAside)
   })
 
   it('should center the headline and keep the lines in their order', () => {
@@ -601,15 +953,36 @@ describe('render', () => {
     }
     const root = render(value)
     const expectedHeadline = {
-      props: { style: { alignItems: 'center', textAlign: 'center' } },
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 16,
+      width: '100%',
+      maxWidth: 800,
+      alignItems: 'center',
+      textAlign: 'center',
     }
     const expectedAside = {
-      props: { style: { marginLeft: 'auto', textAlign: 'right' } },
+      type: 'div',
+      props: {
+        style: {
+          marginLeft: 'auto',
+          marginTop: 17.37,
+          maxWidth: 536,
+          fontFamily: 'label-latin',
+          fontWeight: 500,
+          fontSize: 26,
+          lineHeight: 1.2,
+          letterSpacing: '0em',
+          color: '#a3a3a3',
+          textAlign: 'right',
+        },
+        children: 'v1.1.0',
+      },
     }
 
     expect(findByStyle(root, 'justifyContent', 'center')).toBeDefined()
-    expect(findByStyle(root, 'gap', 16)).toMatchObject(expectedHeadline)
-    expect(findByText(root, 'v1.1.0')).toMatchObject(expectedAside)
+    expect(findByStyle(root, 'gap', 16)?.props.style).toEqual(expectedHeadline)
+    expect(findByText(root, 'v1.1.0')).toEqual(expectedAside)
   })
 
   it('should put every padding side without a value at the card edge', () => {
@@ -618,10 +991,18 @@ describe('render', () => {
       sizes: { ...defaultSizes, cardPadding: { top: 40 } },
     }
     const expected = {
-      props: { style: { paddingTop: 40, paddingRight: 0, paddingBottom: 0, paddingLeft: 0 } },
+      position: 'relative',
+      flex: 1,
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      paddingTop: 40,
+      paddingRight: 0,
+      paddingBottom: 0,
+      paddingLeft: 0,
     }
 
-    expect(findByStyle(render(value), 'paddingTop', 40)).toMatchObject(expected)
+    expect(findByStyle(render(value), 'paddingTop', 40)?.props.style).toEqual(expected)
   })
 
   it('should cap the column at the content width', () => {
@@ -630,10 +1011,16 @@ describe('render', () => {
       sizes: { ...defaultSizes, contentWidth: 640 },
     }
     const expected = {
-      props: { style: { flexDirection: 'column', width: '100%', maxWidth: 640 } },
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 16,
+      width: '100%',
+      maxWidth: 640,
+      alignItems: 'flex-start',
+      textAlign: 'left',
     }
 
-    expect(findByStyle(render(value), 'maxWidth', 640)).toMatchObject(expected)
+    expect(findByStyle(render(value), 'maxWidth', 640)?.props.style).toEqual(expected)
   })
 
   it('should draw the card icon as the first item of the column above the eyebrow', () => {
@@ -653,11 +1040,39 @@ describe('render', () => {
           style: { borderRadius: 0 },
         },
       },
-      { props: { children: 'Guides › Parsing' } },
-      { props: { children: 'Parsing namespaces' } },
+      {
+        type: 'div',
+        props: {
+          style: {
+            fontFamily: 'label-latin',
+            fontWeight: 500,
+            fontSize: 26,
+            color: '#ff8c4d',
+            textTransform: 'uppercase',
+            letterSpacing: '0.12em',
+          },
+          children: 'Guides › Parsing',
+        },
+      },
+      {
+        type: 'div',
+        props: {
+          style: {
+            color: '#f0f0f0',
+            fontFamily: 'title-latin',
+            fontSize: 72,
+            fontWeight: 700,
+            lineHeight: 1.15,
+            letterSpacing: '-0.025em',
+            display: 'block',
+            lineClamp: 3,
+          },
+          children: 'Parsing namespaces',
+        },
+      },
     ]
 
-    expect(columnChildren).toMatchObject(expected)
+    expect(columnChildren).toEqual(expected)
   })
 
   it('should size and round the card icon by its own size keys', () => {
@@ -701,13 +1116,14 @@ describe('render', () => {
       footerIcon: { element },
     }
     const expected = {
+      type: 'div',
       props: {
-        style: { height: 32, color: '#a3a3a3' },
+        style: { display: 'flex', height: 32, flexShrink: 0, overflow: 'hidden', color: '#a3a3a3' },
         children: { type: 'svg', props: { viewBox: '0 0 8 8', height: 32 } },
       },
     }
 
-    expect(findByStyle(render(value), 'overflow', 'hidden')).toMatchObject(expected)
+    expect(findByStyle(render(value), 'overflow', 'hidden')).toEqual(expected)
   })
 
   it('should draw an element icon in its own color over the slot color', () => {
@@ -717,9 +1133,15 @@ describe('render', () => {
       card: { ...baseContext.card, header: { text: 'feedsmith', icon: { element } } },
       headerIcon: { element, color: '#123456' },
     }
-    const expected = { props: { style: { color: '#123456' } } }
+    const expected = {
+      type: 'div',
+      props: {
+        style: { display: 'flex', height: 56, flexShrink: 0, overflow: 'hidden', color: '#123456' },
+        children: { type: 'svg', props: { viewBox: '0 0 8 8', height: 56 } },
+      },
+    }
 
-    expect(findByStyle(render(value), 'overflow', 'hidden')).toMatchObject(expected)
+    expect(findByStyle(render(value), 'overflow', 'hidden')).toEqual(expected)
   })
 
   it('should size and round a card element icon by its own size keys', () => {
@@ -755,9 +1177,15 @@ describe('render', () => {
       card: { ...baseContext.card, header: { text: 'feedsmith', icon: { element } } },
       headerIcon: { element },
     }
-    const expected = { props: { children: { props: { height: 56 } } } }
+    const expected = {
+      type: 'div',
+      props: {
+        style: { display: 'flex', height: 56, flexShrink: 0, overflow: 'hidden', color: '#f0f0f0' },
+        children: { type: 'svg', props: { viewBox: '0 0 8 8', height: 56 } },
+      },
+    }
 
-    expect(findByStyle(render(value), 'overflow', 'hidden')).toMatchObject(expected)
+    expect(findByStyle(render(value), 'overflow', 'hidden')).toEqual(expected)
   })
 
   it('should give the icon height to the svg a component returns', () => {
@@ -789,9 +1217,15 @@ describe('render', () => {
       card: { ...baseContext.card, header: { text: 'feedsmith', icon: { element } } },
       headerIcon: { element },
     }
-    const expected = { props: { children: element } }
+    const expected = {
+      type: 'div',
+      props: {
+        style: { display: 'flex', height: 56, flexShrink: 0, overflow: 'hidden', color: '#f0f0f0' },
+        children: element,
+      },
+    }
 
-    expect(findByStyle(render(value), 'overflow', 'hidden')).toMatchObject(expected)
+    expect(findByStyle(render(value), 'overflow', 'hidden')).toEqual(expected)
   })
 
   it('should pass an element icon without props through as it is', () => {
@@ -800,9 +1234,15 @@ describe('render', () => {
       card: { ...baseContext.card, header: { text: 'feedsmith', icon: { element: 'F' } } },
       headerIcon: { element: 'F' },
     }
-    const expected = { props: { children: 'F' } }
+    const expected = {
+      type: 'div',
+      props: {
+        style: { display: 'flex', height: 56, flexShrink: 0, overflow: 'hidden', color: '#f0f0f0' },
+        children: 'F',
+      },
+    }
 
-    expect(findByStyle(render(value), 'overflow', 'hidden')).toMatchObject(expected)
+    expect(findByStyle(render(value), 'overflow', 'hidden')).toEqual(expected)
   })
 
   it('should draw the extra element as the last item of the column under the description', () => {
@@ -814,12 +1254,42 @@ describe('render', () => {
     const column = findByStyle(render(value), 'maxWidth', 800) as Node
     const columnChildren = (column.props.children as Array<Node | undefined>).filter(Boolean)
     const expected = [
-      { props: { children: 'Parsing namespaces' } },
-      { props: { children: 'Every tag the parser reads.' } },
+      {
+        type: 'div',
+        props: {
+          style: {
+            color: '#f0f0f0',
+            fontFamily: 'title-latin',
+            fontSize: 72,
+            fontWeight: 700,
+            lineHeight: 1.15,
+            letterSpacing: '-0.025em',
+            display: 'block',
+            lineClamp: 2,
+          },
+          children: 'Parsing namespaces',
+        },
+      },
+      {
+        type: 'div',
+        props: {
+          style: {
+            fontFamily: 'body-latin',
+            fontWeight: 400,
+            fontSize: 30,
+            lineHeight: 1.35,
+            letterSpacing: '0em',
+            color: '#a3a3a3',
+            display: 'block',
+            lineClamp: 2,
+          },
+          children: 'Every tag the parser reads.',
+        },
+      },
       extra,
     ]
 
-    expect(columnChildren).toMatchObject(expected)
+    expect(columnChildren).toEqual(expected)
   })
 
   it('should draw the extra element under the title without a description', () => {
@@ -830,9 +1300,27 @@ describe('render', () => {
     }
     const column = findByStyle(render(value), 'maxWidth', 800) as Node
     const columnChildren = (column.props.children as Array<Node | undefined>).filter(Boolean)
-    const expected = [{ props: { children: 'Parsing namespaces' } }, extra]
+    const expected = [
+      {
+        type: 'div',
+        props: {
+          style: {
+            color: '#f0f0f0',
+            fontFamily: 'title-latin',
+            fontSize: 72,
+            fontWeight: 700,
+            lineHeight: 1.15,
+            letterSpacing: '-0.025em',
+            display: 'block',
+            lineClamp: 5,
+          },
+          children: 'Parsing namespaces',
+        },
+      },
+      extra,
+    ]
 
-    expect(columnChildren).toMatchObject(expected)
+    expect(columnChildren).toEqual(expected)
   })
 
   it('should track each text by its own size key', () => {
@@ -859,35 +1347,141 @@ describe('render', () => {
     }
     const root = render(value)
     const expectedHeader = {
-      props: { style: { letterSpacing: '0.01em' } },
+      type: 'div',
+      props: {
+        style: {
+          maxWidth: 536,
+          flexShrink: 1,
+          fontFamily: 'label-latin',
+          fontWeight: 500,
+          fontSize: 44,
+          lineHeight: 1.2,
+          letterSpacing: '0.01em',
+        },
+        children: 'feedsmith',
+      },
     }
     const expectedEyebrow = {
-      props: { style: { letterSpacing: '0.02em' } },
+      type: 'div',
+      props: {
+        style: {
+          fontFamily: 'label-latin',
+          fontWeight: 500,
+          fontSize: 26,
+          color: '#ff8c4d',
+          textTransform: 'uppercase',
+          letterSpacing: '0.02em',
+        },
+        children: 'Guides › Parsing',
+      },
     }
     const expectedTitle = {
-      props: { style: { letterSpacing: '0.03em' } },
+      type: 'div',
+      props: {
+        style: {
+          color: '#f0f0f0',
+          fontFamily: 'title-latin',
+          fontSize: 72,
+          fontWeight: 700,
+          lineHeight: 1.15,
+          letterSpacing: '0.03em',
+          display: 'block',
+          lineClamp: 2,
+        },
+        children: 'Parsing namespaces',
+      },
     }
     const expectedByline = {
-      props: { style: { letterSpacing: '0.04em' } },
+      type: 'div',
+      props: {
+        style: {
+          color: '#f0f0f0',
+          fontFamily: 'label-latin',
+          fontWeight: 500,
+          fontSize: 28,
+          letterSpacing: '0.04em',
+          display: 'block',
+          lineClamp: 1,
+        },
+        children: 'Test Tosterone',
+      },
     }
     const expectedDescription = {
-      props: { style: { letterSpacing: '0.05em' } },
+      type: 'div',
+      props: {
+        style: {
+          fontFamily: 'body-latin',
+          fontWeight: 400,
+          fontSize: 30,
+          lineHeight: 1.35,
+          letterSpacing: '0.05em',
+          color: '#a3a3a3',
+          display: 'block',
+          lineClamp: 2,
+        },
+        children: 'Every tag the parser reads.',
+      },
     }
     const expectedFooter = {
-      props: { style: { letterSpacing: '0.06em' } },
+      type: 'div',
+      props: {
+        style: {
+          maxWidth: 536,
+          flexShrink: 1,
+          fontFamily: 'label-latin',
+          fontWeight: 500,
+          fontSize: 28,
+          lineHeight: 1.2,
+          letterSpacing: '0.06em',
+        },
+        children: 'example/repo',
+      },
     }
-    const expectedAside = {
-      props: { style: { letterSpacing: '0.07em' } },
+    const expectedHeaderAside = {
+      type: 'div',
+      props: {
+        style: {
+          marginLeft: 'auto',
+          marginTop: 17.37,
+          maxWidth: 536,
+          fontFamily: 'label-latin',
+          fontWeight: 500,
+          fontSize: 26,
+          lineHeight: 1.2,
+          letterSpacing: '0.07em',
+          color: '#a3a3a3',
+          textAlign: 'right',
+        },
+        children: 'v1.1.0',
+      },
+    }
+    const expectedFooterAside = {
+      type: 'div',
+      props: {
+        style: {
+          marginLeft: 'auto',
+          marginBottom: 0.47,
+          maxWidth: 536,
+          fontFamily: 'label-latin',
+          fontWeight: 500,
+          fontSize: 26,
+          lineHeight: 1.2,
+          letterSpacing: '0.07em',
+          color: '#a3a3a3',
+          textAlign: 'right',
+        },
+        children: 'Page 3',
+      },
     }
 
-    expect(findByText(root, 'feedsmith')).toMatchObject(expectedHeader)
-    expect(findByText(root, 'Guides › Parsing')).toMatchObject(expectedEyebrow)
-    expect(findByText(root, 'Parsing namespaces')).toMatchObject(expectedTitle)
-    expect(findByText(root, 'Test Tosterone')).toMatchObject(expectedByline)
-    expect(findByText(root, 'Every tag the parser reads.')).toMatchObject(expectedDescription)
-    expect(findByText(root, 'example/repo')).toMatchObject(expectedFooter)
-    expect(findByText(root, 'v1.1.0')).toMatchObject(expectedAside)
-    expect(findByText(root, 'Page 3')).toMatchObject(expectedAside)
+    expect(findByText(root, 'feedsmith')).toEqual(expectedHeader)
+    expect(findByText(root, 'Guides › Parsing')).toEqual(expectedEyebrow)
+    expect(findByText(root, 'Parsing namespaces')).toEqual(expectedTitle)
+    expect(findByText(root, 'Test Tosterone')).toEqual(expectedByline)
+    expect(findByText(root, 'Every tag the parser reads.')).toEqual(expectedDescription)
+    expect(findByText(root, 'example/repo')).toEqual(expectedFooter)
+    expect(findByText(root, 'v1.1.0')).toEqual(expectedHeaderAside)
+    expect(findByText(root, 'Page 3')).toEqual(expectedFooterAside)
   })
 
   it('should apply size overrides over the defaults', () => {
@@ -896,10 +1490,23 @@ describe('render', () => {
       sizes: { ...defaultSizes, titleText: 80, titleWeight: 500, titleTracking: '-0.035em' },
     }
     const expected = {
-      props: { style: { fontSize: 80, fontWeight: 500, letterSpacing: '-0.035em' } },
+      type: 'div',
+      props: {
+        style: {
+          color: '#f0f0f0',
+          fontFamily: 'title-latin',
+          fontSize: 80,
+          fontWeight: 500,
+          lineHeight: 1.15,
+          letterSpacing: '-0.035em',
+          display: 'block',
+          lineClamp: 5,
+        },
+        children: 'Parsing namespaces',
+      },
     }
 
-    expect(findByText(render(value), 'Parsing namespaces')).toMatchObject(expected)
+    expect(findByText(render(value), 'Parsing namespaces')).toEqual(expected)
   })
 })
 

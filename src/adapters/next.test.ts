@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'bun:test'
 import type { Card } from '../types/index.js'
+import type { NextImage } from './next.js'
 import { next } from './next.js'
 
 describe('next', () => {
@@ -9,12 +10,13 @@ describe('next', () => {
 
   it('should export the image size and content type for the card', () => {
     const image = next({ style: { sizes: { cardWidth: 600, cardHeight: 315 } }, card: getCard })
-    const expected = {
+    const expected: NextImage = {
+      default: expect.any(Function),
       size: { width: 600, height: 315 },
       contentType: 'image/png',
     }
 
-    expect(image).toMatchObject(expected)
+    expect(image).toEqual(expected)
   })
 
   it('should resolve the card from the params and respond with a PNG', async () => {
