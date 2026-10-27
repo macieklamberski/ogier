@@ -136,9 +136,11 @@ describe('render', () => {
       'example/repo',
       'Page 3',
     ]
+    const headerIcon = nodes.find((node) => node.props.height === 56)
+    const footerIcon = nodes.find((node) => node.props.height === 32)
 
-    expect(nodes.find((node) => node.props.height === 56)).toEqual(expectedHeaderIcon)
-    expect(nodes.find((node) => node.props.height === 32)).toEqual(expectedFooterIcon)
+    expect(headerIcon).toEqual(expectedHeaderIcon)
+    expect(footerIcon).toEqual(expectedFooterIcon)
     expect(findByText(root, 'v1.1.0')).toMatchObject(expectedAside)
     expect(findByText(root, 'Page 3')).toMatchObject(expectedAside)
     expect(findByText(root, 'Guides › Parsing')).toMatchObject(expectedEyebrow)
@@ -254,11 +256,10 @@ describe('render', () => {
     const expectedAside = {
       props: { style: { color: '#000007' } },
     }
+    const result = collectNodes(root).find((node) => node.props.height === 32)
 
     expect(groups).toMatchObject(expectedGroups)
-    expect(collectNodes(root).find((node) => node.props.height === 32)).toMatchObject(
-      expectedFooterIcon,
-    )
+    expect(result).toMatchObject(expectedFooterIcon)
     expect(findByText(root, 'Guides › Parsing')).toMatchObject(expectedEyebrow)
     expect(findByText(root, 'Parsing namespaces')).toMatchObject(expectedTitle)
     expect(findByText(root, 'Test Tosterone')).toMatchObject(expectedByline)
@@ -482,8 +483,9 @@ describe('render', () => {
       type: 'img',
       props: { src: 'data:image/png;base64,AAAA', style: { objectFit: 'cover' } },
     }
+    const result = nodes.find((node) => node.type === 'img')
 
-    expect(nodes.find((node) => node.type === 'img')).toMatchObject(expected)
+    expect(result).toMatchObject(expected)
     expect(findByStyle(render(value), 'right', 0)).toBeUndefined()
   })
 
