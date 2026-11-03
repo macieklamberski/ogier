@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'bun:test'
 import type { Card } from '../types/index.js'
-import { next } from './next.js'
+import { type NextParams, next } from './next.js'
 
 describe('next', () => {
-  const getCard = (params: { slug?: string | Array<string> }): Card => {
+  const getCard = (params: NextParams): Card => {
     return { header: { text: 'feedstand' }, title: `Post ${params.slug}` }
   }
 
