@@ -269,6 +269,9 @@ describe('render', () => {
 
   it('should render the header, the title and the pattern rail with minimal properties', () => {
     const root = render(baseContext)
+    const expectedHeader = {
+      props: { style: { fontSize: 44, fontWeight: 500 } },
+    }
     const expected = {
       props: { style: { fontSize: 72, fontWeight: 700, lineHeight: 1.15 } },
     }
@@ -277,7 +280,7 @@ describe('render', () => {
       props: { style: { position: 'absolute', right: 0, width: 600, height: 630 } },
     }
 
-    expect(findByText(root, 'feedsmith')).toBeDefined()
+    expect(findByText(root, 'feedsmith')).toMatchObject(expectedHeader)
     expect(findByText(root, 'Parsing namespaces')).toMatchObject(expected)
     expect(findByStyle(root, 'right', 0)).toMatchObject(expectedRail)
     expect(findByStyle(root, 'right', 0)?.props.src).toStartWith('data:image/svg+xml;base64,')
@@ -577,6 +580,9 @@ describe('render', () => {
       },
     }
     const root = render(value)
+    const expectedRow = {
+      props: { style: { display: 'flex', justifyContent: 'flex-end' } },
+    }
     const expectedHeadline = {
       props: { style: { alignItems: 'flex-end', textAlign: 'right' } },
     }
@@ -584,7 +590,7 @@ describe('render', () => {
       props: { style: { marginLeft: 'auto', textAlign: 'right' } },
     }
 
-    expect(findByStyle(root, 'justifyContent', 'flex-end')).toBeDefined()
+    expect(findByStyle(root, 'justifyContent', 'flex-end')).toMatchObject(expectedRow)
     expect(findByStyle(root, 'gap', 16)).toMatchObject(expectedHeadline)
     expect(findByStyle(root, 'flexDirection', 'row-reverse')).toBeUndefined()
     expect(findByText(root, 'v1.1.0')).toMatchObject(expectedAside)
@@ -600,6 +606,9 @@ describe('render', () => {
       },
     }
     const root = render(value)
+    const expectedRow = {
+      props: { style: { display: 'flex', justifyContent: 'center' } },
+    }
     const expectedHeadline = {
       props: { style: { alignItems: 'center', textAlign: 'center' } },
     }
@@ -607,7 +616,7 @@ describe('render', () => {
       props: { style: { marginLeft: 'auto', textAlign: 'right' } },
     }
 
-    expect(findByStyle(root, 'justifyContent', 'center')).toBeDefined()
+    expect(findByStyle(root, 'justifyContent', 'center')).toMatchObject(expectedRow)
     expect(findByStyle(root, 'gap', 16)).toMatchObject(expectedHeadline)
     expect(findByText(root, 'v1.1.0')).toMatchObject(expectedAside)
   })
