@@ -7,6 +7,7 @@ import * as images from './images.js'
 import { resolvePackageFile } from './packages.js'
 
 const relativeRegex = /^\.\.?\//
+
 const mimeTypes: Record<string, string> = {
   '.svg': 'image/svg+xml',
   '.png': 'image/png',
