@@ -1,4 +1,4 @@
-import { isObject, trimObject } from 'trousse'
+import { isFunction, isObject, trimObject } from 'trousse'
 import { renderPattern } from './patterns.js'
 import type {
   Align,
@@ -120,7 +120,7 @@ const withHeight = (element: unknown, height: number): unknown => {
     return element
   }
 
-  if ('type' in element && typeof element.type === 'function') {
+  if ('type' in element && isFunction(element.type)) {
     return withHeight(element.type(element.props), height)
   }
 
