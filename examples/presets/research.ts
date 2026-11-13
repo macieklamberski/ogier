@@ -1,3 +1,4 @@
+import { join } from 'node:path'
 import type { Card, Style } from 'ogier'
 import { renderPng } from 'ogier'
 import { dark } from 'ogier/themes'
@@ -14,7 +15,7 @@ const card: Card = {
     aside: 'March 12, 2026',
   },
   image: {
-    file: new URL('../assets/paint.jpg', import.meta.url),
+    file: join(import.meta.dir, '../assets/paint.jpg'),
   },
 }
 

@@ -1,3 +1,4 @@
+import { join } from 'node:path'
 import type { Card, Style } from 'ogier'
 import { renderPng } from 'ogier'
 import { light } from 'ogier/themes'
@@ -11,7 +12,7 @@ const card: Card = {
   byline: 'Tomas Ferreira',
   description: 'Twelve chapters, one armchair and no reason to hurry.',
   image: {
-    file: new URL('../assets/reader.jpg', import.meta.url),
+    file: join(import.meta.dir, '../assets/reader.jpg'),
   },
 }
 
