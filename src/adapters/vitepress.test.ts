@@ -70,7 +70,8 @@ describe('vitepress', () => {
       ['meta', { name: 'twitter:image', content: 'https://example.com/og/guides-parsing.png' }],
     ]
 
-    expect(vitepress(options).transformHead(value)).toEqual(expected)
+    const head = vitepress(options).transformHead(value)
+    expect(head).toEqual(expected)
   })
 
   it('should end the page url in .html when clean urls are off', () => {
@@ -80,7 +81,8 @@ describe('vitepress', () => {
       { property: 'og:url', content: 'https://example.com/guides/parsing.html' },
     ]
 
-    expect(vitepress(options).transformHead(value)).toContainEqual(expected)
+    const head = vitepress(options).transformHead(value)
+    expect(head).toContainEqual(expected)
   })
 
   it('should point an index page at its folder', () => {
@@ -90,7 +92,8 @@ describe('vitepress', () => {
       { property: 'og:url', content: 'https://example.com/guides/' },
     ]
 
-    expect(vitepress(options).transformHead(value)).toContainEqual(expected)
+    const head = vitepress(options).transformHead(value)
+    expect(head).toContainEqual(expected)
   })
 
   it('should put the site base in the page and image urls', () => {
@@ -137,9 +140,8 @@ describe('vitepress', () => {
   it('should emit no icon link without a favicon', () => {
     const value = getContext('index.md', 'Home')
 
-    expect(vitepress(options).transformHead(value)).not.toContainEqual(
-      expect.arrayContaining(['link']),
-    )
+    const head = vitepress(options).transformHead(value)
+    expect(head).not.toContainEqual(expect.arrayContaining(['link']))
   })
 
   it('should emit the icon link when a favicon is given', () => {
@@ -177,7 +179,8 @@ describe('vitepress', () => {
     og.transformHead(getContext('guides/parsing.md', 'Guides: Parsing'))
     await og.buildEnd({ outDir })
 
-    expect((await readdir(join(outDir, 'og'))).sort()).toEqual(expected)
+    const images = (await readdir(join(outDir, 'og'))).sort()
+    expect(images).toEqual(expected)
   })
 
   it('should write the home card from the site title without a site description', async () => {

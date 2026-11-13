@@ -256,9 +256,8 @@ describe('render', () => {
     }
 
     expect(groups).toMatchObject(expectedGroups)
-    expect(collectNodes(root).find((node) => node.props.height === 32)).toMatchObject(
-      expectedFooterIcon,
-    )
+    const footerIcon = collectNodes(root).find((node) => node.props.height === 32)
+    expect(footerIcon).toMatchObject(expectedFooterIcon)
     expect(findByText(root, 'Guides › Parsing')).toMatchObject(expectedEyebrow)
     expect(findByText(root, 'Parsing namespaces')).toMatchObject(expectedTitle)
     expect(findByText(root, 'Test Tosterone')).toMatchObject(expectedByline)
@@ -283,7 +282,8 @@ describe('render', () => {
     expect(findByText(root, 'feedsmith')).toMatchObject(expectedHeader)
     expect(findByText(root, 'Parsing namespaces')).toMatchObject(expected)
     expect(findByStyle(root, 'right', 0)).toMatchObject(expectedRail)
-    expect(findByStyle(root, 'right', 0)?.props.src).toStartWith('data:image/svg+xml;base64,')
+    const railSrc = findByStyle(root, 'right', 0)?.props.src
+    expect(railSrc).toStartWith('data:image/svg+xml;base64,')
     expect(findByStyle(root, 'background', '#ff8c4d')).toBeUndefined()
   })
 
@@ -803,7 +803,8 @@ describe('render', () => {
       props: { viewBox: '0 0 8 8', height: 56 },
     }
 
-    expect(findByStyle(render(value), 'overflow', 'hidden')?.props.children).toEqual(expected)
+    const icon = findByStyle(render(value), 'overflow', 'hidden')?.props.children
+    expect(icon).toEqual(expected)
   })
 
   it('should keep the height an element icon sets itself', () => {

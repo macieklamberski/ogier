@@ -180,7 +180,8 @@ describe('loadFonts', () => {
 
     const { fonts } = await loadFonts(value, weights, loadFontsourceFamily)
 
-    expect(fonts.at(-1)?.data).toEqual(expected)
+    const fontData = fonts.at(-1)?.data
+    expect(fontData).toEqual(expected)
   })
 
   it('should load the default family for a role given as undefined', async () => {
