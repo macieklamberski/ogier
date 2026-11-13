@@ -1,3 +1,4 @@
+import { join } from 'node:path'
 import type { Card, Style } from 'ogier'
 import { renderPng } from 'ogier'
 import { dark } from 'ogier/themes'
@@ -41,7 +42,7 @@ const style: Style = {
   },
   background: {
     image: {
-      file: new URL('../assets/river.jpg', import.meta.url),
+      file: join(import.meta.dir, '../assets/river.jpg'),
     },
   },
 }
