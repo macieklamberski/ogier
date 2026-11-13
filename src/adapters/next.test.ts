@@ -24,7 +24,8 @@ describe('next', () => {
     const expected = '89504e470d0a1a0a'
 
     expect(response.headers.get('Content-Type')).toBe('image/png')
-    expect(Buffer.from(body.subarray(0, 8)).toString('hex')).toBe(expected)
+    const signature = Buffer.from(body.subarray(0, 8)).toString('hex')
+    expect(signature).toBe(expected)
   })
 
   it('should add the headers from the options to the response', async () => {

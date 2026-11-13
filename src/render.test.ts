@@ -307,7 +307,8 @@ describe('createRenderer', () => {
     const result = await renderer.renderPng(card)
     const expected = '89504e470d0a1a0a'
 
-    expect(result.subarray(0, 8).toString('hex')).toBe(expected)
+    const signature = result.subarray(0, 8).toString('hex')
+    expect(signature).toBe(expected)
   })
 })
 
